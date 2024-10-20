@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>register</title>
-    <link rel="stylesheet" href="./../CSS/register.css">
+    <link rel="stylesheet" href="./../css/register.css">
 </head>
 <body>
     <form action="" onsubmit="submitForm(event)" id="register_form">
@@ -45,7 +45,9 @@ function submitForm(event) {
         if (data.code != 0) {
             alert(data.msg);
         } else {
-            console.log("注册成功");
+            // console.log("注册成功");
+            alert("注册成功");
+            window.location.href="./login.php";
         }
     }).catch(error => {
         console.log("error: " + error);
