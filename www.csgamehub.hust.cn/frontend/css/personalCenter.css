@@ -1,0 +1,106 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#background_container {
+    width: 100%;
+    height: 100vh;
+}
+
+.flex-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
+
+.profile_pic {
+    display: block;
+    width: 150px;
+    height: 150px;
+    padding-top: 20px;
+    margin: 0 auto;
+}
+
+.lefter {
+    /* display: inline; */
+    background-color: lightgray;
+    height: 100vh;
+    width: 15%;
+}
+
+.option {
+    text-align: center;
+    margin: 20px 0;
+}
+
+#update_password_form {
+    width: 450px;
+    height: 400px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 10px;
+}
+
+.option:hover {
+    cursor: pointer;
+}
+
+.main {
+    width: 85%;
+    height: 100vh;
+    background-color: rgb(145, 188, 252);
+}
+
+.line {
+    margin: 40px 0;
+    list-style: none;
+    font-size: 20px;
+    text-align: right;
+}
+
+.input_box {
+    width: 250px;
+    height: 25px;
+}
+
+.confirm_button {
+    width: 100px;
+    height: 40px;
+    font-size: 20px;
+    color: white;
+    background-color: lightseagreen;
+    margin-right: 15px;
+    border: none;
+}
+
+.logout_button {
+    width: 100px;
+    height: 40px;
+    font-size: 20px;
+    color: white;
+    background-color: red;
+    border: none;
+}
+
+/* .line-container {
+    display: flex;
+    align-items: center;
+} */
+
+.input_title {
+    text-align: left;
+}
+
+#invisible_input_box {
+    display: none;
+}
+
+#invisible_line {
+    list-style: none;
+}
+
+.btn:hover {
+    cursor: pointer;
+}

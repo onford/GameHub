@@ -1,10 +1,9 @@
 <?php
-$msg = "";
+$msg="";
 
-function assign(&$var, $value)
-{
-    if ($var=="") {
-        $var == $value;
+function assign(&$var, $value) {
+    if ($var == "") {
+        $var=$value;
     }
 }
 
