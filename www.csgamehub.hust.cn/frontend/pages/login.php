@@ -5,23 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>login</title>
     <link rel="stylesheet" href="./../css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
     <!-- <link rel="stylesheet" href="//unpkg.com/element-plus/dist/index.css" /> -->
 </head>
 
 <body>
     <form action="" onsubmit="submitForm(event)" id="loginForm">
+        <div class="heading">登录 GameHub </div>
         <ul>
             <li class="line">
-                <span>用户名: </span>
+            <i class="fa fa-user"></i>&emsp;
                 <input type="text" name="username">
             </li>
             <li class="line">
-                <span>密码: </span>
+            <i class="fa fa-lock"></i>&emsp;
                 <input type="password" name="password">
             </li>
             <li class="line">
                 <input type="submit" value="登录" class="login_button">
-                <a href="./register.php" style="font-size: 14px;">没有账号?注册</a>
+                <a href="./register.php" style="font-size: 14px;" class="register">没有账号?注册</a>
             </li>
         </ul>
     </form>
@@ -57,5 +60,4 @@ function submitForm(event) {
 }
 
 </script>
-
 </html>

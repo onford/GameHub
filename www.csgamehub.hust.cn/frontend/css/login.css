@@ -1,7 +1,8 @@
 body {
     padding: 0;
     margin: 0;
-    background-color: rgba(67, 125, 239, 0.867);
+    background-image: url("./../img/login_background.jpg");
+    background-size: cover; /* 图片将缩放以完全覆盖body元素 */  
 }
 
 form {
@@ -12,6 +13,15 @@ form {
     border-radius: 10px;
 }
 
+/* i{
+    color: black;
+} */
+
+.heading{
+    font-weight: bold;
+    font-size: large;
+}
+
 li {
     list-style: none;
 }
@@ -20,18 +30,57 @@ li {
     /* display: inline-block; */
     margin: 20px 0;
     text-align: right;
-    margin-right: 40px;
+    margin-right: 60px;
+}
+
+.responsive-svg {  
+    height: 100%; /* 让SVG填满容器的高度 */  
+    width: auto; /* 宽度自动调整以保持宽高比 */  
+    max-width: 100%; /* 确保SVG不会超过容器的宽度 */  
 }
 
 input {
     height: 20px;
 }
 
+.heading{
+    margin-top: 50px;
+    margin-bottom: 50px;
+    text-align: center;
+    font-size: 30px;
+    color:#4f4f4f;
+}
+
 .login_button {
-    margin-right: 20px;
-    height: 30px;
-    width: 60px;
+    margin:auto;
+    height: 40px;
+    width: 80px;
     color: white;
     background-color: rgb(43, 151, 252);
     border: none;
+    border-radius: 10px;
+    font-size: 18px;
+}
+
+.login_button:hover{
+    background-color: rgb(96, 163, 225);
+}
+
+a {  
+    color: gray; /* 灰色 */  
+    text-decoration: none; /* 去掉下划线 */  
+}  
+
+/* 鼠标悬浮在超链接上的样式 */  
+a:hover {  
+    color: rgb(173, 230, 222); /* 浅蓝色 */  
+}  
+
+/* 点击后的超链接样式 */  
+a:visited {  
+    color: gray; /* 黑色 */  
+}  
+
+li a.register{
+    margin: right -20px;
 }
