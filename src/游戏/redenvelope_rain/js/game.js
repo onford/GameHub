@@ -1,10 +1,11 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-const gameDuration = 15000; // 游戏持续30秒
-let envelopes = [];
+const gameDuration = 15000; // 游戏持续15秒
+let envelopes = []; //信封集合
 let score = 0;
 let startTime = Date.now();
 let timer;
+document.body.appendChild(canvas);
 
 canvas.style.position = 'absolute';
 canvas.style.top = '0';
@@ -14,7 +15,7 @@ canvas.height = 600; // 设置canvas的高度
 // 设置canvas的边框
 canvas.style.border = '2px solid #000000'; // 设置边框为2像素宽，黑色
 
-// 创建得分元素并添加到文档中
+// 得分元素
 const scoreElement = document.createElement('div');
 scoreElement.id = 'score';
 scoreElement.style.position = 'absolute';
@@ -29,7 +30,7 @@ function updateScore() {
   scoreElement.textContent = `得分: ${score}`;
 }
 
-// 创建游戏剩余时间元素并添加到文档中
+// 游戏剩余时间元素
 const timeRemainingElement = document.createElement('div');
 timeRemainingElement.id = 'timeRemaining';
 timeRemainingElement.style.position = 'absolute';
@@ -46,6 +47,22 @@ function updateTimeRemaining() {
   timeRemainingElement.textContent = `剩余时间: ${seconds}s`;
 }
 
+// 游戏音乐
+const gameAudio = document.createElement("audio");
+gameAudio.id = 'endAudio';
+gameAudio.src = "music/gamebegin.mp4";
+gameAudio.type = "audio/mpeg";
+gameAudio.loop = false;
+document.body.appendChild(gameAudio);
+
+// 游戏结束音乐
+const endAudio = document.createElement("audio");
+endAudio.id = 'endAudio';
+endAudio.src = "music/gameover.mp3";
+endAudio.type = "audio/mpeg";
+endAudio.loop = false;
+document.body.appendChild(endAudio);
+
 // 显示游戏结束界面的函数
 function showGameOver() {
   const gameOverElement = document.createElement('div');
@@ -61,6 +78,7 @@ function showGameOver() {
   gameOverElement.style.color = 'red';
   gameOverElement.style.fontSize = '48px';
   gameOverElement.textContent = `游戏结束！得分: ${score}`;
+  endAudio.play();
   document.body.appendChild(gameOverElement);
 }
 
@@ -73,7 +91,7 @@ class Envelope {
     this.height = 60;
     this.speed = Math.random() * 4 + 1;
   }
-
+  //绘画
   draw() {
     ctx.fillStyle = 'red';
     ctx.fillRect(this.x, this.y, this.width, this.height);
@@ -81,7 +99,7 @@ class Envelope {
     ctx.font = '20px Arial';
     ctx.fillText('红包', this.x + 5, this.y + 30);
   }
-
+  //更新位置
   update() {
     this.y += this.speed;
   }
@@ -107,6 +125,7 @@ function updateEnvelopes() {
   });
 }
 
+//处理鼠标点击事件
 function handleClick(event) {
   const rect = canvas.getBoundingClientRect();
   const clickX = event.clientX - rect.left;
@@ -137,15 +156,17 @@ function startGame() {
   timer = setInterval(createEnvelope, 500); // 每秒生成一个红包
   canvas.addEventListener('click', handleClick);
   gameLoop = setInterval(() => {
-    // 游戏逻辑，例如红包生成、下落等
+    // 游戏逻辑
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawEnvelopes();
     updateEnvelopes();
     updateScore();
     updateTimeRemaining();
-    
+    gameAudio.play();
+
     // 检查游戏是否结束
     if (Date.now() - startTime >= gameDuration) {
+      gameAudio.pause();
       clearInterval(gameLoop);
       clearInterval(timer);
       canvas.removeEventListener('click', handleClick);
@@ -154,10 +175,4 @@ function startGame() {
   }, 1000 / 60); // 以60帧/秒更新游戏
 }
 
-// 初始化游戏
-function initGame() {
-  canvas.addEventListener('click', handleClick);
-  startGame();
-}
-
-window.onload = initGame;
+window.onload = startGame;
