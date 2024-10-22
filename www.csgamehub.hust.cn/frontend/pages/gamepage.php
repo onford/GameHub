@@ -39,6 +39,14 @@
                 排行榜
             </h1>
         </div>
+
+        <div class="commentarea">
+            <!-- 评论区 -->
+            <div class="comment_box container">
+                <textarea name="comment_textarea" placeholder="请输入你的评论..."></textarea>
+                <button class="post_btn">发布</button>
+            </div>
+        </div>
     </div>
 </body>
 
@@ -82,6 +90,12 @@
     }
 
     window.onload = init();
+
+    var profile_pic = document.getElementsByClassName("profile_pic")[0];
+    profile_pic.onclick = function() {
+        console.log("头像点击事件触发");
+        window.location.href = "./messageCenter.php";
+    }
 </script>
 
 </html>
