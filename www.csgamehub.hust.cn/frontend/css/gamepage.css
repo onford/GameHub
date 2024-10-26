@@ -179,3 +179,7 @@ body {
     height: 100px;
     flex-basis: 80%;
 }
+
+.list-group-item {
+    color: lightskyblue;
+}
