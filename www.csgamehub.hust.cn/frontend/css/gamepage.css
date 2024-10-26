@@ -8,7 +8,7 @@
     height: 100vh;
 }
 
-.container {
+.my-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -175,7 +175,7 @@ body {
     height: 100vh;
 }
 
-.comment_box input{
+.comment_box input {
     height: 100px;
     flex-basis: 80%;
 }

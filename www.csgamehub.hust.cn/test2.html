@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrap 左中右布局</title>
+    <!-- 引入Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <style>
+        /* 自定义样式，用于调整布局 */
+        .sidebar {
+            background-color: #f8f9fa;
+            /* 侧边栏背景色 */
+            padding: 20px;
+        }
+
+        .main-content {
+            padding: 20px;
+        }
+
+        .top-section,
+        .bottom-section {
+            background-color: #e9ecef;
+            /* 中间部分上下两部分的背景色 */
+            margin-bottom: 20px;
+            /* 下部分与上部分之间的间距 */
+        }
+
+        .bottom-section:last-child {
+            margin-bottom: 0;
+            /* 移除最后一个元素的底部间距 */
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边栏 -->
+            <div class="col-md-2 sidebar">
+                <h5>侧边栏</h5>
+                <p>这里是侧边栏的内容。</p>
+                <ul class="list-unstyled">
+                    <li><a href="#">链接 1</a></li>
+                    <li><a href="#">链接 2</a></li>
+                    <li><a href="#">链接 3</a></li>
+                </ul>
+            </div>
+
+            <!-- 中间部分 -->
+            <div class="col-md-8 main-content">
+                <!-- 上部分 -->
+                <div class="top-section">
+                    <h5>上部分</h5>
+                    <p>这里是中间部分的上部分内容。</p>
+                </div>
+                <!-- 下部分 -->
+                <div class="bottom-section">
+                    <h5>下部分</h5>
+                    <p>这里是中间部分的下部分内容。</p>
+                </div>
+            </div>
+
+            <!-- 右侧部分（可选） -->
+            <div class="col-md-2">
+                <h5>右侧部分</h5>
+                <p>这里是页面的右侧内容（可选）。</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入Bootstrap JS和依赖的Popper.js和jQuery（可选，用于Bootstrap的组件） -->
+    <!-- 注意：在实际项目中，你可能需要下载这些文件到本地或使用CDN版本 -->
+    <!-- 如果你不需要Bootstrap的JS组件，可以省略以下部分 -->
+</body>
+
+</html>

@@ -23,7 +23,7 @@
             </div>
             <div>
                 <p class="option">
-                    <a href="./gamepage.php">返回首页</a>
+                    <a href="./gamepage.html">返回首页</a>
                 </p>
             </div>
         </div>
@@ -59,25 +59,25 @@
     function jumpHandle1(event) {
         event.preventDefault();
         console.log("跳转页面事件触发");
-        window.location.href = "./messageCenter.php";
+        window.location.href = "./messageCenter.html";
     }
 
     function jumpHandle2(event) {
         event.preventDefault();
         console.log("跳转页面事件触发");
-        window.location.href = "./codeUpload.php";
+        window.location.href = "./codeUpload.html";
     }
 
     function jumpHandle3(event) {
         event.preventDefault();
         console.log("跳转页面事件触发");
-        window.location.href = "./accountManager.php";
+        window.location.href = "./accountManager.html";
     }
 
     function submitForm(event) {
         event.preventDefault();
         console.log("表单已被提交");
-        const url = "./../../backend/api/change_password_api.php";
+        const url = "./../../backend/api/change_password_api.html";
         var update_form = document.getElementById("update_password_form");
         var formData = new FormData(update_form);
         fetch(url, {
@@ -109,7 +109,7 @@
         console.log("登出事件触发");
         const flag = confirm("确定登出账号吗?");
         if (flag == true) {
-            window.location.href = "./login.php";
+            window.location.href = "./login.html";
         }
     }
 </script>

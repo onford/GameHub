@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="./../css/personalCenter.css">
 </head>
+
 <body>
     <div class="flex-container" id="background_container ">
         <div class="lefter">
@@ -21,7 +23,7 @@
             </div>
             <div>
                 <p class="option">
-                    <a href="./gamepage.php">返回首页</a> 
+                    <a href="./gamepage.html">返回首页</a>
                 </p>
             </div>
         </div>
@@ -37,19 +39,20 @@
     function jumpHandle1(event) {
         event.preventDefault();
         console.log("跳转页面事件触发");
-        window.location.href = "./messageCenter.php";
+        window.location.href = "./messageCenter.html";
     }
 
     function jumpHandle2(event) {
         event.preventDefault();
         console.log("跳转页面事件触发");
-        window.location.href = "./codeUpload.php";
+        window.location.href = "./codeUpload.html";
     }
 
     function jumpHandle3(event) {
         event.preventDefault();
         console.log("跳转页面事件触发");
-        window.location.href = "./accountManager.php";
+        window.location.href = "./accountManager.html";
     }
 </script>
+
 </html>
