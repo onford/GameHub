@@ -6,26 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>register</title>
     <link rel="stylesheet" href="./../css/register.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
     <form action="" onsubmit="submitForm(event)" id="register_form">
+        <div class="heading">注册 GameHub 账号</div>
         <ul>
             <li class="line">
-                <span>用户名: </span>
-                <input type="text" name="username">
+                <i class="fa fa-user"></i>&emsp;
+                <input type="text" name="username" placeholder="用户名" class="fill_in">
             </li>
             <li class="line">
-                <span>密码: </span>
-                <input type="password" name="password">
+                <i class="fa fa-lock"></i>&emsp;
+                <input type="password" name="password" placeholder="密码" class="fill_in">
             </li>
             <li class="line">
-                <span>确认密码: </span>
-                <input type="password" name="re_password">
+                <i class="fa fa-lock"></i>&emsp;
+                <input type="password" name="re_password" placeholder="确认密码" class="fill_in">
             </li>
-            <li class="line">
-                <input type="submit" value="注册" class="register_button">
-                <a href="./login.html" style="font-size: 14px;">已有账号?登录</a>
+            <li class="line" style="margin-right: 10px;margin-top:20px;">
+                <input type="submit" value="注册" class="register_button">&emsp;&emsp;
+                <a href="./login.html" style="font-size: 14px;" class="login">已有账号?登录</a>
             </li>
         </ul>
     </form>

@@ -6,7 +6,7 @@ body {
 }
 
 form {
-    width: 20vw;
+    width: 25vw;
     background-color: white;
     padding: 5px;
     margin: 35vh auto;
@@ -18,8 +18,12 @@ form {
 } */
 
 .heading{
-    font-weight: bold;
-    font-size: large;
+    font-weight: bold;    
+    margin-top: 50px;
+    margin-bottom: 50px;
+    text-align: center;
+    font-size: 30px;
+    color:#4f4f4f;
 }
 
 li {
@@ -30,7 +34,7 @@ li {
     /* display: inline-block; */
     margin: 20px 0;
     text-align: right;
-    margin-right: 60px;
+    margin-right: 100px;
 }
 
 .responsive-svg {  
@@ -43,18 +47,10 @@ input {
     height: 20px;
 }
 
-.heading{
-    margin-top: 50px;
-    margin-bottom: 50px;
-    text-align: center;
-    font-size: 30px;
-    color:#4f4f4f;
-}
-
 .login_button {
     margin:auto;
     height: 40px;
-    width: 80px;
+    width: 120px;
     color: white;
     background-color: rgb(43, 151, 252);
     border: none;
@@ -67,13 +63,14 @@ input {
 }
 
 a {  
+    margin: right -20px;
     color: gray; /* 灰色 */  
     text-decoration: none; /* 去掉下划线 */  
 }  
 
 /* 鼠标悬浮在超链接上的样式 */  
 a:hover {  
-    color: rgb(173, 230, 222); /* 浅蓝色 */  
+    color: rgb(173, 230, 222) !important; /* 浅蓝色 */  
 }  
 
 /* 点击后的超链接样式 */  
@@ -81,6 +78,15 @@ a:visited {
     color: gray; /* 黑色 */  
 }  
 
-li a.register{
-    margin: right -20px;
+.fill_in{
+    height: 25px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-width: 1.5px;
+    outline: none;
+}
+
+.fill_in:focus{
+    border-color: rgb(173, 230, 222);
 }

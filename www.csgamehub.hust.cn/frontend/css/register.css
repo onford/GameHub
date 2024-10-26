@@ -1,11 +1,21 @@
 body {
     padding: 0;
     margin: 0;
-    background-color: rgba(67, 125, 239, 0.867);
+    background-image: url("./../img/login_background.jpg");
+    background-size: cover; /* 图片将缩放以完全覆盖body元素 */  
+}
+
+.heading{
+    font-weight: bold;    
+    margin-top: 50px;
+    margin-bottom: 50px;
+    text-align: center;
+    font-size: 30px;
+    color:#4f4f4f;
 }
 
 form {
-    width: 20vw;
+    width: 25vw;
     background-color: white;
     padding: 5px;
     margin: 35vh auto;
@@ -20,7 +30,7 @@ li {
     /* display: inline-block; */
     margin: 20px 0;
     text-align: right;
-    margin-right: 25px;
+    margin-right: 90px;
 }
 
 input {
@@ -28,10 +38,45 @@ input {
 }
 
 .register_button {
-    margin-right: 20px;
-    height: 30px;
-    width: 60px;
+    margin:auto;
+    height: 40px;
+    width: 120px;
     color: white;
     background-color: rgb(43, 151, 252);
     border: none;
+    border-radius: 10px;
+    font-size: 18px;
+}
+
+.register_button:hover{
+    background-color: rgb(96, 163, 225);
+}
+
+a {  
+    margin: right -20px;
+    color: gray; /* 灰色 */  
+    text-decoration: none; /* 去掉下划线 */  
+}  
+
+/* 鼠标悬浮在超链接上的样式 */  
+a:hover {  
+    color: rgb(173, 230, 222) !important; /* 浅蓝色 */  
+}  
+
+/* 点击后的超链接样式 */  
+a:visited {  
+    color: gray; /* 黑色 */  
+}  
+
+.fill_in{
+    height: 25px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-width: 1.5px;
+    outline: none;
+}
+
+.fill_in:focus{
+    border-color: rgb(173, 230, 222);
 }
