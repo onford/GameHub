@@ -78,7 +78,7 @@ a:visited {
     color: gray; /* 黑色 */  
 }  
 
-.fill_in{
+input.fill_in{
     height: 25px;
     border-top: none;
     border-left: none;
@@ -87,6 +87,6 @@ a:visited {
     outline: none;
 }
 
-.fill_in:focus{
+input.fill_in:focus{
     border-color: rgb(173, 230, 222);
 }

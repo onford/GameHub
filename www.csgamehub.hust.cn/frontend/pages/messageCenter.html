@@ -11,21 +11,19 @@
 <body>
     <div class="flex-container" id="background_container">
         <div class="lefter">
-            <img src="./../../src/images/test_icon.webp" alt="" class="profile_pic">
-            <div>
-                <p class="option" onclick="jumpHandle1(event)">消息中心</p>
+            <div style="height: 30%;place-items: center;display: grid;"><img src="./../../src/images/test_icon.webp" alt="" class="profile_pic"></div>
+            <div class="option" style="background-color: #ccc;" onclick="jumpHandle1(event)">
+                <p>消息中心</p>
+            </div class="option">
+            <div class="option" onclick="jumpHandle2(event)">
+                <p>创作中心</p>
             </div>
-            <div>
-                <p class="option" onclick="jumpHandle2(event)">创作中心</p>
+            <div class="option" onclick="jumpHandle3(event)">
+                <p>账号管理</p>
             </div>
-            <div>
-                <p class="option" onclick="jumpHandle3(event)">账号管理</p>
-            </div>
-            <div>
-                <p class="option">
-                    <a href="./gamepage.html">返回首页</a>
-                </p>
-            </div>
+            <a href="./gamepage.html"><div class="option" >
+                    返回首页
+            </div></a>
         </div>
         <div class="main">
         </div>

@@ -19,20 +19,20 @@
     display: block;
     width: 150px;
     height: 150px;
-    padding-top: 20px;
     margin: 0 auto;
 }
 
 .lefter {
     /* display: inline; */
-    background-color: lightgray;
+    background-color: white;
     height: 100vh;
     width: 15%;
 }
 
 .option {
     text-align: center;
-    margin: 20px 0;
+    padding: 20px 0;
+    font-size: 20px;
 }
 
 #update_password_form {
@@ -104,3 +104,19 @@
 .btn:hover {
     cursor: pointer;
 }
+
+a,.option{  
+    margin: right -20px;
+    color: gray; /* 灰色 */  
+    text-decoration: none; /* 去掉下划线 */  
+}  
+
+/* 鼠标悬浮在超链接上的样式 */  
+a:hover,.option:hover {  
+    background-color: #ccc;
+}  
+
+/* 点击后的超链接样式 */  
+a:visited,.option:visited{  
+    color: gray; /* 黑色 */  
+}  
