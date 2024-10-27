@@ -82,19 +82,50 @@
         user_name.value = localStorage.getItem("username");
         game_name.value = localStorage.getItem("cur_game");
 
-        for (var i = 1; i <= 5; i++) {
-            var new_game_icon_table = document.createElement("div");
-            var new_game_icon = document.createElement("img");
-            new_game_icon.src = "./../../src/images/test_game_icon.webp";
-            var new_game_name = document.createElement("p");
-            new_game_icon_table.classList.add("game_icon_table");
-            new_game_icon.classList.add("game_icon");
-            new_game_name.classList.add("game_name");
-            new_game_name.innerHTML = "game" + i;
-            new_game_icon_table.appendChild(new_game_icon);
-            new_game_icon_table.appendChild(new_game_name);
-            gametable.appendChild(new_game_icon_table);
-        }
+        // 游戏列表的插入
+        var game_select_api = "./../../backend/api/game_select_api.php";
+        fetch(game_select_api, {
+            method: "GET"
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.code != 0) {
+                alert(data.msg);
+            } else {
+                console.log("游戏列表查询成功");
+                console.log(data);
+                for (var i = 0; i < data.data.length; i++) {
+                    var new_game_icon_table = document.createElement("div");
+                    var new_game_icon = document.createElement("img");
+                    new_game_icon.src = "./../../src/images/test_game_icon.webp";
+                    var new_game_name = document.createElement("p");
+                    new_game_icon_table.classList.add("game_icon_table");
+                    new_game_icon.classList.add("game_icon");
+                    new_game_name.classList.add("game_name");
+                    new_game_name.innerHTML = data.data[i];
+                    new_game_icon_table.appendChild(new_game_icon);
+                    new_game_icon_table.appendChild(new_game_name);
+                    gametable.appendChild(new_game_icon_table);
+                }
+            }
+        })
+        .catch(error => {
+            console.error(error);
+        })
+
+        // for (var i = 1; i <= 5; i++) {
+        //     var new_game_icon_table = document.createElement("div");
+        //     var new_game_icon = document.createElement("img");
+        //     new_game_icon.src = "./../../src/images/test_game_icon.webp";
+        //     var new_game_name = document.createElement("p");
+        //     new_game_icon_table.classList.add("game_icon_table");
+        //     new_game_icon.classList.add("game_icon");
+        //     new_game_name.classList.add("game_name");
+        //     new_game_name.innerHTML = "game" + i;
+        //     new_game_icon_table.appendChild(new_game_icon);
+        //     new_game_icon_table.appendChild(new_game_name);
+        //     gametable.appendChild(new_game_icon_table);
+        // }
 
         // 用户名显示
         var username = document.getElementsByClassName("username")[0];
