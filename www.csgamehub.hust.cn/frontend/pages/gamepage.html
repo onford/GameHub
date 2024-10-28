@@ -28,13 +28,14 @@
                     <div class="item">
                         <span id="score"></span>
                         <!-- <span id="history"></span> -->
-                        <button id="btn">New Game</button>
+                        <!-- <button id="btn">New Game</button> -->
                     </div>
                     <canvas id="canvas"></canvas>
-                    <script src="./../game/2048.js"></script>
+                    <script src="./../game/2048/js/game.js"></script>
+                    <!-- <script src="./../game/senpai/js/game.js"></script> -->
                 </div>
             </div>
-            <div class="my-container" id="gametable_container" onclick="game_icon_click_handle(event)">
+            <div class="my-container" id="gametable_container">
                 <!-- 这里面的元素由init函数插入 -->
             </div>
         </div>
@@ -87,31 +88,31 @@
         fetch(game_select_api, {
             method: "GET"
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.code != 0) {
-                alert(data.msg);
-            } else {
-                console.log("游戏列表查询成功");
-                console.log(data);
-                for (var i = 0; i < data.data.length; i++) {
-                    var new_game_icon_table = document.createElement("div");
-                    var new_game_icon = document.createElement("img");
-                    new_game_icon.src = "./../../src/images/" + data.data[i] + "_icon.jpg";
-                    var new_game_name = document.createElement("p");
-                    new_game_icon_table.classList.add("game_icon_table");
-                    new_game_icon.classList.add("game_icon");
-                    new_game_name.classList.add("game_name");
-                    new_game_name.innerHTML = data.data[i];
-                    new_game_icon_table.appendChild(new_game_icon);
-                    new_game_icon_table.appendChild(new_game_name);
-                    gametable.appendChild(new_game_icon_table);
+            .then(response => response.json())
+            .then(data => {
+                if (data.code != 0) {
+                    alert(data.msg);
+                } else {
+                    console.log("游戏列表查询成功");
+                    console.log(data);
+                    for (var i = 0; i < data.data.length; i++) {
+                        var new_game_icon_table = document.createElement("div");
+                        var new_game_icon = document.createElement("img");
+                        new_game_icon.src = "./../../src/images/" + data.data[i] + "_icon.jpg";
+                        var new_game_name = document.createElement("p");
+                        new_game_icon_table.classList.add("game_icon_table");
+                        new_game_icon.classList.add("game_icon");
+                        new_game_name.classList.add("game_name");
+                        new_game_name.innerHTML = data.data[i];
+                        new_game_icon_table.appendChild(new_game_icon);
+                        new_game_icon_table.appendChild(new_game_name);
+                        gametable.appendChild(new_game_icon_table);
+                    }
                 }
-            }
-        })
-        .catch(error => {
-            console.error(error);
-        })
+            })
+            .catch(error => {
+                console.error(error);
+            })
 
         // for (var i = 1; i <= 5; i++) {
         //     var new_game_icon_table = document.createElement("div");
@@ -171,12 +172,12 @@
             })
     }
 
-    function game_icon_click_handle(event) {
-        event.preventDefault();
-        console.log("事件触发");
-        // window.location.href = "https://ys.mihoyo.com/";
-        window.open("https://ys.mihoyo.com/", "_blank");
-    }
+    // function game_icon_click_handle(event) {
+    //     event.preventDefault();
+    //     console.log("事件触发");
+    //     // window.location.href = "https://ys.mihoyo.com/";
+    //     window.open("https://ys.mihoyo.com/", "_blank");
+    // }
 
     function init_rank_list() {
         event.preventDefault();
