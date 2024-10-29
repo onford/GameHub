@@ -24,7 +24,7 @@
 
 .lefter {
     /* display: inline; */
-    background-color: white;
+    background-color: #eeeeee;
     height: 100vh;
     width: 15%;
 }
@@ -50,7 +50,10 @@
 .main {
     width: 85%;
     height: 100vh;
-    background-color: rgb(145, 188, 252);
+    padding: 0;
+    margin: 0;
+    background-color: white;
+    /* 图片将缩放以完全覆盖body元素 */
 }
 
 .line {
@@ -105,18 +108,24 @@
     cursor: pointer;
 }
 
-a,.option{  
+a,
+.option {
     margin: right -20px;
-    color: gray; /* 灰色 */  
-    text-decoration: none; /* 去掉下划线 */  
-}  
+    color: gray;
+    /* 灰色 */
+    text-decoration: none;
+    /* 去掉下划线 */
+}
 
-/* 鼠标悬浮在超链接上的样式 */  
-a:hover,.option:hover {  
+/* 鼠标悬浮在超链接上的样式 */
+a:hover,
+.option:hover {
     background-color: #ccc;
-}  
+}
 
-/* 点击后的超链接样式 */  
-a:visited,.option:visited{  
-    color: gray; /* 黑色 */  
-}  
+/* 点击后的超链接样式 */
+a:visited,
+.option:visited {
+    color: gray;
+    /* 黑色 */
+}
