@@ -8,24 +8,34 @@ use softwareproject;
 
 drop table if exists userlist;
 create table userlist(
-    username varchar(255) primary key,
-    `password` varchar(255) not null
+    username varchar(127) primary key,
+    `password` varchar(127) not null
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
 drop table if exists game_list;
 create table game_list(
-    gamename varchar(255) primary key
+    gamename varchar(127) primary key
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 drop table if exists comment_list;
 create table comment_list(
     id int auto_increment primary key,
-    username varchar(255),
-    gamename varchar(255),
+    username varchar(127),
+    gamename varchar(127),
     `comment` text not null,
-     foreign key(username) references userlist(user_name),
-     foreign key(gamename) references game_list(gamename)
+    foreign key(username) references userlist(user_name),
+    foreign key(gamename) references game_list(gamename)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+drop table if exists gamescorelist;
+create table gamescorelist(
+    username varchar(127),
+    gamename varchar(127),
+    highest_score int unsigned default null,
+    primary key(username,gamename),
+    foreign key(username) references userlist(user_name),
+    foreign key(gamename) references game_list(gamename)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 

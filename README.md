@@ -22,29 +22,37 @@
 
 当前存在的表格为：
 
-PK: primary key  
-AI: auto_increment  
-NN: not null  
-FK: foreign key  
-
 Table: **userlist**
 | 列名|类型|限制|
 |:---:|:---:|:---:|
-|username|varchar(255)|PK|
-|username|varchar(255)|NN|
+|username|varchar(127)|PK|
+|username|varchar(127)|NN|
 
 Table: **game_list**
 | 列名|类型|限制|
 |:---:|:---:|:---:|
-|gamename|varchar(255)|PK|
+|gamename|varchar(127)|PK|
 
 Table: **comment_list**
 | 列名|类型|限制|
 |:---:|:---:|:---:|
 |id|int|PK AI|
-|username|varchar(255)|FK -> userlist(username)|
-|gamename|varchar(255)|FK -> game_list(gamename)|
+|username|varchar(127)|FK -> userlist(username)|
+|gamename|varchar(127)|FK -> game_list(gamename)|
 |comment|text|NN|
 
+Table: **gamescorelist**
+| 列名|类型|限制|
+|:---:|:---:|:---:|
+|username|varchar(127)|FK -> userlist(username)|
+|gamename|varchar(127)|FK -> game_list(gamename)|
+|highest_score|int |DEFAULT NULL<br>UN|
 
-
+PK = (username,gamename)
+ 
+其中限制条件的缩写分别是  
+PK: primary key  
+AI: auto_increment  
+NN: not null  
+FK: foreign key  
+UN: unsigned
