@@ -35,7 +35,7 @@ if ($msg != "") {
 // 查询最多前五条记录
 $table_name = "game_list";
 $sql = "
-    select game_name
+    select gamename
     from $table_name
     limit 5;
 ";
@@ -43,7 +43,7 @@ $sql = "
 $res = $conn->query($sql);
 if ($res) {
     while ($row = $res->fetch_assoc()) {
-        array_push($data, $row["game_name"]);
+        array_push($data, $row["gamename"]);
     }
 } else {
     assign($msg, $conn->error);
