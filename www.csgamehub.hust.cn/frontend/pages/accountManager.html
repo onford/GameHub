@@ -78,7 +78,7 @@
     function submitForm(event) {
         event.preventDefault();
         console.log("表单已被提交");
-        const url = "./../../backend/api/change_password_api.html";
+        const url = "./../../backend/api/change_password_api.php";
         var update_form = document.getElementById("update_password_form");
         var formData = new FormData(update_form);
         fetch(url, {
