@@ -9,8 +9,8 @@
 
 ```php
 "serverName" => "localhost",
- "username" => "root",
- "password" => "114514",
+"username" => "root",
+"password" => "114514",
 ```
 
 
@@ -36,17 +36,19 @@ CREATE TABLE `game_list` (
 
 
 CREATE TABLE `gamescorelist` (
-  `username` varchar(50) NOT NULL,
-  `gamename` varchar(50) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `gamename` varchar(255) NOT NULL,
   `highest_score` int(11) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
+
 CREATE TABLE `userlist` (
-  `username` varchar(50) NOT NULL,
-  `password` varchar(50) NOT NULL,
-  PRIMARY KEY (`username`,`password`)
+  `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  PRIMARY KEY (`username`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 
 ```
 
