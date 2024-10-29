@@ -15,40 +15,36 @@
 
 
 
-- 表格
+- SQL 文件
 
-```sql
-CREATE DATABASE `softwareproject` /*!40100 DEFAULT CHARACTER SET utf8 */;
+开发者需注意目录`init`。该目录存放一个 sql 文件，用于生成所有后端涉及到的表格。**在进行开发之前，应该执行该 sql 脚本**。
+> Mysql workbench 执行脚本的方法为，打开脚本，使用快捷键`Ctrl + Shift + Enter`。
 
-CREATE TABLE `comment_list` (
-  `username` varchar(255) NOT NULL,
-  `gamename` varchar(255) NOT NULL,
-  `comment` text NOT NULL,
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+当前存在的表格为：
 
+PK: primary key
+AI: auto_increment
+NN: not null
+FK: foreign key
 
-CREATE TABLE `game_list` (
-  `game_name` varchar(255) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+Table: **userlist**
+| 列名|类型|限制|
+|:---:|:---:|:---:|
+|username|varchar(255)|PK|
+|username|varchar(255)|NN|
 
+Table: **game_list**
+| 列名|类型|限制|
+|:---:|:---:|:---:|
+|gamename|varchar(255)|PK|
 
-
-CREATE TABLE `gamescorelist` (
-  `username` varchar(255) NOT NULL,
-  `gamename` varchar(255) NOT NULL,
-  `highest_score` int(11) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
-
-CREATE TABLE `userlist` (
-  `username` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  PRIMARY KEY (`username`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+Table: **comment_list**
+| 列名|类型|限制|
+|:---:|:---:|:---:|
+|id|int|PK AI|
+|username|varchar(255)|FK -> userlist(username)|
+|gamename|varchar(255)|FK -> game_list(gamename)|
+|comment|text|NN|
 
 
-```
 
