@@ -17,15 +17,15 @@
 
 - SQL 文件
 
-开发者需注意目录`init`。该目录存放一个 sql 文件，用于生成所有后端涉及到的表格。**在进行开发之前，应该执行该 sql 脚本**。
+开发者需注意目录`www.csgamehub.hust.cn/init`。该目录存放一个 sql 文件，用于生成所有后端涉及到的表格。**在进行开发之前，应该执行该 sql 脚本**。
 > Mysql workbench 执行脚本的方法为，打开脚本，使用快捷键`Ctrl + Shift + Enter`。
 
 当前存在的表格为：
 
-PK: primary key
-AI: auto_increment
-NN: not null
-FK: foreign key
+PK: primary key  
+AI: auto_increment  
+NN: not null  
+FK: foreign key  
 
 Table: **userlist**
 | 列名|类型|限制|
