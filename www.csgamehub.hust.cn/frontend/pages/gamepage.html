@@ -73,6 +73,11 @@
 </body>
 
 <script>
+    function game_icon_click_handle(event) {
+        // event.preventDefault();
+        console.log("游戏图标点击事件触发");
+    }
+
     function init() {
         // 游戏列表的生成
         var gametable = document.getElementById("gametable_container");
@@ -102,6 +107,7 @@
                         var new_game_name = document.createElement("p");
                         new_game_icon_table.classList.add("game_icon_table");
                         new_game_icon.classList.add("game_icon");
+                        new_game_icon.onclick = game_icon_click_handle(event);
                         new_game_name.classList.add("game_name");
                         new_game_name.innerHTML = data.data[i];
                         new_game_icon_table.appendChild(new_game_icon);
