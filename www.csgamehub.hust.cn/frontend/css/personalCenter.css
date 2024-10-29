@@ -3,6 +3,41 @@
     padding: 0;
 }
 
+/* 以下是消息中心后加入的一些css样式 */
+.message-item {
+    padding: 1.25rem;
+    border-left: 4px solid #e3e6f0 !important;
+    transition: border-left-color 0.3s ease;
+}
+
+.message-item:hover {
+    border-left-color: #0d6efd !important;
+}
+
+.message-item.checked {
+    border-left-color: #198754;
+}
+
+.message-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.message-meta {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.message-time {
+    margin-left: auto;
+}
+
+.checkbox-custom {
+    margin-right: 1rem;
+}
+
+/* 到这里结束 */
+
 #background_container {
     width: 100%;
     height: 100vh;
