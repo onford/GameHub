@@ -60,10 +60,23 @@ input {
     border: none;
     border-radius: 10px;
     font-size: 18px;
+    cursor: pointer;
 }
 
 .login_button:hover {
     background-color: rgb(96, 163, 225);
+    cursor: pointer;
+}
+
+.login_button:disabled {
+    background-color: #ccc;
+    /* 灰色背景 */
+    color: #666;
+    /* 灰色文字 */
+    /* 你可以根据需要添加其他样式，比如边框颜色、透明度等 */
+    /* 灰色边框 */
+    cursor: not-allowed;
+    /* 改变鼠标悬停时的光标样式，表示不可点击 */
 }
 
 a {

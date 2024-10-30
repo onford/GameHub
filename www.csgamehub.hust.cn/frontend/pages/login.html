@@ -25,7 +25,7 @@
                 <p id="errormsg"></p>
             </li>
             <li class="line" style="margin-right: 10px;margin-top:20px;">
-                <input type="submit" value="登录" class="login_button">&emsp;&emsp;
+                <input type="submit" value="登录" class="login_button" disabled>&emsp;&emsp;
                 <a href="./register.html" style="font-size: 14px;" class="register">没有账号?注册</a>
             </li>
         </ul>
@@ -62,6 +62,7 @@
                 console.log("error: " + error);
             })
     }
+
     // 账号和密码不准输入空格
     Array.from(document.getElementsByClassName('fill_in')).forEach(function (input) {
         input.addEventListener('keypress', function (event) {
@@ -71,7 +72,21 @@
                 event.preventDefault();
             }
         });
-    });  
+    });
+
+    // 没有输入账号密码不准登录
+    var account_ready = false;
+    var password_ready = false;
+    document.getElementsByName("username")[0].addEventListener('input', function () {
+        account_ready = this.value !== '';
+        if (account_ready && password_ready) document.querySelector('.login_button').disabled = false;
+        else document.querySelector('.login_button').disabled = true;
+    });
+    document.getElementsByName("password")[0].addEventListener('input', function () {
+        password_ready = this.value !== '';
+        if (account_ready && password_ready) document.querySelector('.login_button').disabled = false;
+        else document.querySelector('.login_button').disabled = true;
+    });
 </script>
 
 </html>
