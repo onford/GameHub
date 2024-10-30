@@ -56,3 +56,6 @@ AI: auto_increment
 NN: not null  
 FK: foreign key  
 UN: unsigned
+
+### 关于样式库
+直接使用 cdn 引入会受到网络质量的影响，建议直接将代码下载到本地。样式库位于`/www.csgamehub.hust.cn/src/vendor`。
