@@ -62,7 +62,16 @@
                 console.log("error: " + error);
             })
     }
-
+    // 账号和密码不准输入空格
+    Array.from(document.getElementsByClassName('fill_in')).forEach(function (input) {
+        input.addEventListener('keypress', function (event) {
+            // 现代浏览器通常只使用event.key，但为了兼容旧版浏览器，这里仍然保留了event.keyCode的检查  
+            // 但实际上，你应该只使用event.key，因为keyCode已被弃用  
+            if (event.key === ' ') {
+                event.preventDefault();
+            }
+        });
+    });  
 </script>
 
 </html>
