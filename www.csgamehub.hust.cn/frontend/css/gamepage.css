@@ -51,7 +51,7 @@ body {
 
 #screen_container {
     height: 80vh;
-    background-color: lightyellow;
+    background-color: rgba(244, 165, 96, 0.637);
 }
 
 /* #gametable_container {
@@ -60,7 +60,7 @@ body {
 
 #gametable_container {
     height: 20vh;
-    background-color: lightblue;
+    background-color: rgba(172, 255, 47, 0.606);
 }
 
 .profile_pic:hover {

@@ -29,7 +29,7 @@
                         <button id="btn">New Game</button>
                     </div>
                     <canvas id="canvas"></canvas>
-                    <script src="./../game/2048/js/game.js"></script>
+                    <!-- <script src="./../game/2048/js/game.js" id="currentgame"></script> -->
                     <!-- <script src="./../game/senpai/js/game.js"></script> -->
                 </div>
             </div>
@@ -71,10 +71,10 @@
 </body>
 
 <script>
-    function game_icon_click_handle(event) {
+    function game_icon_click_handle() {
         // event.preventDefault();
         console.log("游戏图标点击事件触发");
-        console.log(event);
+        window.location.href = "./gamepage.html?gamename=" + this.name;
     }
     function init() {
         // 游戏列表的生成
@@ -102,6 +102,7 @@
                         var new_game_icon_table = document.createElement("div");
                         var new_game_icon = document.createElement("img");
                         new_game_icon.src = "./../../src/images/" + data.data[i] + "_icon.jpg";
+                        new_game_icon.name = data.data[i];
                         var new_game_name = document.createElement("p");
                         new_game_icon_table.classList.add("game_icon_table");
                         new_game_icon.classList.add("game_icon");
@@ -187,7 +188,7 @@
         event.preventDefault();
     }
 
-    window.onload = init();
+    // window.onload = init();
 
     var profile_pic = document.getElementsByClassName("profile_pic")[0];
     profile_pic.onclick = function () {
@@ -217,6 +218,34 @@
                 console.error(error);
             });
     }
+
+    // 动态加载游戏 js
+    function loadScript(url, callback) {
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = url;
+
+        // Attach event listener for when the script is loaded  
+        script.onload = function () {
+            if (callback && typeof callback === 'function') {
+                callback();
+                init();
+            }
+        };
+        script.onerror = function () {
+            // 为了防止玩家故意设置一个错误的url参数导致找不到js，自动跳转到2048
+            window.location.href = "./gamepage.html";
+        }
+
+        // Append the script to the body  
+        document.body.appendChild(script);
+    }
+    var queryValue = new URLSearchParams(window.location.search).get('gamename');
+    if (queryValue == null) queryValue = "2048"; // 默认游戏
+    loadScript("./../game/" + queryValue + "/js/game.js", function () {
+        console.log(queryValue + " is loaded.");
+        localStorage.setItem("cur_game", queryValue);
+    })
 </script>
 
 </html>
