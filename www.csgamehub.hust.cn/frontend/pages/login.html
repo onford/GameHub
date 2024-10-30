@@ -21,7 +21,8 @@
             </li>
             <li class="line">
                 <i class="fa fa-lock"></i>&emsp;
-                <input type="password" name="password" placeholder="密码" class="fill_in">
+                <input type="password" name="password" placeholder="密码" class="fill_in"><br>
+                <p id="errormsg"></p>
             </li>
             <li class="line" style="margin-right: 10px;margin-top:20px;">
                 <input type="submit" value="登录" class="login_button">&emsp;&emsp;
@@ -45,8 +46,9 @@
             .then(data => { // data是从api传过来转成json格式的数据
                 console.log(data);
                 if (data.code != 0) {
-                    alert(data.msg);
+                    document.getElementById("errormsg").innerHTML = data.msg;
                 } else {
+                    document.getElementById("errormsg").innerHTML = "";
                     console.log("登录成功");
                     console.log(data.data[0]);
 

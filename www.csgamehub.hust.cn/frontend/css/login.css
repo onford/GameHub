@@ -2,7 +2,8 @@ body {
     padding: 0;
     margin: 0;
     background-image: url("./../img/login_background.jpg");
-    background-size: cover; /* 图片将缩放以完全覆盖body元素 */  
+    background-size: cover;
+    /* 图片将缩放以完全覆盖body元素 */
 }
 
 form {
@@ -17,13 +18,13 @@ form {
     color: black;
 } */
 
-.heading{
-    font-weight: bold;    
+.heading {
+    font-weight: bold;
     margin-top: 50px;
     margin-bottom: 50px;
     text-align: center;
     font-size: 30px;
-    color:#4f4f4f;
+    color: #4f4f4f;
 }
 
 li {
@@ -37,10 +38,13 @@ li {
     margin-right: 100px;
 }
 
-.responsive-svg {  
-    height: 100%; /* 让SVG填满容器的高度 */  
-    width: auto; /* 宽度自动调整以保持宽高比 */  
-    max-width: 100%; /* 确保SVG不会超过容器的宽度 */  
+.responsive-svg {
+    height: 100%;
+    /* 让SVG填满容器的高度 */
+    width: auto;
+    /* 宽度自动调整以保持宽高比 */
+    max-width: 100%;
+    /* 确保SVG不会超过容器的宽度 */
 }
 
 input {
@@ -48,7 +52,7 @@ input {
 }
 
 .login_button {
-    margin:auto;
+    margin: auto;
     height: 40px;
     width: 120px;
     color: white;
@@ -58,27 +62,31 @@ input {
     font-size: 18px;
 }
 
-.login_button:hover{
+.login_button:hover {
     background-color: rgb(96, 163, 225);
 }
 
-a {  
+a {
     margin: right -20px;
-    color: gray; /* 灰色 */  
-    text-decoration: none; /* 去掉下划线 */  
-}  
+    color: gray;
+    /* 灰色 */
+    text-decoration: none;
+    /* 去掉下划线 */
+}
 
-/* 鼠标悬浮在超链接上的样式 */  
-a:hover {  
-    color: rgb(173, 230, 222) !important; /* 浅蓝色 */  
-}  
+/* 鼠标悬浮在超链接上的样式 */
+a:hover {
+    color: rgb(173, 230, 222) !important;
+    /* 浅蓝色 */
+}
 
-/* 点击后的超链接样式 */  
-a:visited {  
-    color: gray; /* 黑色 */  
-}  
+/* 点击后的超链接样式 */
+a:visited {
+    color: gray;
+    /* 黑色 */
+}
 
-input.fill_in{
+input.fill_in {
     height: 25px;
     border-top: none;
     border-left: none;
@@ -87,6 +95,12 @@ input.fill_in{
     outline: none;
 }
 
-input.fill_in:focus{
+input.fill_in:focus {
     border-color: rgb(173, 230, 222);
+}
+
+#errormsg {
+    color: red;
+    font-size: 15px;
+    margin-top: -0.5px;
 }

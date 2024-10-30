@@ -24,7 +24,8 @@
             </li>
             <li class="line">
                 <i class="fa fa-lock"></i>&emsp;
-                <input type="password" name="re_password" placeholder="确认密码" class="fill_in">
+                <input type="password" name="re_password" placeholder="确认密码" class="fill_in"><br>
+                <p id="errormsg"></p>
             </li>
             <li class="line" style="margin-right: 10px;margin-top:20px;">
                 <input type="submit" value="注册" class="register_button">&emsp;&emsp;
@@ -48,11 +49,14 @@
             .then(data => {
                 console.log(data);
                 if (data.code != 0) {
-                    alert(data.msg);
+                    document.getElementById("errormsg").innerHTML = data.msg;
                 } else {
                     // console.log("注册成功");
-                    alert("注册成功");
-                    window.location.href = "./login.html";
+                    document.getElementById("errormsg").style.color = "green";
+                    document.getElementById("errormsg").innerHTML = "注册成功!<br>1 秒后自动跳转登录界面";
+                    setTimeout(function () {
+                        window.location.href = "./login.html";
+                    }, 1000);
                 }
             }).catch(error => {
                 console.log("error: " + error);

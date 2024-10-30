@@ -2,16 +2,17 @@ body {
     padding: 0;
     margin: 0;
     background-image: url("./../img/login_background.jpg");
-    background-size: cover; /* 图片将缩放以完全覆盖body元素 */  
+    background-size: cover;
+    /* 图片将缩放以完全覆盖body元素 */
 }
 
-.heading{
-    font-weight: bold;    
+.heading {
+    font-weight: bold;
     margin-top: 50px;
     margin-bottom: 50px;
     text-align: center;
     font-size: 30px;
-    color:#4f4f4f;
+    color: #4f4f4f;
 }
 
 form {
@@ -38,7 +39,7 @@ input {
 }
 
 .register_button {
-    margin:auto;
+    margin: auto;
     height: 40px;
     width: 120px;
     color: white;
@@ -48,27 +49,31 @@ input {
     font-size: 18px;
 }
 
-.register_button:hover{
+.register_button:hover {
     background-color: rgb(96, 163, 225);
 }
 
-a {  
+a {
     margin: right -20px;
-    color: gray; /* 灰色 */  
-    text-decoration: none; /* 去掉下划线 */  
-}  
+    color: gray;
+    /* 灰色 */
+    text-decoration: none;
+    /* 去掉下划线 */
+}
 
-/* 鼠标悬浮在超链接上的样式 */  
-a:hover {  
-    color: rgb(173, 230, 222) !important; /* 浅蓝色 */  
-}  
+/* 鼠标悬浮在超链接上的样式 */
+a:hover {
+    color: rgb(173, 230, 222) !important;
+    /* 浅蓝色 */
+}
 
-/* 点击后的超链接样式 */  
-a:visited {  
-    color: gray; /* 黑色 */  
-}  
+/* 点击后的超链接样式 */
+a:visited {
+    color: gray;
+    /* 黑色 */
+}
 
-.fill_in{
+.fill_in {
     height: 25px;
     border-top: none;
     border-left: none;
@@ -77,6 +82,12 @@ a:visited {
     outline: none;
 }
 
-.fill_in:focus{
+.fill_in:focus {
     border-color: rgb(173, 230, 222);
+}
+
+#errormsg {
+    color: red;
+    font-size: 15px;
+    margin-top: -0.5px;
 }
