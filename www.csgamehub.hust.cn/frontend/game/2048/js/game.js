@@ -87,6 +87,17 @@ var draw = {
 
 }
 
+function notMovable() {
+    for (let i = 0; i < 4; i++)
+        for (let j = 0; j < 4; j++) {
+            if (i < 3 && map[i][j] == map[i + 1][j])
+                return false;
+            if (j < 3 && map[i][j] == map[i][j + 1])
+                return false;
+        }
+    return true;
+}
+
 
 var game = {
     init: function () {
@@ -130,12 +141,11 @@ var game = {
             }
         }
         draw.produce();
-        if (space == 0) {
+        if (space == 0 && notMovable()) {
             alert("game over");
             game.historyScore(score);
         }
         draw.block();
-
     },
     /*
      * 首盘history应为游戏结束的分数，并更新localStorage.history
