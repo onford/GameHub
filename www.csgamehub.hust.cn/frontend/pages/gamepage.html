@@ -246,6 +246,31 @@
         console.log(queryValue + " is loaded.");
         localStorage.setItem("cur_game", queryValue);
     })
+    function recordScore(score) {
+        const update_score_api = "./../../backend/api/update_score_api.php";
+        var gameData = new FormData();
+        gameData.append("username", localStorage.getItem("username"));
+        gameData.append("gamename", localStorage.getItem("cur_game"));
+        gameData.append("score", score);
+
+        fetch(update_score_api, {
+            method: "POST",
+            body: gameData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code != 0) {
+                    alert(data.msg);
+                } else {
+                    console.log("游戏分数更新接口返回结果");
+                    console.log(data);
+                    localStorage.setItem("highest_score", data.data);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            })
+    }
 </script>
 
 </html>
