@@ -129,6 +129,12 @@ var update = function (modifier) {
     }
 };
 
+document.addEventListener('keydown', function (event) {
+    // 检查是否按下了箭头键  
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+        event.preventDefault(); // 禁止箭头键的默认行为  
+    }
+});
 
 // Handle keyboard controls
 var keysDown = {}, pauseTag = false;
@@ -176,39 +182,7 @@ var newGame = function () {
         ctx.fillStyle = "#897064";
         ctx.fillText("野兽先辈\r\n雷普了你（喜）！", canvas.width / 2, canvas.height / 2);
         ctx.drawImage(lossImage, canvas.width / 2 - 75., canvas.height / 2 - 200., 150., 150.);
-        //创建一个临时表单提交给接口
-        var temp_score_form = document.createElement("form");
-        var temp_username_inputer = document.createElement("input");
-        temp_username_inputer.name = "username";
-        temp_username_inputer.value = localStorage.getItem("username");
-        var temp_gamename_inputer = document.createElement("input");
-        temp_gamename_inputer.name = "gamename";
-        temp_gamename_inputer.value = localStorage.getItem("cur_game");
-        var temp_score_inputer = document.createElement("input");
-        temp_score_inputer.name = "score";
-        temp_score_inputer.value = highest_score;
-        temp_score_form.appendChild(temp_username_inputer);
-        temp_score_form.appendChild(temp_gamename_inputer);
-        temp_score_form.appendChild(temp_score_inputer);
-        const update_score_api = "./../../backend/api/update_score_api.php";
-        const temp_form_data = new FormData(temp_score_form);
-        fetch(update_score_api, {
-            method: "POST",
-            body: temp_form_data
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.code != 0) {
-                    alert(data.msg);
-                } else {
-                    console.log("游戏分数更新接口返回结果");
-                    console.log(data);
-                    localStorage.setItem("highest_score", data.data);
-                }
-            })
-            .catch(error => {
-                console.error(error);
-            })
+        recordScore(highest_score);
         highest_score = 0;
     }
 }

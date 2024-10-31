@@ -145,6 +145,7 @@ var game = {
         if (space == 0 && notMovable()) {
             alert("game over");
             game.historyScore(score);
+            recordScore(score);
         }
         draw.block();
     },
@@ -170,6 +171,13 @@ document.onkeydown = function (e) {
     game.move(dir);
     console.log(dir);
 };
+
+document.addEventListener('keydown', function (event) {
+    // 检查是否按下了箭头键  
+    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+        event.preventDefault(); // 禁止箭头键的默认行为  
+    }
+});
 
 var sx, sy, dx, dy, ex, ey;
 canvas.ontouchstart = function (event) {
