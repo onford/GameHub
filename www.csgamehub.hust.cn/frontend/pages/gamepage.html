@@ -37,6 +37,29 @@
             <div class="my-container" id="gametable_container">
                 <!-- 这里面的元素由init函数插入 -->
             </div>
+            <div class="container mt-5">
+                <h2 class="mb-4">评论区</h2>
+
+                <!-- 评论输入框和提交按钮 -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <form id="commentForm" onsubmit="commentHandle(event)">
+                            <div class="form-group">
+                                <textarea class="form-control" id="commentText" rows="3" name="comment_text"
+                                    placeholder="写点评论..."></textarea>
+                            </div>
+                            <input type="text" id="ivsb_user_name" name="username" style="display: none;">
+                            <input type="text" id="ivsb_game_name" name="gamename" style="display: none;">
+                            <button type="submit" class="btn btn-primary">提交</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 评论列表 -->
+                <div id="commentList" class="list-group">
+                    <!-- 评论项将会动态插入到这里 -->
+                </div>
+            </div>
         </div>
 
         <div class="righter">
@@ -73,30 +96,6 @@
                     else document.getElementById('sidebar-trigger').innerHTML = "查看排行榜";
                 });
             </script>
-        </div>
-
-        <div class="container mt-5">
-            <h2 class="mb-4">评论区</h2>
-
-            <!-- 评论输入框和提交按钮 -->
-            <div class="card mb-4">
-                <div class="card-body">
-                    <form id="commentForm" onsubmit="commentHandle(event)">
-                        <div class="form-group">
-                            <textarea class="form-control" id="commentText" rows="3" name="comment_text"
-                                placeholder="写点评论..."></textarea>
-                        </div>
-                        <input type="text" id="ivsb_user_name" name="username" style="display: none;">
-                        <input type="text" id="ivsb_game_name" name="gamename" style="display: none;">
-                        <button type="submit" class="btn btn-primary">提交</button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- 评论列表 -->
-            <div id="commentList" class="list-group">
-                <!-- 评论项将会动态插入到这里 -->
-            </div>
         </div>
     </div>
 </body>
