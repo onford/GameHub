@@ -35,6 +35,7 @@ $sql = "
     select username,highest_score
     from $tablename
     where gamename='$gamename'
+    order by highest_score desc
     limit 20;
 ";
 
