@@ -97,6 +97,17 @@ body {
     width: 70%;
     height: 100vh;
     background-color: white;
+    overflow-y: auto;
+    /* 允许竖直滚动 */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* Internet Explorer 10+ */
+}
+
+/* 针对基于 WebKit 的浏览器（如 Chrome、Safari、Edge 的旧版本） */
+.main::-webkit-scrollbar {
+    display: none;
 }
 
 .screen {
