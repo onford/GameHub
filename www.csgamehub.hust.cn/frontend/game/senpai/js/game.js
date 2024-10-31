@@ -203,7 +203,7 @@ var newGame = function () {
                 } else {
                     console.log("游戏分数更新接口返回结果");
                     console.log(data);
-                    localStorage.setItem("highest_score", data.data);
+                    // localStorage.setItem("highest_score", data.data);
                 }
             })
             .catch(error => {
