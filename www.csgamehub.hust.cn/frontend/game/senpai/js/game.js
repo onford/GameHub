@@ -6,6 +6,8 @@ canvas.width = 450;
 canvas.height = 450;
 // document.body.appendChild(canvas);
 
+var highest_score = 0;
+
 // Create the audios
 var bgAudio = document.createElement("audio");
 bgAudio.src = "./../game/senpai/music/bgmusic.mp3";
@@ -63,6 +65,10 @@ function changeDirection() {
     senpai.dx = (escaper.x - senpai.x) / Math.hypot(escaper.x - senpai.x + epsilon, escaper.y - senpai.y + epsilon);
     senpai.dy = (escaper.y - senpai.y) / Math.hypot(escaper.x - senpai.x + epsilon, escaper.y - senpai.y + epsilon);
     score += 114;
+    if (score > highest_score) {
+        highest_score = score;
+    }
+    console.log("highest_score: " + highest_score);
     senpai.speed = Math.min(senpai.speed + 11.4, 1145.);
 }
 
@@ -170,6 +176,40 @@ var newGame = function () {
         ctx.fillStyle = "#897064";
         ctx.fillText("野兽先辈\r\n雷普了你（喜）！", canvas.width / 2, canvas.height / 2);
         ctx.drawImage(lossImage, canvas.width / 2 - 75., canvas.height / 2 - 200., 150., 150.);
+        //创建一个临时表单提交给接口
+        var temp_score_form = document.createElement("form");
+        var temp_username_inputer = document.createElement("input");
+        temp_username_inputer.name = "username";
+        temp_username_inputer.value = localStorage.getItem("username");
+        var temp_gamename_inputer = document.createElement("input");
+        temp_gamename_inputer.name = "gamename";
+        temp_gamename_inputer.value = localStorage.getItem("cur_game");
+        var temp_score_inputer = document.createElement("input");
+        temp_score_inputer.name = "score";
+        temp_score_inputer.value = highest_score;
+        temp_score_form.appendChild(temp_username_inputer);
+        temp_score_form.appendChild(temp_gamename_inputer);
+        temp_score_form.appendChild(temp_score_inputer);
+        const update_score_api = "./../../backend/api/update_score_api.php";
+        const temp_form_data = new FormData(temp_score_form);
+        fetch(update_score_api, {
+            method: "POST",
+            body: temp_form_data
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code != 0) {
+                    alert(data.msg);
+                } else {
+                    console.log("游戏分数更新接口返回结果");
+                    console.log(data);
+                    localStorage.setItem("highest_score", data.data);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            })
+        highest_score = 0;
     }
 }
 

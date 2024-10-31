@@ -3,7 +3,7 @@ $msg = "";
 $rest = [
     "code" => 0,
     "msg" => $msg,
-    "data" => [],
+    "data" => 0,
 ];
 
 function assign(&$var, $value)
@@ -33,7 +33,11 @@ if ($msg != "") {
 
 //首先检查用户有没有玩过这个游戏,就是是否存在(username,gamename)
 $db_highest_score = -1;
-$score = $_POST['score'];
+$score = $_POST["score"];
+if (is_string($score)) {
+    $score = intval($score);
+}
+$tablename = "gamescorelist";
 
 $username = $_POST['username'];
 $gamename = $_POST['gamename'];
@@ -46,19 +50,33 @@ $res = $conn->query($sql);
 if ($res) {
     while ($row = $res->fetch_assoc()) {
         $db_highest_score = $row["highest_score"];
+        if (is_string($db_highest_score)) {
+            $db_highest_score = intval($db_highest_score);
+        }
     }
 } else {
     $assign($msg, $conn->error);
 }
 
+if ($msg != "") {
+    $rest["code"] = 1;
+    $rest["msg"] = $msg;
+    $conn->close();
+    echo json_encode($rest);
+    die();
+}
+
+$now_highest_score = $db_highest_score;
+
 if ($db_highest_score == -1) { //用户没有玩过这个游戏
     $insert_sql = "
-        insert into $tablename
-        values ('$username','$gamename','$score');
+        insert into $tablename(username,gamename,highest_score)
+        values ('$username','$gamename',$score);
     ";
     $res2 = $conn->query($insert_sql);
     if ($res2) {
-
+        $db_highest_score = $score;
+        $now_highest_score = $score;
     } else {
         assign($msg, $conn->error);
     }
@@ -72,16 +90,15 @@ if ($db_highest_score == -1) { //用户没有玩过这个游戏
 }
 
 if ($score > $db_highest_score) { //更新最高分数
+    $now_highest_score = $score;
     $update_sql = "
         update $tablename
-        set $db_highest_score=$score
+        set highest_score=$score
         where username='$username' and gamename='$gamename';
     ";
     $res3 = $conn->query($update_sql);
-    if (res3) {
-
-    } else {
-        $assign($msg, $conn->error);
+    if ($res3) {} else {
+        assign($msg, $conn->error);
     }
     if ($msg != "") {
         $rest["code"] = 1;
@@ -91,6 +108,8 @@ if ($score > $db_highest_score) { //更新最高分数
         die();
     }
 }
+
+$rest["data"] = $now_highest_score;
 
 $conn->close();
 echo json_encode($rest);

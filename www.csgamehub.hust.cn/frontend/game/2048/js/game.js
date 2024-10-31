@@ -37,6 +37,7 @@ var draw = {
 
     // 随机生成方块
     produce: function () {
+        if (space == 0) return;
         // 随机取当前剩余方块以内的数
         var cot = ~~(Math.random() * space);
 
