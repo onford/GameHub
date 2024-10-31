@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="./../css/gamepage.css">
     <link href="./../../src/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="./../../src/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="./../../src/vendor/fontawesome/css/all.min.css">
     <link rel="icon" href="./../../src/images/favicon1.ico" type="image/x-icon">
 </head>
 
@@ -46,7 +47,18 @@
             <!-- 排行榜侧边栏内容 -->
             <div id="sidebar" class="sidebar">
                 <div class="sidebar-content">
-                    <h2>这是排行榜。原神怎么你了？</h2>
+                    <table class="table" style="color:white;">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">玩家</th>
+                                <th scope="col">最高得分</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider" id="ranklist">
+                            <!-- 这里面是游戏对应的用户排名，由 init_rank_list 插入 -->>
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <!-- 用于展开/隐藏排行榜右边栏的js代码 -->
@@ -153,22 +165,16 @@
         // }
 
         // 用户名显示
-        var username = document.getElementsByClassName("username")[0];
-        username.innerHTML = "用户名: " + localStorage.getItem("username");
+        document.getElementsByClassName("username")[0].innerHTML = "用户名: " + localStorage.getItem("username");
 
         // 游戏名显示
-        var gamename = document.getElementsByClassName("gamename")[0];
-        gamename.innerHTML = "正在游玩: " + "2048";
+        document.getElementsByClassName("gamename")[0].innerHTML = "正在游玩: " + "2048";
 
         //评论加载
         var comment_list = document.getElementById("commentList");
         var get_comment_api = "./../../backend/api/get_comment_api.php";
-        var temp_form = document.createElement("form");
-        var temp_game_name_input = document.createElement("input");
-        temp_game_name_input.value = localStorage.getItem("cur_game");
-        temp_game_name_input.name = "gamename";
-        temp_form.appendChild(temp_game_name_input);
-        var temp_form_data = new FormData(temp_form);
+        var temp_form_data = new FormData();
+        temp_form_data.append("gamename", localStorage.getItem("cur_game"));
         fetch(get_comment_api, {
             method: "POST", //理论上要用GET, 但是这里我还需要传一个gamename, GET方法不能添加body, 所以这里我用了POST方法
             body: temp_form_data
@@ -194,6 +200,8 @@
             .catch(error => {
                 console.error(error);
             })
+        // 游戏排名加载
+        init_rank_list();
     }
 
     // function game_icon_click_handle(event) {
@@ -205,8 +213,41 @@
 
     function init_rank_list() {
         event.preventDefault();
+        var ranklist = document.getElementById("ranklist");
+        var game_rank_api = "./../../backend/api/game_rank_api.php";
+        var temp_form_data = new FormData();
+        temp_form_data.append("gamename", localStorage.getItem("cur_game"));
+        fetch(game_rank_api, {
+            method: "POST",
+            body: temp_form_data
+        }).then(response => response.json())
+            .then(data => {
+                if (data.code != 0) {
+                    alert(data.msg);
+                } else {
+                    console.log("游戏排名查询成功");
+                    console.log(data);
+                    var usernames = data.data.usernames;
+                    var scores = data.data.highest_scores;
+                    console.assert(usernames.length == scores.length); //不会打断执行, 是true的时候也不会显示在控制台
+                    var len = usernames.length;
+                    for (var i = 0; i < len; i++) {
+                        var new_item = document.createElement("tr");
+                        new_item.innerHTML = "<th scope=\"row\">" + crown_style(i + 1) + "</th><td>" + usernames[i] + "</td><td>" + scores[i] + "</td>";
+                        ranklist.appendChild(new_item);
+                    }
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            })
     }
 
+    // 前1~3名给予皇冠
+    function crown_style(rank) {
+        if (rank > 3) return rank;
+        return "<i class=\"fa-solid fa-crown\" style=\"color:" + (rank == 1 ? "gold" : (rank == 2 ? "silver" : "rgb(186,110,64)")) + ";\"></i>";
+    }
     // window.onload = init();
 
     var profile_pic = document.getElementsByClassName("profile_pic")[0];

@@ -1,9 +1,13 @@
 <?php
 // 连接数据库
+$data = [
+    "usernames" => [],
+    "highest_scores" => [],
+];
 $rest = [
     "code" => 0,
     "msg" => "",
-    "data" => [],
+    "data" => $data,
 ];
 
 function error_and_die($msg)
@@ -35,10 +39,16 @@ $sql = "
 ";
 
 $res = $conn->query($sql);
-if ($res) {} else {
+if ($res) {
+    while ($row = $res->fetch_assoc()) {
+        array_push($data["usernames"], $row["username"]);
+        array_push($data["highest_scores"], $row["highest_score"]);
+    }
+} else {
     $conn->close();
     error_and_die($conn->error);
 }
 
 $conn->close();
+$rest["data"] = $data;
 echo json_encode($rest);
