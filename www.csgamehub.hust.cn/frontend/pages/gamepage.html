@@ -39,9 +39,28 @@
         </div>
 
         <div class="righter">
-            <h1 class="rank_title">
-                排行榜
-            </h1>
+            <!-- 查看排行榜的小按钮 -->
+            <div id="sidebar-trigger" class="sidebar-trigger">
+                查看排行榜
+            </div>
+            <!-- 排行榜侧边栏内容 -->
+            <div id="sidebar" class="sidebar">
+                <div class="sidebar-content">
+                    <h2>这是排行榜。原神怎么你了？</h2>
+                </div>
+            </div>
+            <!-- 用于展开/隐藏排行榜右边栏的js代码 -->
+            <script>
+                const sidebarTrigger = document.getElementById('sidebar-trigger');
+                sidebarTrigger.addEventListener('click', () => {
+                    // 切换侧边栏状态  
+                    document.getElementById('sidebar').classList.toggle('sidebar-open');
+                    document.getElementById('sidebar-trigger').classList.toggle('sidebar-trigger-open');
+                    if (document.getElementById('sidebar').classList.contains('sidebar-open'))
+                        document.getElementById('sidebar-trigger').innerHTML = "收起排行榜";
+                    else document.getElementById('sidebar-trigger').innerHTML = "查看排行榜";
+                });
+            </script>
         </div>
 
         <div class="container mt-5">
@@ -264,7 +283,6 @@
                 } else {
                     console.log("游戏分数更新接口返回结果");
                     console.log(data);
-                    localStorage.setItem("highest_score", data.data);
                 }
             })
             .catch(error => {

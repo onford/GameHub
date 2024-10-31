@@ -31,7 +31,66 @@ body {
     width: 15%;
     height: 100vh;
     left: 85%;
-    background-color: lightgrey;
+    background-color: white;
+}
+
+.sidebar-trigger {
+    text-orientation: upright;
+    /* 文字方向保持直立 */
+    writing-mode: vertical-rl;
+    /* 垂直方向从右到左书写 */
+    position: absolute;
+    /* 设置为绝对定位 */
+    top: 50%;
+    /* 将顶部边缘移动到父容器的垂直中央 */
+    right: 0;
+    /* 将右侧边缘紧贴着父容器的右侧 */
+    transform: translateY(-50%);
+    /* 使用 transform 属性将子元素垂直居中（相对于其顶部边缘） */
+    background-color: lightcoral;
+    /* 背景颜色用于可视化 */
+    padding: 10px;
+    border-top-left-radius: 9px;
+    border-bottom-left-radius: 9px;
+    z-index: 1000;
+    transition: right 0.3s ease-in-out;
+}
+
+.sidebar-trigger-open {
+    right: 270px;
+    /* 根据侧边栏宽度调整 */
+}
+
+.sidebar-trigger:hover {
+    background-color: #ccc;
+    cursor: pointer;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: -270px;
+    /* 初始位置在屏幕外侧 */
+    width: 270px;
+    height: 100%;
+    background-color: #333;
+    color: white;
+    transition: right 0.3s ease-in-out;
+    /* 添加过渡效果 */
+    z-index: 999;
+    /* 确保侧边栏在内容之上，但低于触发按钮 */
+}
+
+.sidebar-open {
+    right: 0px;
+    /* 根据侧边栏宽度调整 */
+}
+
+.sidebar-content {
+    padding: 20px;
+    overflow-y: auto;
+    /* 允许内容垂直滚动 */
+    height: 100%;
 }
 
 .main {

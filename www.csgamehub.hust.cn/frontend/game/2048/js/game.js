@@ -142,26 +142,13 @@ var game = {
             }
         }
         draw.produce();
-        if (space == 0 && notMovable()) {
-            alert("game over");
-            game.historyScore(score);
-            recordScore(score);
-        }
         draw.block();
-    },
-    /*
-     * 首盘history应为游戏结束的分数，并更新localStorage.history
-     * 次盘对比localStorage.history和scores的分数
-     */
-    historyScore: function (scores) {
-        // if (!localStorage.history) {
-        //     localStorage.history = scores;
-        // }
-        // if (scores > localStorage.history) {
-        //     localStorage.history = scores;
-        // }
-    },
-
+        if (space == 0 && notMovable()) {
+            recordScore(score);
+            document.onkeydown = null;
+            setTimeout(function () { alert("game over") }, 500);
+        }
+    }
 }
 
 
