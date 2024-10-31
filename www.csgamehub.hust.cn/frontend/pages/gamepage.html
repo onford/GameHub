@@ -204,7 +204,7 @@
         init_rank_list();
 
         // 历史最佳显示
-        document.getElementsByClassName("history_best")[0].innerHTML = "历史最佳: 0";
+        // document.getElementsByClassName("history_best")[0].innerHTML = "历史最佳: 0";
     }
 
     // function game_icon_click_handle(event) {
@@ -234,10 +234,10 @@
                     var scores = data.data.highest_scores;
                     console.assert(usernames.length == scores.length); //不会打断执行, 是true的时候也不会显示在控制台
                     var len = usernames.length;
-                    localStorage.setItem("history_best", -1);
                     for (var i = 0; i < len; i++) {
                         if (usernames[i] == localStorage.getItem("username"))
-                            localStorage.setItem("history_best", scores[i]);
+                            document.getElementsByClassName("history_best")[0].innerHTML = "历史最佳: " + scores[i];
+
                         var new_item = document.createElement("tr");
                         new_item.innerHTML = "<th scope=\"row\">" + crown_style(i + 1) + "</th><td>" + usernames[i] + "</td><td>" + scores[i] + "</td>";
                         ranklist.appendChild(new_item);
