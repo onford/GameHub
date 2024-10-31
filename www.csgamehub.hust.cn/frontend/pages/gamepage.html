@@ -18,7 +18,7 @@
             <img src="./../../src/images/test_icon.webp" alt="" class="profile_pic">
             <p class="username"></p>
             <p class="gamename"></p>
-            <p class="history_best">历史最佳: 0</p>
+            <p class="history_best"></p>
         </div>
 
         <div class="main">
@@ -56,7 +56,7 @@
                             </tr>
                         </thead>
                         <tbody class="table-group-divider" id="ranklist">
-                            <!-- 这里面是游戏对应的用户排名，由 init_rank_list 插入 -->>
+                            <!-- 这里面是游戏对应的用户排名，由 init_rank_list 插入 -->
                         </tbody>
                     </table>
                 </div>
@@ -165,10 +165,10 @@
         // }
 
         // 用户名显示
-        document.getElementsByClassName("username")[0].innerHTML = "用户名: " + localStorage.getItem("username");
+        document.getElementsByClassName("username")[0].innerHTML = "用户名: " + user_name.value;
 
         // 游戏名显示
-        document.getElementsByClassName("gamename")[0].innerHTML = "正在游玩: " + "2048";
+        document.getElementsByClassName("gamename")[0].innerHTML = "正在游玩: " + game_name.value;
 
         //评论加载
         var comment_list = document.getElementById("commentList");
@@ -202,6 +202,9 @@
             })
         // 游戏排名加载
         init_rank_list();
+
+        // 历史最佳显示
+        document.getElementsByClassName("history_best")[0].innerHTML = "历史最佳: 0";
     }
 
     // function game_icon_click_handle(event) {
@@ -231,7 +234,10 @@
                     var scores = data.data.highest_scores;
                     console.assert(usernames.length == scores.length); //不会打断执行, 是true的时候也不会显示在控制台
                     var len = usernames.length;
+                    localStorage.setItem("history_best", -1);
                     for (var i = 0; i < len; i++) {
+                        if (usernames[i] == localStorage.getItem("username"))
+                            localStorage.setItem("history_best", scores[i]);
                         var new_item = document.createElement("tr");
                         new_item.innerHTML = "<th scope=\"row\">" + crown_style(i + 1) + "</th><td>" + usernames[i] + "</td><td>" + scores[i] + "</td>";
                         ranklist.appendChild(new_item);
@@ -300,6 +306,7 @@
         // Append the script to the body  
         document.body.appendChild(script);
     }
+
     var queryValue = new URLSearchParams(window.location.search).get('gamename');
     if (queryValue == null) queryValue = "2048"; // 默认游戏
     loadScript("./../game/" + queryValue + "/js/game.js", function () {
