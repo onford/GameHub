@@ -52,9 +52,9 @@
 
 .profile_pic {
     display: block;
-    width: 150px;
-    height: 150px;
+    width: 65%;
     margin: 0 auto;
+    border-radius: 50%;
 }
 
 .lefter {
