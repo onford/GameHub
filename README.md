@@ -44,6 +44,7 @@ Table: **comment_list**
 |root_id|int|DEFAULT NULL<br>FK -> comment_list(id)|
 |likes|int|DEFAULT 0|
 |unlikes|int|DEFAULT 0|
+|timestamps|datetime||
 
 Table: **gamescorelist**
 | 列名|类型|限制|

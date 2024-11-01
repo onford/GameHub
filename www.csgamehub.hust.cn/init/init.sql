@@ -28,6 +28,7 @@ create table comment_list(
     root_id int default null,
     likes int default 0,
     unlikes int default 0,
+    `timestamps` datetime,
     foreign key(username) references userlist(user_name),
     foreign key(gamename) references game_list(gamename),
     foreign key(reference_id) references comment_list(id),
