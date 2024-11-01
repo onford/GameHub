@@ -38,13 +38,14 @@ $res = $conn->query($sql);
 if ($res) {
     while ($row = $res->fetch_assoc()) {
         $new_node = [
-            "id" => $row['id'],
-            "username" => $row['username'],
-            // 'gamename'=>$row['gamename']; 应该不需要?
-            'comment' => $row['comment'],
-            'root_id' => $row['root_id'],
-            'likes' => $row['likes'],
-            'unlikes' => $row['unlikes'],
+            "id" => $row["id"],
+            "comment" => $row["comment"],
+            "post_id" => $row["post_id"],
+            "username" => $row["username"],
+            "likes" => $row["likes"],
+            "unlikes" => $row['unlikes'],
+            "timestamps" => $row['timestamps'],
+            'reference_id' => $row['reference_id'],
         ];
         array_push($rest["data"], $new_node); // $new_node不能用json_encode转成json格式的对象, js认不出来
     }
