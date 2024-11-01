@@ -30,7 +30,8 @@ $tablename = "comment_list";
 $sql = "
     select *
     from $tablename
-    where gamename='$gamename' and root_id is NULL;
+    where gamename='$gamename' and root_id is NULL
+    order by likes-unlikes;
 ";
 
 $res = $conn->query($sql);
