@@ -7,13 +7,22 @@ $rest = [
 ];
 // echo json_encode($rest);
 
-array_push($rest["data"], $_POST);
+// array_push($rest["data"], $_POST);
 
 function assign(&$var, $value)
 {
     if ($var == "") {
         $var = $value;
     }
+}
+
+function error_and_die($msg)
+{
+    global $rest;
+    $rest["code"] = 1;
+    $rest["msg"] = $msg;
+    echo json_encode($rest);
+    die();
 }
 
 // 连接数据库
@@ -53,14 +62,15 @@ if ($message != "") {
     die();
 }
 
+$now_timestamps = date('Y-m-d H:i:s');
 $sql = "
     insert into $table_name (username, gamename, comment,timestamps)
-    values ('$user_name', '$game_name', '$comment_text',NOW());
+    values ('$user_name', '$game_name', '$comment_text','$now_timestamps');
 ";
 $res = $conn->query($sql);
 
 if ($res) {
-
+    $rest["data"] = $now_timestamps;
 } else {
     assign($message, $conn->error);
 }
