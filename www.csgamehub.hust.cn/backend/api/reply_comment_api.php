@@ -29,6 +29,7 @@ $username = $_POST["username"];
 $gamename = $_POST["gamename"];
 $comment = $_POST["comment"];
 $reference_id = $_POST["reference_id"];
+$timestamps = $_POST["timestamps"];
 if (is_string($reference_id)) {
     $reference_id = intval($reference_id);
 }
@@ -39,8 +40,8 @@ if (is_string($root_id)) {
 }
 $tablename = "comment_list";
 $sql = "
-    insert into $tablename (username,gamename,comment,reference_id,root_id)
-    values ('$username','$gamename','$comment',$reference_id,$root_id);
+    insert into $tablename (username,gamename,comment,reference_id,root_id,timestamps)
+    values ('$username','$gamename','$comment',$reference_id,$root_id,'$timestamps');
 ";
 
 $res = $conn->query($sql);
