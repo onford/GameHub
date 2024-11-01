@@ -24,8 +24,14 @@ create table comment_list(
     username varchar(127),
     gamename varchar(127),
     `comment` text not null,
+    reference_id int default null,
+    root_id int default null,
+    likes int default 0,
+    unlikes int default 0,
     foreign key(username) references userlist(user_name),
-    foreign key(gamename) references game_list(gamename)
+    foreign key(gamename) references game_list(gamename),
+    foreign key(reference_id) references comment_list(id),
+    foreign key(root_id) references comment_list(id)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 drop table if exists gamescorelist;

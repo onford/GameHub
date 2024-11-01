@@ -40,6 +40,10 @@ Table: **comment_list**
 |username|varchar(127)|FK -> userlist(username)|
 |gamename|varchar(127)|FK -> game_list(gamename)|
 |comment|text|NN|
+|reference_id|int|DEFAULT NULL<br>FK -> comment_list(id)|
+|root_id|int|DEFAULT NULL<br>FK -> comment_list(id)|
+|likes|int|DEFAULT 0|
+|unlikes|int|DEFAULT 0|
 
 Table: **gamescorelist**
 | 列名|类型|限制|
