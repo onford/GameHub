@@ -74,12 +74,12 @@
             <!-- 排行榜侧边栏内容 -->
             <div id="sidebar" class="sidebar">
                 <div class="sidebar-content">
-                    <table class="table" style="color:white;">
+                    <table class="table" style="color:white !important;">
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">玩家</th>
-                                <th scope="col">最高得分</th>
+                                <th scope="col" class="myth">#</th>
+                                <th scope="col" class="myth">玩家</th>
+                                <th scope="col" class="myth">最高得分</th>
                             </tr>
                         </thead>
                         <tbody class="table-group-divider" id="ranklist">
@@ -261,7 +261,7 @@
                         }
 
                         var new_item = document.createElement("tr");
-                        new_item.innerHTML = "<th scope=\"row\">" + crown_style(i + 1) + "</th><td>" + usernames[i] + "</td><td>" + scores[i] + "</td>";
+                        new_item.innerHTML = "<th scope=\"row\" class=\"myth\">" + crown_style(i + 1) + "</th><td class=\"mytd\">" + usernames[i] + "</td><td class=\"mytd\">" + scores[i] + "</td>";
                         ranklist.appendChild(new_item);
                     }
                 }
