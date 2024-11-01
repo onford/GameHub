@@ -259,10 +259,13 @@
                             document.getElementsByClassName("history_best")[0].innerHTML = "历史最佳: " + scores[i];
                             score_ready = true;
                         }
-
                         var new_item = document.createElement("tr");
                         new_item.innerHTML = "<th scope=\"row\" class=\"myth\">" + crown_style(i + 1) + "</th><td class=\"mytd\">" + usernames[i] + "</td><td class=\"mytd\">" + scores[i] + "</td>";
                         ranklist.appendChild(new_item);
+                    }
+                    if (document.getElementsByClassName("history_best")[0].innerHTML == '') {
+                        document.getElementsByClassName("history_best")[0].innerHTML = "历史最佳: 0";
+                        score_ready = true;
                     }
                 }
             })
