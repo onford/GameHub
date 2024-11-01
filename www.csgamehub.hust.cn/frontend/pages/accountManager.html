@@ -34,27 +34,6 @@
         </div>
         <div class="main my-flex-container">
             <form action="" onsubmit=submitForm(event) class="my-flex-container" id="update_password_form">
-                <!-- <ul>
-                    <li class="line line-container">
-                        <span class="input_title">旧密码: </span>
-                        <input type="password" name="old_password" class="input_box">
-                    </li>
-                    <li class="line line-container">
-                        <span class="input_title">新密码: </span>
-                        <input type="password" name="new_password" class="input_box">
-                    </li>
-                    <li class="line line-container">
-                        <span class="input_title">确认密码: </span>
-                        <input type="password" name="re_new_password" class="input_box">
-                    </li>
-                    <li id="invisible_line">
-                        <input type="text" name="username" id="invisible_input_box">
-                    </li>
-                    <li class="line">
-                        <input type="submit" value="确认" class="confirm_button my-btn">
-                        <button class="logout_button my-btn" onclick="logoutHandle(event)">登出</button>
-                    </li>
-                </ul> -->
                 <ul>
                     <li class="line">
                         <div class="heading">修改密码</div>
@@ -71,7 +50,7 @@
                         <input type="password" name="re_new_password" placeholder="确认新密码" class="fill_in"><br>
                     </li>
                     <li class="line" style="margin-right: 10px;margin-top:20px;">
-                        <input type="submit" value="确认" class="confirm_button">&emsp;&emsp;
+                        <input type="submit" value="确认" class="confirm_button" disabled>&emsp;&emsp;
                         <button class='logout_button' onclick="logoutHandle(event);">登出</button>
                     </li>
                 </ul>
@@ -137,6 +116,38 @@
             window.location.href = "./login.html";
         }
     }
+
+    //表单不允许输入空格
+    Array.from(document.getElementsByClassName('fill_in')).forEach(function (input) {
+        input.addEventListener('keypress', function (event) {
+            // 现代浏览器通常只使用event.key，但为了兼容旧版浏览器，这里仍然保留了event.keyCode的检查  
+            // 但实际上，你应该只使用event.key，因为keyCode已被弃用  
+            if (event.key === ' ') {
+                event.preventDefault();
+            }
+        });
+    });
+
+    var old_password_ready = false, new_password_ready = false, re_new_password_ready = false;
+    var confirm_button = document.getElementsByClassName("confirm_button")[0];
+
+    //三个输入框都加个监听器
+    Array.from(document.getElementsByClassName("fill_in")).forEach(element => {
+        element.addEventListener('input', function () { // 箭头函数没有this关键字, 所以用普通函数
+            if (this.name == "old_password" && this.value !== '') {
+                old_password_ready = true;
+            }
+            if (this.name == "new_password" && this.value !== '') {
+                new_password_ready = true;
+            }
+            if (this.name == "re_new_password" && this.value !== '') {
+                re_new_password_ready = true;
+            }
+            if (old_password_ready && new_password_ready && re_new_password_ready) {
+                confirm_button.disabled = false;
+            }
+        })
+    });
 </script>
 
 </html>

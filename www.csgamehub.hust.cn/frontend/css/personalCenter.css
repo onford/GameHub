@@ -114,6 +114,17 @@
     border-radius: 10px;
 }
 
+.confirm_button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed !important;
+    /* 不可点击 */
+}
+
+.confirm_button:hover:not(:disabled) {
+    background-color: rgb(67, 212, 205);
+    cursor: pointer;
+}
+
 .logout_button {
     width: 100px;
     height: 40px;
@@ -172,10 +183,6 @@ a:visited,
     /* 黑色 */
 }
 
-.confirm_button:hover {
-    background-color: rgb(67, 212, 205);
-    cursor: pointer;
-}
 
 .comfirm_button:disabled {
     background-color: #ccc;
