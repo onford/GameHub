@@ -110,7 +110,6 @@ var game = {
     },
     move: function (dir) {
         //用来调整不同方向的遍历方式
-        // -1 0
         function modify(x, y) {
             tx = x, ty = y;
             if (dir[0] == 0) tx = [ty, ty = tx][0];
@@ -118,18 +117,20 @@ var game = {
             if (dir[0] > 0) ty = 3 - ty;
             return [tx, ty];
         }
-        //根据移动的方向，将地图中对应行/列中的数字一个个压入栈中，如果第一次遇到栈顶数字和待入栈数字相等，则栈顶数字乘2，最后用栈中数字更新地图中的对应行/列
+        
+        let hasMoved = false; // 新增标志位
         for (var i = 0; i < 4; i++) {
-            var tmp = Array();
+            var tmp = [];
             var isadd = false;
             for (var j = 0; j < 4; j++) {
                 var ti = modify(i, j)[0],
                     tj = modify(i, j)[1];
                 if (map[ti][tj] != 0) {
-                    if (!isadd && map[ti][tj] == tmp[tmp.length - 1]) {
+                    if (!isadd && map[ti][tj] === tmp[tmp.length - 1]) {
                         score += (tmp[tmp.length - 1] *= 2);
                         isadd = true;
                         space += 1;
+                        hasMoved = true; // 更新标志位
                     } else {
                         tmp.push(map[ti][tj]);
                     }
@@ -138,15 +139,24 @@ var game = {
             for (var j = 0; j < 4; j++) {
                 var ti = modify(i, j)[0],
                     tj = modify(i, j)[1];
-                map[ti][tj] = isNaN(tmp[j]) ? 0 : tmp[j];
+                if (isNaN(tmp[j])) {
+                    map[ti][tj] = 0;
+                } else if (map[ti][tj] !== tmp[j]) {
+                    hasMoved = true; // 更新标志位
+                    map[ti][tj] = tmp[j];
+                }
             }
         }
-        draw.produce();
-        draw.block();
-        if (space == 0 && notMovable()) {
-            recordScore(score);
-            document.onkeydown = null;
-            setTimeout(function () { alert("game over") }, 500);
+    
+        if (hasMoved) { // 只有在有效移动后才生成新方块
+            draw.produce();
+            draw.block();
+            // 检查游戏结束
+            if (space == 0 && notMovable()) {
+                recordScore(score);
+                document.onkeydown = null;
+                setTimeout(function () { alert("game over") }, 500);
+            }
         }
     }
 }
