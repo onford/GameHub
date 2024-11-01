@@ -54,8 +54,8 @@ if ($message != "") {
 }
 
 $sql = "
-    insert into $table_name (username, gamename, comment)
-    values ('$user_name', '$game_name', '$comment_text');
+    insert into $table_name (username, gamename, comment,timestamps)
+    values ('$user_name', '$game_name', '$comment_text',NOW());
 ";
 $res = $conn->query($sql);
 

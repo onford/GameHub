@@ -111,6 +111,7 @@
     background-color: lightseagreen;
     margin-right: 15px;
     border: none;
+    border-radius: 10px;
 }
 
 .logout_button {
@@ -120,6 +121,12 @@
     color: white;
     background-color: red;
     border: none;
+    border-radius: 10px;
+}
+
+.logout_button:hover {
+    background-color: rgb(245, 107, 107);
+    cursor: pointer;
 }
 
 /* .line-container {
@@ -163,4 +170,54 @@ a:visited,
 .option:visited {
     color: gray;
     /* 黑色 */
+}
+
+.confirm_button:hover {
+    background-color: rgb(67, 212, 205);
+    cursor: pointer;
+}
+
+.comfirm_button:disabled {
+    background-color: #ccc;
+    /* 灰色背景 */
+    color: #666;
+    /* 灰色文字 */
+    /* 你可以根据需要添加其他样式，比如边框颜色、透明度等 */
+    /* 灰色边框 */
+    cursor: not-allowed;
+    /* 改变鼠标悬停时的光标样式，表示不可点击 */
+}
+
+input.fill_in {
+    height: 25px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-width: 1.5px;
+    outline: none;
+}
+
+input.fill_in:focus {
+    border-color: rgb(173, 230, 222);
+}
+
+#errormsg {
+    color: red;
+    font-size: 15px;
+    margin-top: -0.5px;
+}
+
+.main {
+    background-image: url("./../img/login_background.jpg");
+    background-size: cover;
+}
+
+.heading {
+    font-weight: bold;
+    margin-top: 50px;
+    margin-bottom: 30px;
+    margin-right: 20px;
+    text-align: center;
+    font-size: 30px;
+    color: #4f4f4f;
 }
