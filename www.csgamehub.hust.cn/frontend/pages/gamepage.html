@@ -10,10 +10,14 @@
     <script src="./../../src/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="./../../src/vendor/fontawesome/css/all.min.css">
     <link rel="icon" href="./../../src/images/favicon1.ico" type="image/x-icon">
+    <script src="./../../src/vendor/jquery/jquery-3.6.4.min.js"></script>
 </head>
 
 <body>
     <div class="my-container" id="background_container">
+        <div class="loader-wrapper">
+            <span class="loader"><span class="loader-inner"></span></span>
+        </div>
         <div class="lefter">
             <img src="./../../src/images/test_icon.webp" alt="" class="profile_pic">
             <p class="username"></p>
@@ -101,6 +105,8 @@
 </body>
 
 <script>
+
+
     function game_icon_click_handle() {
         // event.preventDefault();
         console.log("游戏图标点击事件触发");
@@ -336,6 +342,11 @@
                 console.error(error);
             })
     }
+
+    //按道理来说,应该是等页面所有元素加载完成之后才结束动画,但是发现结束动画的时候游戏图标还没有加载出来,所以我设置了一个timeout 1s
+    $(window).on("load", setTimeout(function () {
+        $(".loader-wrapper").fadeOut("slow");
+    }, 1000));
 </script>
 
 </html>
