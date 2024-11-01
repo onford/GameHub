@@ -25,7 +25,7 @@
             <p class="history_best"></p>
         </div>
 
-        <div class="main">
+        <div class=" main">
             <div class="my-container" id="screen_container">
                 <div class="screen">
                     <div class="item">
@@ -105,7 +105,8 @@
 </body>
 
 <script>
-
+    var score_ready = false, game_icon_ready = false;
+    var score_timer, game_icon_timer;
 
     function game_icon_click_handle() {
         // event.preventDefault();
@@ -134,6 +135,7 @@
                 } else {
                     console.log("游戏列表查询成功");
                     console.log(data);
+                    var game_icon_ok = new Array(data.data.length).fill(false);
                     for (var i = 0; i < data.data.length; i++) {
                         var new_game_icon_table = document.createElement("div");
                         var new_game_icon = document.createElement("img");
@@ -143,12 +145,19 @@
                         new_game_icon_table.classList.add("game_icon_table");
                         new_game_icon.classList.add("game_icon");
                         new_game_icon.onclick = game_icon_click_handle;
+                        var set_icon_ok = (seq) => { game_icon_ok[seq] = true; }
+                        new_game_icon.onload = set_icon_ok(i);
                         new_game_name.classList.add("game_name");
                         new_game_name.innerHTML = data.data[i];
                         new_game_icon_table.appendChild(new_game_icon);
                         new_game_icon_table.appendChild(new_game_name);
                         gametable.appendChild(new_game_icon_table);
                     }
+                    game_icon_timer = setInterval(() => {
+                        game_icon_ready = game_icon_ok.every(element => element === true);
+                        if (game_icon_ready)
+                            clearInterval(game_icon_timer);
+                    }, 10);
                 }
             })
             .catch(error => {
@@ -210,6 +219,12 @@
 
         // 历史最佳显示
         // document.getElementsByClassName("history_best")[0].innerHTML = "历史最佳: 0";
+        score_timer = setInterval(() => {
+            if (game_icon_ready && score_ready) {
+                $(".loader-wrapper").fadeOut("slow");
+                clearInterval(score_timer);
+            }
+        }, 10);
     }
 
     // function game_icon_click_handle(event) {
@@ -240,8 +255,10 @@
                     console.assert(usernames.length == scores.length); //不会打断执行, 是true的时候也不会显示在控制台
                     var len = usernames.length;
                     for (var i = 0; i < len; i++) {
-                        if (usernames[i] == localStorage.getItem("username"))
+                        if (usernames[i] == localStorage.getItem("username")) {
                             document.getElementsByClassName("history_best")[0].innerHTML = "历史最佳: " + scores[i];
+                            score_ready = true;
+                        }
 
                         var new_item = document.createElement("tr");
                         new_item.innerHTML = "<th scope=\"row\">" + crown_style(i + 1) + "</th><td>" + usernames[i] + "</td><td>" + scores[i] + "</td>";
@@ -344,9 +361,9 @@
     }
 
     //按道理来说,应该是等页面所有元素加载完成之后才结束动画,但是发现结束动画的时候游戏图标还没有加载出来,所以我设置了一个timeout 1s
-    $(window).on("load", setTimeout(function () {
-        $(".loader-wrapper").fadeOut("slow");
-    }, 1000));
+    // $(window).on("load", function () {
+    //     $(".loader-wrapper").fadeOut("slow");
+    // });
 </script>
 
 </html>
