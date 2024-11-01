@@ -47,6 +47,7 @@ $res = $conn->query($sql);
 if ($res) {
 
 } else {
+    $conn->close();
     error_and_die($conn->error);
 }
 
