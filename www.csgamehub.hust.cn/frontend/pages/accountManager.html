@@ -10,9 +10,14 @@
     <script src="./../../src/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="./../../src/vendor/fontawesome/css/all.min.css">
     <link rel="icon" href="./../../src/images/favicon1.ico" type="image/x-icon">
+    <script src="./../../src/vendor/jquery/jquery-3.6.4.min.js"></script>
+    <link rel="stylesheet" href="./../css/global.css">
 </head>
 
 <body>
+    <div class="loader-wrapper">
+        <span class="loader"><span class="loader-inner"></span></span>
+    </div>
     <div class="my-flex-container" id="background_container">
         <div class="lefter">
             <div style="height: 30%;place-items: center;display: grid;"><img src="./../../src/images/test_icon.webp"
@@ -147,6 +152,10 @@
                 confirm_button.disabled = false;
             }
         })
+    });
+
+    $(window).on("load", function () {
+        $(".loader-wrapper").fadeOut("slow");
     });
 </script>
 

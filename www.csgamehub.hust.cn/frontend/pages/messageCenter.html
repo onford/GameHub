@@ -11,9 +11,15 @@
     <link href="./../../src/vendor/bootstrap/icons/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="icon" href="./../../src/images/favicon1.ico" type="image/x-icon">
     <!-- bootstrap icon库 -->
+
+    <script src="./../../src/vendor/jquery/jquery-3.6.4.min.js"></script>
+    <link rel="stylesheet" href="./../css/global.css">
 </head>
 
 <body>
+    <div class="loader-wrapper">
+        <span class="loader"><span class="loader-inner"></span></span>
+    </div>
     <div class="my-flex-container" id="background_container">
         <div class="lefter">
             <div style="height: 30%;place-items: center;display: grid;"><img src="./../../src/images/test_icon.webp"
@@ -116,6 +122,10 @@
         console.log("跳转页面事件触发");
         window.location.href = "./accountManager.html";
     }
+
+    $(window).on("load", function () {
+        $(".loader-wrapper").fadeOut("slow");
+    });
 </script>
 
 </html>
