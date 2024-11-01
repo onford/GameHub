@@ -45,39 +45,46 @@
                 <h2 class="mb-4">评论区</h2>
 
                 <!-- 评论输入框和提交按钮 -->
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <form id="commentForm" onsubmit="commentHandle(event)">
-                            <div class="form-group">
-                                <textarea class="form-control" id="commentText" rows="3" name="comment_text"
-                                    placeholder="写点评论..." style="resize: none;"></textarea>
+
+                <form id="commentForm" onsubmit="commentHandle(event)">
+                    <div style="display: flex;" width="100%">
+                        <div style="float: left;flex-basis: 10%;display: flex;
+                        justify-content: center;align-items: baseline;"><img src="./../../src/images/test_icon.webp"
+                                width="50%" style="border-radius: 50%;margin-top: -5px;"></img></div>
+                        <div class="card mb-4" style="float: right;width: 90%;">
+                            <div class="form-group" width="100%" height="24px">
+                                <textarea class="form-control" id="commentText" name="comment_text"
+                                    placeholder="写点评论..." rows="1"
+                                    style="resize: none;height: 24px;box-sizing:border-box;"></textarea>
                             </div>
-                            <script>
-                                const textarea = document.getElementById('commentText');
-                                function adjustTextareaHeight() {
-                                    // Calculate the height based on the scrollHeight  
-                                    textarea.style.height = 'auto';
-                                    if (textarea.scrollHeight >= 135) {
-                                        textarea.style.overflowY = 'auto';
-                                        textarea.style.height = '135px';
-                                    }
-                                    else {
-                                        textarea.style.overflowY = 'hidden';
-                                        textarea.style.height = `${textarea.scrollHeight}px`;
-                                    }
-                                }
-
-                                // Add event listeners for input and keyup to adjust height  
-                                textarea.addEventListener('input', adjustTextareaHeight);
-                                textarea.addEventListener('keyup', adjustTextareaHeight); 
-                            </script>
-                            <input type="text" id="ivsb_user_name" name="username" style="display: none;">
-                            <input type="text" id="ivsb_game_name" name="gamename" style="display: none;">
-                            <button type="submit" class="btn btn-primary" style="margin-top:20px;">提交</button>
-                        </form>
+                        </div>
                     </div>
-                </div>
 
+                    <div style="width: 100%;display: flex;justify-content:right;">
+                        <button type="submit" class="btn btn-primary" style="margin-bottom:20px;">提交</button>
+                    </div>
+                    <script>
+                        const textarea = document.getElementById('commentText');
+                        function adjustTextareaHeight() {
+                            // Calculate the height based on the scrollHeight  
+                            textarea.style.height = 'auto';
+                            if (textarea.scrollHeight >= 135) {
+                                textarea.style.overflowY = 'auto';
+                                textarea.style.height = '135px';
+                            }
+                            else {
+                                textarea.style.overflowY = 'hidden';
+                                textarea.style.height = `${textarea.scrollHeight}px`;
+                            }
+                        }
+
+                        // Add event listeners for input and keyup to adjust height  
+                        textarea.addEventListener('input', adjustTextareaHeight);
+                        textarea.addEventListener('keyup', adjustTextareaHeight); 
+                    </script>
+                    <input type="text" id="ivsb_user_name" name="username" style="display: none;">
+                    <input type="text" id="ivsb_game_name" name="gamename" style="display: none;">
+                </form>
                 <!-- 评论列表 -->
                 <div id="commentList" class="list-group">
                     <!-- 评论项将会动态插入到这里 -->
@@ -204,35 +211,7 @@
         document.getElementsByClassName("gamename")[0].innerHTML = "正在游玩: " + game_name.value;
 
         //评论加载
-        var comment_list = document.getElementById("commentList");
-        var get_comment_api = "./../../backend/api/get_comment_api.php";
-        var temp_form_data = new FormData();
-        temp_form_data.append("gamename", localStorage.getItem("cur_game"));
-        fetch(get_comment_api, {
-            method: "POST", //理论上要用GET, 但是这里我还需要传一个gamename, GET方法不能添加body, 所以这里我用了POST方法
-            body: temp_form_data
-        }).then(response => response.json())
-            .then(data => {
-                if (data.code != 0) {
-                    alert(data.msg);
-                } else {
-                    console.log("评论查询成功");
-                    console.log(data);
-                    var usernames = data.data.usernames;
-                    var comments = data.data.comments;
-                    console.assert(usernames.length == comments.length); //不会打断执行, 是true的时候也不会显示在控制台
-                    var len = usernames.length;
-                    for (var i = 0; i < len; i++) {
-                        var new_item = document.createElement("div");
-                        new_item.className = "list-group-item";
-                        new_item.innerHTML = "<h4><strong>" + usernames[i] + ":</strong></h4>" + comments[i];
-                        comment_list.appendChild(new_item);
-                    }
-                }
-            })
-            .catch(error => {
-                console.error(error);
-            })
+        init_comment_list();
         // 游戏排名加载
         init_rank_list();
 
@@ -252,7 +231,34 @@
     //     // window.location.href = "https://ys.mihoyo.com/";
     //     window.open("https://ys.mihoyo.com/", "_blank");
     // }
-
+    function init_comment_list() {
+        var comment_list = document.getElementById("commentList");
+        comment_list.innerHTML = "";
+        var get_comment_api = "./../../backend/api/get_comment_api.php";
+        var temp_form_data = new FormData();
+        temp_form_data.append("gamename", localStorage.getItem("cur_game"));
+        fetch(get_comment_api, {
+            method: "POST", //理论上要用GET, 但是这里我还需要传一个gamename, GET方法不能添加body, 所以这里我用了POST方法
+            body: temp_form_data
+        }).then(response => response.json())
+            .then(data => {
+                if (data.code != 0) {
+                    alert(data.msg);
+                } else {
+                    console.log("评论查询成功");
+                    console.log(data);
+                    var usernames = data.data.usernames;
+                    var comments = data.data.comments;
+                    console.assert(usernames.length == comments.length); //不会打断执行, 是true的时候也不会显示在控制台
+                    var len = usernames.length;
+                    for (var i = 0; i < len; i++)
+                        comment_list.appendChild(comment_item(usernames[i], comments[i]));
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            })
+    }
     function init_rank_list() {
         event.preventDefault();
         var ranklist = document.getElementById("ranklist");
@@ -312,6 +318,7 @@
         var url = "./../../backend/api/post_comment.php";
         var comment_form = document.getElementById("commentForm");
         var form_data = new FormData(comment_form);
+        console.log(comment_form);
         fetch(url, {
             method: "POST",
             body: form_data
@@ -322,12 +329,25 @@
                     alert(data.msg);
                 } else {
                     alert("评论发表成功");
-                    location.reload();
+                    document.getElementById("commentList").appendChild(comment_item(document.getElementById("ivsb_user_name").value, document.getElementById("commentText").value));
+                    document.getElementById("commentText").value = "";
                 }
             }).catch(error => {
                 console.error(error);
             });
     }
+
+
+    // 生成评论项目
+    function comment_item(user, comment) {
+        var new_item = document.createElement("div");
+        new_item.className = "list-group-item";
+        new_item.style = "border-left:0;border-right:0;border-radius:0;"
+        new_item.innerHTML = "<strong style=\"color:#FB7299\">" + user + "</strong><br><p style=\"margin-top:10px;margin-bottom:-5px;\">" + comment + "</p>";
+        return new_item;
+    }
+
+
 
     // 动态加载游戏 js
     function loadScript(url, callback) {
