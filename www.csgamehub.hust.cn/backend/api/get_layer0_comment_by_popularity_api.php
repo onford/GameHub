@@ -32,8 +32,8 @@ $liketable = "likelist";
 $unliketable = "unlikelist";
 $sql = "
     select *,
-        (select count(*) from $liketable where $tablename.id = $liketable.comment_id and $liketable.username = $username) as liked,
-        (select count(*) from $unliketable where $tablename.id = $unliketable.comment_id and $unliketable.username = $username) as unliked,
+        (select count(*) from $liketable where $tablename.id = $liketable.comment_id and $liketable.username = '$username') as liked,
+        (select count(*) from $unliketable where $tablename.id = $unliketable.comment_id and $unliketable.username = '$username') as unliked,
         (select count(*) from $liketable where $tablename.id = $liketable.comment_id) as likes,
         (select count(*) from $unliketable where $tablename.id = $unliketable.comment_id) as unlikes
     from $tablename
