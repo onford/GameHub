@@ -135,3 +135,7 @@ a {
 .my-search-btn:hover {
     background-color: #1e97bf;
 }
+
+.my-only-td {
+    color: #657180;
+}

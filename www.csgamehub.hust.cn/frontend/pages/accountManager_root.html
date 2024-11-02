@@ -30,7 +30,7 @@
                 </p>
                 <hr>
                 <input type="text" class="my-search-box" placeholder="搜索用户名">
-                <button class="my-search-btn">搜索</button>
+                <button class="my-search-btn" onclick="searchHandle(event)">搜索</button>
             </div>
             <div class="my-main-body">
                 <table>
@@ -78,8 +78,103 @@
         location.href = './accountManager_root.html';
     }
 
-    function init() {
+    function generateEmptyTable(msg) {
         var my_table = document.getElementsByTagName("table")[0];
+        // 先将子节点全部删除
+        var table_children = my_table.childNodes;
+        while (table_children.length > 0) {
+            my_table.removeChild(table_children[0]);
+        }
+        var my_thead = document.createElement("thead");
+        var only_tr = document.createElement("tr");
+        var only_td = document.createElement("td");
+        only_td.className = "my-only-td";
+        only_td.innerHTML = msg;
+        only_tr.appendChild(only_td);
+        my_thead.appendChild(only_tr);
+        my_table.appendChild(my_thead);
+    }
+
+    function generateTable(usernames) {
+        var my_table = document.getElementsByTagName("table")[0];
+        // 先将子节点全部删除
+        var table_children = my_table.childNodes;
+        while (table_children.length > 0) {
+            my_table.removeChild(table_children[0]);
+        }
+
+        var my_thead = document.createElement("thead");
+        var my_id_td = document.createElement("td");
+        var my_username_td = document.createElement("td");
+        var my_operation_td = document.createElement("td");
+        my_id_td.innerHTML = "序号";
+        my_username_td.innerHTML = "用户名";
+        my_operation_td.innerHTML = "操作";
+        my_thead.appendChild(my_id_td);
+        my_thead.appendChild(my_username_td);
+        my_thead.appendChild(my_operation_td);
+        my_table.appendChild(my_thead);
+
+
+
+        var my_tbody = document.createElement("tbody");
+
+        for (var i = 0; i < usernames.length; i++) {
+            var new_tr = document.createElement("tr");
+            var new_id_td = document.createElement("td");
+            var new_username_td = document.createElement("td");
+
+            var new_operation_td = document.createElement("td");
+            var new_operation_modify_a = document.createElement("a");
+            new_operation_modify_a.innerHTML = "修改 ";
+            new_operation_modify_a.href = "#";
+            var new_operation_delete_a = document.createElement("a");
+            new_operation_delete_a.innerHTML = "删除";
+            new_operation_delete_a.href = "#";
+            new_operation_td.appendChild(new_operation_modify_a);
+            new_operation_td.appendChild(new_operation_delete_a);
+
+            new_id_td.innerHTML = i + 1;
+            new_username_td.innerHTML = usernames[i];
+
+            new_tr.appendChild(new_id_td);
+            new_tr.appendChild(new_username_td);
+            new_tr.appendChild(new_operation_td);
+
+            my_tbody.appendChild(new_tr);
+        }
+
+        my_table.appendChild(my_tbody);
+    }
+
+    function searchHandle(event) {
+        event.preventDefault();
+        const select_likely_username_api = "./../../backend/api/select_likely_username_api.php";
+        var search_box = document.getElementsByClassName("my-search-box")[0];
+        var form_data = new FormData();
+        form_data.append("part_username", search_box.value);
+        fetch(select_likely_username_api, {
+            method: "POST",
+            body: form_data,
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code != 0) {
+                    alert(data.msg);
+                }
+                else {
+                    console.log("用户名查询成功");
+                    if (data.data.length != 0) {
+                        generateTable(data.data);
+                    }
+                    else {
+                        generateEmptyTable("没有搜索到相关结果");
+                    }
+                }
+            })
+    }
+
+    function init() {
         const select_username_api = "./../../backend/api/select_username_api.php";
         fetch(select_username_api, {
             method: "GET",
@@ -90,48 +185,12 @@
                     alert(data.msg);
                 } else {
                     console.log("用户名查询成功");
-                    var my_thead = document.createElement("thead");
-                    var my_id_td = document.createElement("td");
-                    var my_username_td = document.createElement("td");
-                    var my_operation_td = document.createElement("td");
-                    my_id_td.innerHTML = "序号";
-                    my_username_td.innerHTML = "用户名";
-                    my_operation_td.innerHTML = "操作";
-                    my_thead.appendChild(my_id_td);
-                    my_thead.appendChild(my_username_td);
-                    my_thead.appendChild(my_operation_td);
-                    my_table.appendChild(my_thead);
+                    if (data.data.length == 0) {
+                        generateEmptyTable("当前用户表为空");
+                    } else {
+                        generateTable(data.data);
 
-
-
-                    var my_tbody = document.createElement("tbody");
-
-                    for (var i = 0; i < data.data.length; i++) {
-                        var new_tr = document.createElement("tr");
-                        var new_id_td = document.createElement("td");
-                        var new_username_td = document.createElement("td");
-
-                        var new_operation_td = document.createElement("td");
-                        var new_operation_modify_a = document.createElement("a");
-                        new_operation_modify_a.innerHTML = "修改 ";
-                        new_operation_modify_a.href = "#";
-                        var new_operation_delete_a = document.createElement("a");
-                        new_operation_delete_a.innerHTML = "删除";
-                        new_operation_delete_a.href = "#";
-                        new_operation_td.appendChild(new_operation_modify_a);
-                        new_operation_td.appendChild(new_operation_delete_a);
-
-                        new_id_td.innerHTML = i + 1;
-                        new_username_td.innerHTML = data.data[i];
-
-                        new_tr.appendChild(new_id_td);
-                        new_tr.appendChild(new_username_td);
-                        new_tr.appendChild(new_operation_td);
-
-                        my_tbody.appendChild(new_tr);
                     }
-
-                    my_table.appendChild(my_tbody);
                 }
             })
             .catch(error => console.error(error));

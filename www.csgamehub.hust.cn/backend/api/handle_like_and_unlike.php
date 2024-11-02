@@ -26,19 +26,16 @@ if ($conn->connect_error) {
 $comment_id = $_POST['comment_id'];
 $username = $_POST['username'];
 
-if($_POST['operation'] == 0){
+if ($_POST['operation'] == 0) {
     $tablename = "likelist";
     $sql = "delete from $tablename where username = '$username' and comment_id = $comment_id;";
-}
-else if($_POST['operation'] == 1){
+} else if ($_POST['operation'] == 1) {
     $tablename = "likelist";
     $sql = "insert into $tablename values('$username',$comment_id);";
-}
-else if($_POST['operation'] == 2){
+} else if ($_POST['operation'] == 2) {
     $tablename = "unlikelist";
     $sql = "delete from $tablename where username = '$username' and comment_id = $comment_id;";
-}
-else{
+} else {
     $tablename = "unlikelist";
     $sql = "insert into $tablename values('$username',$comment_id);";
 }
