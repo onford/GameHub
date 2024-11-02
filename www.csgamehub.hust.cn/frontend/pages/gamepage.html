@@ -31,12 +31,9 @@
                 <div class="screen">
                     <div class="item">
                         <span id="score"></span>
-                        <!-- <span id="history"></span> -->
                         <button id="btn">New Game</button>
                     </div>
                     <canvas id="canvas"></canvas>
-                    <!-- <script src="./../game/2048/js/game.js" id="currentgame"></script> -->
-                    <!-- <script src="./../game/senpai/js/game.js"></script> -->
                 </div>
             </div>
             <div class="my-container" id="gametable_container">
@@ -61,30 +58,12 @@
                                     onblur="if(this.value == '') document.getElementById('submit_div').hidden=true;"></textarea>
                             </div>
                         </div>
+                        <script src="./../js/gamepage/textarea.js"></script>
                     </div>
 
                     <div style="width: 100%;display: flex;justify-content:right;" id="submit_div" hidden>
                         <button type="submit" class="btn btn-primary" style="margin-bottom:20px;">提交</button>
                     </div>
-                    <script>
-                        const textarea = document.getElementById('commentText');
-                        function adjustTextareaHeight() {
-                            // Calculate the height based on the scrollHeight  
-                            textarea.style.height = 'auto';
-                            if (textarea.scrollHeight >= 135) {
-                                textarea.style.overflowY = 'auto';
-                                textarea.style.height = '135px';
-                            }
-                            else {
-                                textarea.style.overflowY = 'hidden';
-                                textarea.style.height = `${textarea.scrollHeight}px`;
-                            }
-                        }
-
-                        // Add event listeners for input and keyup to adjust height  
-                        textarea.addEventListener('input', adjustTextareaHeight);
-                        textarea.addEventListener('keyup', adjustTextareaHeight); 
-                    </script>
                     <input type="text" id="ivsb_user_name" name="username" style="display: none;">
                     <input type="text" id="ivsb_game_name" name="gamename" style="display: none;">
                 </form>
@@ -133,254 +112,23 @@
     </div>
 </body>
 
+<script src="./../js/gamepage/init.js"></script>
+<script src="./../js/gamepage/submit_comment.js"></script>
+<script src="./../js/gamepage/init_rank_list.js"></script>
 <script>
-    var score_ready = false, game_icon_ready = false;
-    var score_timer, game_icon_timer;
 
     function game_icon_click_handle() {
         // event.preventDefault();
         console.log("游戏图标点击事件触发");
         window.location.href = "./gamepage.html?gamename=" + this.name;
     }
-    function init() {
-        // 游戏列表的生成
-        var gametable = document.getElementById("gametable_container");
 
-        //评论区表单用户名和游戏名的初始化
-        var user_name = document.getElementById("ivsb_user_name");
-        var game_name = document.getElementById("ivsb_game_name");
-        user_name.value = localStorage.getItem("username");
-        game_name.value = localStorage.getItem("cur_game");
-
-        // 游戏列表的插入
-        var game_select_api = "./../../backend/api/game_select_api.php";
-        fetch(game_select_api, {
-            method: "GET"
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.code != 0) {
-                    alert(data.msg);
-                } else {
-                    console.log("游戏列表查询成功");
-                    console.log(data);
-                    var game_icon_ok = new Array(data.data.length).fill(false);
-                    for (var i = 0; i < data.data.length; i++) {
-                        var new_game_icon_table = document.createElement("div");
-                        var new_game_icon = document.createElement("img");
-                        new_game_icon.src = "./../../src/images/" + data.data[i] + "_icon.jpg";
-                        new_game_icon.name = data.data[i];
-                        var new_game_name = document.createElement("p");
-                        new_game_icon_table.classList.add("game_icon_table");
-                        new_game_icon.classList.add("game_icon");
-                        new_game_icon.onclick = game_icon_click_handle;
-                        var set_icon_ok = (seq) => { game_icon_ok[seq] = true; }
-                        new_game_icon.onload = set_icon_ok(i);
-                        new_game_name.classList.add("game_name");
-                        new_game_name.innerHTML = data.data[i];
-                        new_game_icon_table.appendChild(new_game_icon);
-                        new_game_icon_table.appendChild(new_game_name);
-                        gametable.appendChild(new_game_icon_table);
-                    }
-                    game_icon_timer = setInterval(() => {
-                        game_icon_ready = game_icon_ok.every(element => element === true);
-                        if (game_icon_ready)
-                            clearInterval(game_icon_timer);
-                    }, 10);
-                }
-            })
-            .catch(error => {
-                console.error(error);
-            })
-
-        // for (var i = 1; i <= 5; i++) {
-        //     var new_game_icon_table = document.createElement("div");
-        //     var new_game_icon = document.createElement("img");
-        //     new_game_icon.src = "./../../src/images/test_game_icon.webp";
-        //     var new_game_name = document.createElement("p");
-        //     new_game_icon_table.classList.add("game_icon_table");
-        //     new_game_icon.classList.add("game_icon");
-        //     new_game_name.classList.add("game_name");
-        //     new_game_name.innerHTML = "game" + i;
-        //     new_game_icon_table.appendChild(new_game_icon);
-        //     new_game_icon_table.appendChild(new_game_name);
-        //     gametable.appendChild(new_game_icon_table);
-        // }
-
-        // 用户名显示
-        document.getElementsByClassName("username")[0].innerHTML = "用户名: " + user_name.value;
-
-        // 游戏名显示
-        document.getElementsByClassName("gamename")[0].innerHTML = "正在游玩: " + game_name.value;
-
-        //评论加载
-        init_comment_list();
-        // 游戏排名加载
-        init_rank_list();
-
-        // 历史最佳显示
-        // document.getElementsByClassName("history_best")[0].innerHTML = "历史最佳: 0";
-        score_timer = setInterval(() => {
-            if (game_icon_ready && score_ready) {
-                $(".loader-wrapper").fadeOut("slow");
-                clearInterval(score_timer);
-            }
-        }, 10);
-    }
-
-    // function game_icon_click_handle(event) {
-    //     event.preventDefault();
-    //     console.log("事件触发");
-    //     // window.location.href = "https://ys.mihoyo.com/";
-    //     window.open("https://ys.mihoyo.com/", "_blank");
-    // }
-
-
-    // function init_comment_list() {
-    //     var comment_list = document.getElementById("commentList");
-    //     comment_list.innerHTML = "";
-    //     var get_comment_api = "./../../backend/api/get_comment_api.php";
-    //     var temp_form_data = new FormData();
-    //     temp_form_data.append("gamename", localStorage.getItem("cur_game"));
-    //     fetch(get_comment_api, {
-    //         method: "POST", //理论上要用GET, 但是这里我还需要传一个gamename, GET方法不能添加body, 所以这里我用了POST方法
-    //         body: temp_form_data
-    //     }).then(response => response.json())
-    //         .then(data => {
-    //             if (data.code != 0) {
-    //                 alert(data.msg);
-    //             } else {
-    //                 console.log("评论查询成功");
-    //                 console.log(data);
-    //                 var usernames = data.data.usernames;
-    //                 var comments = data.data.comments;
-    //                 console.assert(usernames.length == comments.length); //不会打断执行, 是true的时候也不会显示在控制台
-    //                 var len = usernames.length;
-    //                 for (var i = 0; i < len; i++)
-    //                     comment_list.appendChild(comment_item(usernames[i], comments[i], null));
-    //             }
-    //         })
-    //         .catch(error => {
-    //             console.error(error);
-    //         })
-    // }
-
-    function init_comment_list() {
-        var comment_list = document.getElementById("commentList");
-        comment_list.innerHTML = "";
-        var get_comment_api = "./../../backend/api/get_layer0_comment_by_timestamps_api.php"; // 默认策略
-        var temp_form_data = new FormData();
-        temp_form_data.append("gamename", localStorage.getItem("cur_game"));
-        fetch(get_comment_api, {
-            method: "POST", //理论上要用GET, 但是这里我还需要传一个gamename, GET方法不能添加body, 所以这里我用了POST方法
-            body: temp_form_data
-        }).then(response => response.json())
-            .then(data => {
-                if (data.code != 0) {
-                    alert(data.msg);
-                } else {
-                    console.log("评论查询成功");
-                    console.log(data);
-                    var len = data.data.length;
-                    for (var i = 0; i < len; i++)
-                        comment_list.appendChild(comment_item(data.data[i].id, data.data[i].username, data.data[i].comment, data.data[i].timestamps, data.data[i].likes));
-                }
-            })
-            .catch(error => {
-                console.error(error);
-            })
-    }
-    function init_rank_list() {
-        event.preventDefault();
-        var ranklist = document.getElementById("ranklist");
-        var game_rank_api = "./../../backend/api/game_rank_api.php";
-        var temp_form_data = new FormData();
-        temp_form_data.append("gamename", localStorage.getItem("cur_game"));
-        fetch(game_rank_api, {
-            method: "POST",
-            body: temp_form_data
-        }).then(response => response.json())
-            .then(data => {
-                if (data.code != 0) {
-                    alert(data.msg);
-                } else {
-                    console.log("游戏排名查询成功");
-                    console.log(data);
-                    var usernames = data.data.usernames;
-                    var scores = data.data.highest_scores;
-                    console.assert(usernames.length == scores.length); //不会打断执行, 是true的时候也不会显示在控制台
-                    var len = usernames.length;
-                    for (var i = 0; i < len; i++) {
-                        if (usernames[i] == localStorage.getItem("username")) {
-                            document.getElementsByClassName("history_best")[0].innerHTML = "历史最佳: " + scores[i];
-                            score_ready = true;
-                        }
-                        var new_item = document.createElement("tr");
-                        new_item.innerHTML = "<th scope=\"row\" class=\"myth\">" + crown_style(i + 1) + "</th><td class=\"mytd\">" + usernames[i] + "</td><td class=\"mytd\">" + scores[i] + "</td>";
-                        ranklist.appendChild(new_item);
-                    }
-                    if (document.getElementsByClassName("history_best")[0].innerHTML == '') {
-                        document.getElementsByClassName("history_best")[0].innerHTML = "历史最佳: 0";
-                        score_ready = true;
-                    }
-                }
-            })
-            .catch(error => {
-                console.error(error);
-            })
-    }
-
-    // 前1~3名给予皇冠
-    function crown_style(rank) {
-        if (rank > 3) return rank;
-        return "<i class=\"fa-solid fa-crown\" style=\"color:" + (rank == 1 ? "gold" : (rank == 2 ? "silver" : "rgb(186,110,64)")) + ";\"></i>";
-    }
-    // window.onload = init();
 
     var profile_pic = document.getElementsByClassName("profile_pic")[0];
     profile_pic.onclick = function () {
         console.log("头像点击事件触发");
         window.location.href = "./messageCenter.html";
     }
-
-    function commentHandle(event) {
-        event.preventDefault();
-        console.log("评论区表单被提交了");
-        var url = "./../../backend/api/post_comment.php";
-        var comment_form = document.getElementById("commentForm");
-        var form_data = new FormData(comment_form);
-        fetch(url, {
-            method: "POST",
-            body: form_data
-        }).then(response => response.json())
-            .then(data => {
-                console.log(data);
-                if (data.code == 1) {
-                    alert(data.msg);
-                } else {
-                    alert("评论发表成功");
-                    console.log(data.data);
-                    document.getElementById("commentList").appendChild(comment_item(data.data.comment_id[0], document.getElementById("ivsb_user_name").value,
-                        document.getElementById("commentText").value, data.data.timestamp[0], 0));
-                    document.getElementById("commentText").value = "";
-                }
-            }).catch(error => {
-                console.error(error);
-            });
-    }
-
-
-    // 生成评论项目
-    function comment_item(id, user, comment, timestamp, likes) {
-        var new_item = document.createElement("div");
-        new_item.className = "list-group-item";
-        new_item.id = id;
-        new_item.style = "border-left:0;border-right:0;border-radius:0;"
-        new_item.innerHTML = "<div><strong style=\"color:#FB7299\">" + user + "</strong><br><p style=\"margin-top:10px;\">" + comment + "</p></div><div><div style=\"color:gray;font-size=16px;margin-top:-2px;display: inline-block; \">" + timestamp + "</div><div class=\"comment_component\"><div><i class=\"fa-solid fa-thumbs-up\"></i><div style=\"display: inline-block;margin-left:5px;\">" + likes + "</div></div></div><div class=\"comment_component\"><i class=\"fa-solid fa-thumbs-down\"></i></div><div class=\"comment_component\">回复</div>";
-        return new_item;
-    }
-
-
 
     // 动态加载游戏 js
     function loadScript(url, callback) {
@@ -434,11 +182,6 @@
                 console.error(error);
             })
     }
-
-    //按道理来说,应该是等页面所有元素加载完成之后才结束动画,但是发现结束动画的时候游戏图标还没有加载出来,所以我设置了一个timeout 1s
-    // $(window).on("load", function () {
-    //     $(".loader-wrapper").fadeOut("slow");
-    // });
 </script>
 
 </html>
