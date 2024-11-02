@@ -79,6 +79,7 @@ function init_comment_list() {
     var get_comment_api = "./../../backend/api/get_layer0_comment_by_timestamps_api.php"; // 默认策略
     var temp_form_data = new FormData();
     temp_form_data.append("gamename", localStorage.getItem("cur_game"));
+    temp_form_data.append("username", localStorage.getItem("username")); // 用来查询用户是否给它点赞了
     fetch(get_comment_api, {
         method: "POST", //理论上要用GET, 但是这里我还需要传一个gamename, GET方法不能添加body, 所以这里我用了POST方法
         body: temp_form_data

@@ -17,7 +17,7 @@
 
 - SQL 文件
 
-开发者需注意目录`www.csgamehub.hust.cn/init`。该目录存放一个 sql 文件，用于生成所有后端涉及到的表格。**在进行开发之前，应该执行该 sql 脚本**。
+开发者需注意目录`/www.csgamehub.hust.cn/init`。该目录存放一个 sql 文件，用于生成所有后端涉及到的表格。**在进行开发之前，应该执行该 sql 脚本**。
 > Mysql workbench 执行脚本的方法为，打开脚本，使用快捷键`Ctrl + Shift + Enter`。
 
 当前存在的表格为：
@@ -54,12 +54,19 @@ Table: **gamescorelist**
 |highest_score|int |DEFAULT NULL<br>UN|
 
 PK = (username,gamename)
- 
+
+Table: **likelist,unlikelist**
+| 列名|类型|限制|
+|:---:|:---:|:---:|
+|username|varchar(127)|FK -> userlist(username)|
+|comment_id|int|FK -> comment_list(id)|
+
+
 其中限制条件的缩写分别是  
 PK: primary key  
 AI: auto_increment  
 NN: not null  
-FK: foreign key  
+FK: foreign key（所有外码在参照对象被删除时，会采取级联删除的策略`on delete cascade`）  
 UN: unsigned
 
 ### 关于样式库

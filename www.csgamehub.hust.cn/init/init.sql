@@ -5,20 +5,16 @@ create database softwareproject;
 
 use softwareproject;
 
-
-drop table if exists userlist;
 create table userlist(
     username varchar(127) primary key,
     `password` varchar(127) not null
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
-drop table if exists game_list;
 create table game_list(
     gamename varchar(127) primary key
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-drop table if exists comment_list;
 create table comment_list(
     id int auto_increment primary key,
     username varchar(127),
@@ -35,7 +31,6 @@ create table comment_list(
     foreign key(root_id) references comment_list(id) on delete cascade
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-drop table if exists gamescorelist;
 create table gamescorelist(
     username varchar(127),
     gamename varchar(127),
@@ -44,6 +39,20 @@ create table gamescorelist(
     foreign key(username) references userlist(user_name) on delete cascade,
     foreign key(gamename) references game_list(gamename) on delete cascade
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+create table likelist(
+    username varchar(127),
+    comment_id int,
+    foreign key(username) references userlist(user_name) on delete cascade,
+    foreign key(comment_id) references comment_list(id) on delete cascade
+);
+
+create table unlikelist(
+    username varchar(127),
+    comment_id int,
+    foreign key(username) references userlist(user_name) on delete cascade,
+    foreign key(comment_id) references comment_list(id) on delete cascade
+);
 
 
 -- 下面代码用于加载 game_list，这是一个相对固定的表
