@@ -1,4 +1,5 @@
 <?php
+
 $rest = [
     "code" => 0,
     "msg" => "",
@@ -40,7 +41,7 @@ if ($res) {
         $new_node = [
             "id" => $row["id"],
             "comment" => $row["comment"],
-            "post_id" => $row["post_id"],
+            "root_id" => $row["root_id"],
             "username" => $row["username"],
             "likes" => $row["likes"],
             "unlikes" => $row['unlikes'],

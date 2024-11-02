@@ -3,7 +3,7 @@ $message = "";
 $rest = [
     "code" => 0,
     "msg" => $message,
-    "data" => [],
+    "data" => ["timestamp" => [], "comment_id" => [],],
 ];
 // echo json_encode($rest);
 
@@ -70,10 +70,20 @@ $sql = "
 $res = $conn->query($sql);
 
 if ($res) {
-    $rest["data"] = $now_timestamps;
+    array_push($rest["data"]["timestamp"],$now_timestamps);
 } else {
     assign($message, $conn->error);
 }
+
+$sql = "select last_insert_id() as last_id;"; // 获取新插入的评论的id
+$res = $conn->query($sql);
+
+if($res){
+    array_push($rest["data"]["comment_id"],$res->fetch_assoc()["last_id"]);
+} else {
+    assign($message, $conn->error);
+}
+
 
 if ($message != "") {
     $rest["code"] = 1;
