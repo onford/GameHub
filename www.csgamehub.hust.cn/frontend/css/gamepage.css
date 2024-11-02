@@ -293,6 +293,16 @@ body {
     color: white !important;
 }
 
+.comment_component {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.comment_component:hover {
+    color: lightblue;
+    cursor: pointer;
+}
+
 
 @keyframes loader {
     0% {
