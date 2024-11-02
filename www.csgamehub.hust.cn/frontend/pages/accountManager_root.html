@@ -78,6 +78,42 @@
         location.href = './accountManager_root.html';
     }
 
+    function deleteUsernameHandle(event) {
+        event.preventDefault();
+        var yes = confirm("你确定要删除该用户吗?");
+        if (yes == false) {
+            return;
+        }
+        const delete_username_api = "./../../backend/api/delete_username_api.php";
+        var form_data = new FormData();
+        var event_target = event.target;
+        var username = "";
+        var this_tr = event_target.parentNode.parentNode;
+        for (var child of this_tr.childNodes) {
+            if (child.id == 'my-special-td') {
+                username = child.innerHTML;
+                break;
+            }
+        }
+        form_data.append("username", username);
+        fetch(delete_username_api, {
+            method: "POST",
+            body: form_data
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code != 0) {
+                    alert(data.msg);
+                }
+                else {
+                    console.log("用户删除成功");
+                    var this_tr_parent = this_tr.parentNode;
+                    this_tr_parent.removeChild(this_tr);
+                }
+            })
+            .catch(error => console.error(error));
+    }
+
     function generateEmptyTable(msg) {
         var my_table = document.getElementsByTagName("table")[0];
         // 先将子节点全部删除
@@ -123,6 +159,7 @@
             var new_tr = document.createElement("tr");
             var new_id_td = document.createElement("td");
             var new_username_td = document.createElement("td");
+            new_username_td.id = "my-special-td";
 
             var new_operation_td = document.createElement("td");
             var new_operation_modify_a = document.createElement("a");
@@ -131,6 +168,7 @@
             var new_operation_delete_a = document.createElement("a");
             new_operation_delete_a.innerHTML = "删除";
             new_operation_delete_a.href = "#";
+            new_operation_delete_a.onclick = deleteUsernameHandle;
             new_operation_td.appendChild(new_operation_modify_a);
             new_operation_td.appendChild(new_operation_delete_a);
 
