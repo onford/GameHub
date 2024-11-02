@@ -38,7 +38,7 @@ $sql = "
         (select count(*) from $unliketable where $tablename.id = $unliketable.comment_id) as unlikes
     from $tablename
     where gamename='$gamename' and root_id is NULL
-    order by likes-unlikes;
+    order by likes-unlikes desc;
 ";
 
 $res = $conn->query($sql);

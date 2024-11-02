@@ -39,7 +39,7 @@ $sql = "
         (select count(*) from $unliketable where $tablename.id = $unliketable.comment_id) as unlikes 
     from $tablename
     where gamename='$gamename' and root_id is NULL
-    order by timestamps;
+    order by timestamps desc;
 ";
 // liked: 用户是否点赞过这个评论 unliked: 用户是否点踩过这个评论 保证 liked,unliked in {0,1}
 

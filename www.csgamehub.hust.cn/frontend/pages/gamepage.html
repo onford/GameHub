@@ -40,7 +40,13 @@
                 <!-- 这里面的元素由init函数插入 -->
             </div>
             <div class="container mt-5">
-                <h2 class="mb-4">评论区</h2>
+                <div>
+                    <h2 class="mb-4" style="display:inline-block;padding-right: 20px;">评论区</h2>
+                    <div id="newest" style="display: inline-block;font-weight: bold;" onclick=requestComment(0);>最新
+                    </div>
+                    <div style="display:inline-block;">|</div>
+                    <div id="hotest" style="display: inline-block;" onclick=requestComment(1);>最热</div>
+                </div>
 
                 <!-- 评论输入框和提交按钮 -->
 

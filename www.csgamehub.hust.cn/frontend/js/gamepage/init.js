@@ -60,7 +60,7 @@ function init() {
     document.getElementsByClassName("gamename")[0].innerHTML = "正在游玩: " + game_name.value;
 
     //评论加载
-    init_comment_list();
+    init_comment_list(0); // 默认策略：最新
     // 游戏排名加载
     init_rank_list();
 
@@ -73,10 +73,14 @@ function init() {
         }
     }, 10);
 }
-function init_comment_list() {
+function init_comment_list(option) {
     var comment_list = document.getElementById("commentList");
     comment_list.innerHTML = "";
-    var get_comment_api = "./../../backend/api/get_layer0_comment_by_timestamps_api.php"; // 默认策略
+    var get_comment_api = "";
+    if (option)
+        get_comment_api = "./../../backend/api/get_layer0_comment_by_popularity_api.php";
+    else
+        get_comment_api = "./../../backend/api/get_layer0_comment_by_timestamps_api.php"; // 默认策略
     var temp_form_data = new FormData();
     temp_form_data.append("gamename", localStorage.getItem("cur_game"));
     temp_form_data.append("username", localStorage.getItem("username")); // 用来查询用户是否给它点赞了
@@ -98,4 +102,23 @@ function init_comment_list() {
         .catch(error => {
             console.error(error);
         })
+}
+
+var cur_mode = 0;
+
+function requestComment(code) {
+    if (code != cur_mode) {
+        if (code) {
+            console.log("请求最热评论");
+            document.getElementById("newest").style.fontWeight = "";
+            document.getElementById("hotest").style.fontWeight = "bold";
+        }
+        else {
+            console.log("请求最新评论");
+            document.getElementById("hotest").style.fontWeight = "";
+            document.getElementById("newest").style.fontWeight = "bold";
+        }
+        cur_mode = code;
+        init_comment_list(code);
+    }
 }

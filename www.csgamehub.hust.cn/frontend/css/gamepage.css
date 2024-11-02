@@ -319,6 +319,12 @@ body {
     cursor: pointer;
 }
 
+#newest:hover,
+#hotest:hover {
+    color: lightblue;
+    cursor: pointer;
+}
+
 .delete_confirm {
     display: none;
     /* 初始隐藏 */
