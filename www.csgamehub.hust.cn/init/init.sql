@@ -23,10 +23,10 @@ create table comment_list(
     reference_id int default null,
     root_id int default null,
     `timestamps` datetime,
-    foreign key(username) references userlist(user_name) on delete cascade,
-    foreign key(gamename) references game_list(gamename) on delete cascade,
-    foreign key(reference_id) references comment_list(id) on delete cascade,
-    foreign key(root_id) references comment_list(id) on delete cascade
+    foreign key(username) references userlist(user_name) on delete cascade on update cascade,
+    foreign key(gamename) references game_list(gamename) on delete cascade on update cascade,
+    foreign key(reference_id) references comment_list(id) on delete cascade on update cascade,
+    foreign key(root_id) references comment_list(id) on delete cascade on update cascade
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 create table gamescorelist(
@@ -34,24 +34,24 @@ create table gamescorelist(
     gamename varchar(127),
     highest_score int unsigned default null,
     primary key(username,gamename),
-    foreign key(username) references userlist(user_name) on delete cascade,
-    foreign key(gamename) references game_list(gamename) on delete cascade
+    foreign key(username) references userlist(user_name) on delete cascade on update cascade,
+    foreign key(gamename) references game_list(gamename) on delete cascade on update cascade
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 create table likelist(
     username varchar(127),
     comment_id int,
     primary key(username,comment_id),
-    foreign key(username) references userlist(user_name) on delete cascade,
-    foreign key(comment_id) references comment_list(id) on delete cascade
+    foreign key(username) references userlist(user_name) on delete cascade on update cascade,
+    foreign key(comment_id) references comment_list(id) on delete cascade on update cascade
 );
 
 create table unlikelist(
     username varchar(127),
     comment_id int,
     primary key(username,comment_id),
-    foreign key(username) references userlist(user_name) on delete cascade,
-    foreign key(comment_id) references comment_list(id) on delete cascade
+    foreign key(username) references userlist(user_name) on delete cascade on update cascade,
+    foreign key(comment_id) references comment_list(id) on delete cascade on update cascade
 );
 
 

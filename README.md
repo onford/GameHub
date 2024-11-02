@@ -26,7 +26,7 @@ Table: **userlist**
 | 列名|类型|限制|
 |:---:|:---:|:---:|
 |username|varchar(127)|PK|
-|username|varchar(127)|NN|
+|password|varchar(127)|NN|
 
 Table: **game_list**
 | 列名|类型|限制|
@@ -66,7 +66,7 @@ PK = (username,comment_id)
 PK: primary key  
 AI: auto_increment  
 NN: not null  
-FK: foreign key（所有外码在参照对象被删除时，会采取级联删除的策略`on delete cascade`）  
+FK: foreign key（所有外码在参照对象被删除/修改时，会采取级联删除/修改的策略——`on delete cascade`以及`on update cascade`）  
 UN: unsigned
 
 ### 关于样式库
