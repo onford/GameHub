@@ -29,10 +29,10 @@ create table comment_list(
     likes int default 0,
     unlikes int default 0,
     `timestamps` datetime,
-    foreign key(username) references userlist(user_name),
-    foreign key(gamename) references game_list(gamename),
-    foreign key(reference_id) references comment_list(id),
-    foreign key(root_id) references comment_list(id)
+    foreign key(username) references userlist(user_name) on delete cascade,
+    foreign key(gamename) references game_list(gamename) on delete cascade,
+    foreign key(reference_id) references comment_list(id) on delete cascade,
+    foreign key(root_id) references comment_list(id) on delete cascade
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 drop table if exists gamescorelist;
@@ -41,8 +41,8 @@ create table gamescorelist(
     gamename varchar(127),
     highest_score int unsigned default null,
     primary key(username,gamename),
-    foreign key(username) references userlist(user_name),
-    foreign key(gamename) references game_list(gamename)
+    foreign key(username) references userlist(user_name) on delete cascade,
+    foreign key(gamename) references game_list(gamename) on delete cascade
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
