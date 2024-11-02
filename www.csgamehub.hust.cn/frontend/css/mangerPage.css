@@ -62,13 +62,13 @@ table {
 }
 
 td {
-    border: 1px solid #ccc;
+    border: 1px solid #ccc !important;
     text-align: center;
     padding: 10px;
 }
 
 a {
-    text-decoration: none;
+    text-decoration: none !important;
 }
 
 .my-reject {
@@ -102,4 +102,36 @@ a {
 
 .my-page-navigation-table {
     margin: 20px auto;
+}
+
+.my-search-box {
+    padding: 5px 5px;
+    width: 30%;
+    background-color: #f1f2f3;
+    border: 1px solid #657180;
+    border-radius: 5px;
+}
+
+.my-search-box:hover {
+    background-color: white;
+}
+
+.my-search-box:focus {
+    border: 1px solid #657180;
+    outline: none;
+    background-color: white;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.my-search-btn {
+    border: none;
+    background-color: #00A1D6;
+    color: white;
+    height: 37px;
+    width: 50px;
+    border-radius: 5px;
+}
+
+.my-search-btn:hover {
+    background-color: #1e97bf;
 }
