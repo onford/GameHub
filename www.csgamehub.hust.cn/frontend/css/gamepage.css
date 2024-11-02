@@ -293,6 +293,11 @@ body {
     color: white !important;
 }
 
+.thumb_number {
+    display: inline-block;
+    margin-left: 5px;
+}
+
 .comment_component {
     display: inline-block;
     margin-left: 20px;

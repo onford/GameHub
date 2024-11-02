@@ -42,9 +42,7 @@ Table: **comment_list**
 |comment|text|NN|
 |reference_id|int|DEFAULT NULL<br>FK -> comment_list(id)|
 |root_id|int|DEFAULT NULL<br>FK -> comment_list(id)|
-|likes|int|DEFAULT 0|
-|unlikes|int|DEFAULT 0|
-|timestamps|datetime||
+|timestamps|datetime|
 
 Table: **gamescorelist**
 | 列名|类型|限制|
@@ -60,6 +58,8 @@ Table: **likelist,unlikelist**
 |:---:|:---:|:---:|
 |username|varchar(127)|FK -> userlist(username)|
 |comment_id|int|FK -> comment_list(id)|
+
+PK = (username,comment_id)
 
 
 其中限制条件的缩写分别是  

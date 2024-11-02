@@ -16,7 +16,7 @@ function commentHandle(event) {
                 alert("评论发表成功");
                 console.log(data.data);
                 document.getElementById("commentList").appendChild(comment_item(data.data.comment_id[0], document.getElementById("ivsb_user_name").value,
-                    document.getElementById("commentText").value, data.data.timestamp[0], 0));
+                    document.getElementById("commentText").value, data.data.timestamp[0], 0, 0, 0));
                 document.getElementById("commentText").value = "";
             }
         }).catch(error => {
@@ -26,7 +26,9 @@ function commentHandle(event) {
 
 
 // 生成评论项目
-function comment_item(id, user, comment, timestamp, likes) {
+function comment_item(id, user, comment, timestamp, likes, liked, unliked) {
+    liked = parseInt(liked);
+    unliked = parseInt(unliked);
     var new_item = document.createElement("div");
     new_item.className = "list-group-item";
     new_item.id = id;
@@ -39,13 +41,25 @@ function comment_item(id, user, comment, timestamp, likes) {
     // 生成点赞数
     var likes_div = document.createElement("div");
     likes_div.className = "comment_component";
-    likes_div.innerHTML = "<div><i class=\"fa-solid fa-thumbs-up\"></i><div style=\"display: inline-block;margin-left:5px;\">" + likes + "</div></div>";
+    likes_div.onclick = commit_like_and_unlike;
+    if (liked) {
+        likes_div.innerHTML = "<div><i class=\"fa-solid fa-thumbs-up\"></i><div class=\"thumb_number\">" + likes + "</div></div>";
+    }
+    else {
+        likes_div.innerHTML = "<div><i class=\"fa-regular fa-thumbs-up\"></i><div class=\"thumb_number\">" + likes + "</div></div>"
+    }
     detailed.appendChild(likes_div);
 
     // 生成点踩数
     var unlikes_div = document.createElement("div");
     unlikes_div.className = "comment_component";
-    unlikes_div.innerHTML = "<i class=\"fa-solid fa-thumbs-down\"></i>";
+    unlikes_div.onclick = commit_like_and_unlike;
+    if (unliked) {
+        unlikes_div.innerHTML = "<i class=\"fa-solid fa-thumbs-down\"></i>";
+    }
+    else {
+        unlikes_div.innerHTML = "<i class=\"fa-regular fa-thumbs-down\"></i>";
+    }
     detailed.appendChild(unlikes_div);
 
     // 生成回复
@@ -67,6 +81,49 @@ function comment_item(id, user, comment, timestamp, likes) {
 
     return new_item;
 }
+
+function commit_like_and_unlike() {
+    var target = this.querySelector('i');
+    var temp_form_data = new FormData();
+    temp_form_data.append("username", localStorage.getItem("username"));
+    if (target.classList.contains('fa-thumbs-up')) {
+        temp_form_data.append("comment_id", target.parentElement.parentElement.parentElement.parentElement.id);
+        var thumb_number = this.querySelector(".thumb_number");
+        if (target.classList.contains('fa-solid')) {
+            temp_form_data.append("operation", 0); // 取消点赞
+            thumb_number.innerHTML = parseInt(thumb_number.innerHTML) - 1;
+        }
+        else {
+            temp_form_data.append("operation", 1); // 点赞
+            thumb_number.innerHTML = parseInt(thumb_number.innerHTML) + 1;
+        }
+    }
+    else {
+        temp_form_data.append("comment_id", target.parentElement.parentElement.parentElement.id);
+        if (target.classList.contains('fa-solid'))
+            temp_form_data.append("operation", 2); // 取消点踩
+        else
+            temp_form_data.append("operation", 3); // 点踩
+    }
+    target.classList.toggle('fa-solid');
+    target.classList.toggle('fa-regular');
+    fetch("./../../backend/api/handle_like_and_unlike.php", {
+        method: "POST",
+        body: temp_form_data
+    }).then(response => response.json())
+        .then(data => {
+            if (data.code != 0) {
+                alert(data.msg);
+            } else {
+                console.log("赞踩操作成功");
+                console.log(data.data);
+            }
+        })
+        .catch(error => {
+            console.error(error);
+        })
+}
+
 
 function alert_delete() {
     const id = this.parentElement.parentElement.id;

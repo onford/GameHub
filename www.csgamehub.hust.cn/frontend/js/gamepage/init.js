@@ -89,10 +89,10 @@ function init_comment_list() {
                 alert(data.msg);
             } else {
                 console.log("评论查询成功");
-                console.log(data);
+                console.log(data.data);
                 var len = data.data.length;
                 for (var i = 0; i < len; i++)
-                    comment_list.appendChild(comment_item(data.data[i].id, data.data[i].username, data.data[i].comment, data.data[i].timestamps, data.data[i].likes));
+                    comment_list.appendChild(comment_item(data.data[i].id, data.data[i].username, data.data[i].comment, data.data[i].timestamps, data.data[i].likes, data.data[i].liked, data.data[i].unliked));
             }
         })
         .catch(error => {

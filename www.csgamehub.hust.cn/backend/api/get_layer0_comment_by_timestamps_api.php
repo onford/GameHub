@@ -27,13 +27,21 @@ if ($conn->connect_error) {
 
 // 传入参数gamename
 $gamename = $_POST['gamename'];
+$username = $_POST['username'];
 $tablename = "comment_list";
+$liketable = "likelist";
+$unliketable = "unlikelist";
 $sql = "
-    select *
+    select *,
+        (select count(*) from $liketable where $tablename.id = $liketable.comment_id and $liketable.username = '$username') as liked,
+        (select count(*) from $unliketable where $tablename.id = $unliketable.comment_id and $unliketable.username = '$username') as unliked,
+        (select count(*) from $liketable where $tablename.id = $liketable.comment_id) as likes,
+        (select count(*) from $unliketable where $tablename.id = $unliketable.comment_id) as unlikes 
     from $tablename
     where gamename='$gamename' and root_id is NULL
     order by timestamps;
 ";
+// liked: 用户是否点赞过这个评论 unliked: 用户是否点踩过这个评论 保证 liked,unliked in {0,1}
 
 $res = $conn->query($sql);
 if ($res) {
@@ -47,6 +55,8 @@ if ($res) {
             "unlikes" => $row['unlikes'],
             "timestamps" => $row['timestamps'],
             'reference_id' => $row['reference_id'],
+            "liked" => $row['liked'],
+            "unliked" => $row['unliked'],
         ];
         array_push($rest["data"], $new_node); // $new_node不能用json_encode转成json格式的对象, js认不出来
     }

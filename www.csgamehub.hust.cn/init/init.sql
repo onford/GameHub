@@ -22,8 +22,6 @@ create table comment_list(
     `comment` text not null,
     reference_id int default null,
     root_id int default null,
-    likes int default 0,
-    unlikes int default 0,
     `timestamps` datetime,
     foreign key(username) references userlist(user_name) on delete cascade,
     foreign key(gamename) references game_list(gamename) on delete cascade,
@@ -43,6 +41,7 @@ create table gamescorelist(
 create table likelist(
     username varchar(127),
     comment_id int,
+    primary key(username,comment_id),
     foreign key(username) references userlist(user_name) on delete cascade,
     foreign key(comment_id) references comment_list(id) on delete cascade
 );
@@ -50,6 +49,7 @@ create table likelist(
 create table unlikelist(
     username varchar(127),
     comment_id int,
+    primary key(username,comment_id),
     foreign key(username) references userlist(user_name) on delete cascade,
     foreign key(comment_id) references comment_list(id) on delete cascade
 );
