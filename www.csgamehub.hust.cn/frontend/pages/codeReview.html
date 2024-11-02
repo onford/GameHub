@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./../css/mangerPage.css">
+    <link rel="stylesheet" href="./../../src/vendor/bootstrap/css/bootstrap.min.css">
+</head>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .my-flex-container {
+        display: flex;
+    }
+
+    .my-main {
+        padding: 20px;
+        width: 85%;
+    }
+
+    .my-lefter {
+        height: 100vh;
+        width: 15%;
+        background-color: rgb(58, 58, 58);
+    }
+
+    .my-option-table {
+        width: 100%;
+    }
+
+    .my-option-table:hover {
+        background-color: #000000;
+        cursor: pointer;
+    }
+
+    /* .my-option-table:active {
+        background-color: #bbb;
+    } */
+
+    .my-option {
+        text-align: center;
+        font-size: 20px;
+        padding: 15px;
+        color: white;
+        margin: 0;
+    }
+
+    .my-main-header-title {
+        font-size: 30px;
+    }
+
+    .my-view-option-table {
+        margin-right: 40px;
+    }
+
+    .my-view-option-table:hover {
+        cursor: pointer;
+        border-bottom: 2px solid rgb(0, 153, 255);
+    }
+
+    .my-view-option {
+        margin: 0;
+    }
+
+    table {
+        margin-top: 10px;
+        width: 100%;
+    }
+
+    td {
+        border: 1px solid #ccc;
+        text-align: center;
+        padding: 10px;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    .my-reject {
+        color: rgb(255, 75, 0);
+    }
+
+    .my-accpet {
+        color: rgb(0, 150, 150);
+    }
+
+    .my-not-read {
+        color: #00A1D6;
+    }
+
+    .my-main-bottom {
+        width: 100%;
+    }
+
+    .my-page-btn {
+        border: 1px solid #d7dde4;
+        border-radius: 5%;
+        padding: 0 10px;
+        color: #657180;
+        background-color: white;
+    }
+
+    .my-page-btn:hover {
+        border-color: #00A1D6;
+        color: #00A1D6;
+    }
+
+    .my-page-navigation-table {
+        margin: 20px auto;
+    }
+</style>
+
+<body>
+    <div class="my-flex-container">
+        <div class="my-lefter">
+            <div class="my-option-table" style="background-color: #000000;">
+                <p class="my-option">
+                    代码审核
+                </p>
+            </div>
+            <div class="my-option-table">
+                <p class="my-option">
+                    账号管理
+                </p>
+            </div>
+        </div>
+        <div class="my-main">
+            <div class="my-main-header">
+                <p class="my-main-header-title">
+                    代码审核
+                </p>
+                <hr>
+                <div class="my-flex-container">
+                    <div class="my-view-option-table" style="border-bottom: 2px solid rgb(0, 153, 255);">
+                        <p class="my-view-option">全部</p>
+                    </div>
+                    <div class="my-view-option-table">
+                        <p class="my-view-option">待审核 </p>
+                    </div>
+                    <div class="my-view-option-table">
+                        <p class="my-view-option">已通过 </p>
+                    </div>
+                    <div class="my-view-option-table">
+                        <p class="my-view-option">已驳回 </p>
+                    </div>
+                </div>
+            </div>
+            <div class="my-main-body">
+                <table>
+                    <thead>
+                        <tr>
+                            <td>
+                                序号
+                            </td>
+                            <td>
+                                用户名
+                            </td>
+                            <td>
+                                上载时间
+                            </td>
+                            <td>
+                                状态
+                            </td>
+                            <td>
+                                操作
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                1
+                            </td>
+                            <td>
+                                Njaso
+                            </td>
+                            <td>
+                                2024.11.2 17:32:53
+                            </td>
+                            <td class="my-accpet">
+                                已通过
+                            </td>
+                            <td>
+                                <a href="#">删除</a>
+                                <a href="#">通过</a>
+                                <a href="#">下载压缩包</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                2
+                            </td>
+                            <td>
+                                Tommy
+                            </td>
+                            <td>
+                                2024.11.2 17:41:53
+                            </td>
+                            <td class="my-not-read">
+                                待审核
+                            </td>
+                            <td>
+                                <a href="#">删除</a>
+                                <a href="#">通过</a>
+                                <a href="#">下载压缩包</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                2
+                            </td>
+                            <td>
+                                Sunny
+                            </td>
+                            <td>
+                                2019.12.12 10:41:53
+                            </td>
+                            <td class="my-reject">
+                                已驳回
+                            </td>
+                            <td>
+                                <a class='my-operation' href="#">删除</a>
+                                <a class='my-operation' href="#">通过</a>
+                                <a class='my-operation' href="#">下载压缩包</a>
+                            </td>
+                        </tr>
+                        <!-- 这里插入作品数据 -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="my-main-bottom my-flex-container">
+                <div class="my-page-navigation-table">
+                    <button class="my-page-btn">上一页</button>
+                    <button class="my-page-btn" style="background-color: #00A1D6; color:white;">1</button>
+                    <button class="my-page-btn">2</button>
+                    <button class="my-page-btn">3</button>
+                    <!-- <button class="my-page-btn my-omit-btn">...</button> -->
+                    <span style="font-size: 20px; color: #aaa;">...</span>
+                    <button class="my-page-btn">114514</button>
+                    <button class="my-page-btn">下一页</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    Array.from(document.getElementsByClassName('my-view-option-table')).forEach(element => {
+        element.addEventListener('click', function () {
+            this.style.borderBottom = '2px solid rgb(0, 153, 255)'
+            for (var e of document.getElementsByClassName('my-view-option-table')) {
+                if (e !== this) {
+                    e.style.borderBottom = 'none'
+                }
+            }
+        })
+    })
+</script>
+
+</html>
