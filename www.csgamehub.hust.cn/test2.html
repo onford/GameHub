@@ -4,77 +4,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bootstrap Sidebar Layout</title>
-    <!-- 引入Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Input Focus Style Example</title>
     <style>
-        /* 自定义样式，用于调整边栏和主内容区域 */
-        .sidebar {
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-right: 1px solid #ddd;
+        /* 为所有input元素设置基础样式 */
+        input[type="text"] {
+            padding: 5px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
 
-        .main-content {
-            padding: 20px;
+        /* 为聚焦状态的input元素设置样式 */
+        input[type="text"]:focus {
+            border-color: #007bff;
+            /* 更改边框颜色 */
+            outline: none;
+            /* 移除默认的聚焦轮廓 */
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            /* 添加阴影效果 */
         }
     </style>
 </head>
 
 <body>
 
-    <div class="container-fluid">
-        <div class="row">
-            <!-- 边栏 -->
-            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-                <div class="sidebar-sticky">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#">
-                                <span data-feather="home"></span>
-                                首页 <span class="sr-only">(current)</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="file"></span>
-                                文档
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="settings"></span>
-                                设置
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+    <input type="text" placeholder="点击我，看看会发生什么！">
 
-            <!-- 主内容区域 -->
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-                <div
-                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">主内容区域</h1>
-                </div>
-                <div class="main-content">
-                    <p>这里是主内容区域的内容。</p>
-                    <!-- 你可以在这里添加更多的内容 -->
-                </div>
-            </main>
-        </div>
-    </div>
-
-    <!-- 引入Bootstrap JS和依赖项 -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <!-- 引入Feather图标库（可选，用于示例中的图标） -->
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-    <script>
-        // 初始化Feather图标  
-        feather.replace()  
-    </script>
 </body>
 
 </html>

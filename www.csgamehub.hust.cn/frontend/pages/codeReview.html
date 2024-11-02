@@ -121,12 +121,12 @@
     <div class="my-flex-container">
         <div class="my-lefter">
             <div class="my-option-table" style="background-color: #000000;">
-                <p class="my-option">
+                <p class="my-option" onclick="jumpHandle1(event);">
                     代码审核
                 </p>
             </div>
             <div class="my-option-table">
-                <p class="my-option">
+                <p class="my-option" onclick="jumpHandle2(event);">
                     账号管理
                 </p>
             </div>
@@ -262,6 +262,16 @@
             }
         })
     })
+
+    function jumpHandle1(event) {
+        event.preventDefault();
+        location.href = './codeReview.html';
+    }
+
+    function jumpHandle2(event) {
+        event.preventDefault();
+        location.href = './accountManager_root.html';
+    }
 </script>
 
 </html>
