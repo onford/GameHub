@@ -129,24 +129,33 @@ var update = function (modifier) {
     }
 };
 
-document.addEventListener('keydown', function (event) {
-    // 检查是否按下了箭头键  
-    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
-        event.preventDefault(); // 禁止箭头键的默认行为  
-    }
-});
-
 // Handle keyboard controls
 var keysDown = {}, pauseTag = false;
-addEventListener("keydown", function (e) {
-    beginTag = true;
-    if (bgAudio.paused && !endTag) bgAudio.play();
-    keysDown[e.keyCode] = true;
-    if (e.keyCode == 80) pauseTag = !pauseTag;
+const eventKeyCode = [37, 38, 39, 40, 65, 68, 80, 83, 87];
+document.addEventListener("keydown", function (e) {
+    if (eventKeyCode.includes(e.keyCode)) {
+        // 检查是否按下了箭头键  
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+            event.preventDefault(); // 禁止箭头键的默认行为  
+        }
+        beginTag = true;
+        if (bgAudio.paused && !endTag) bgAudio.play();
+        keysDown[e.keyCode] = true;
+        if (e.keyCode == 80) pauseTag = !pauseTag;
+    }
 }, false);
-addEventListener("keyup", function (e) {
+document.addEventListener("keyup", function (e) {
+    if (e.target.tagName.toLowerCase() === 'textarea') return;
     delete keysDown[e.keyCode];
 }, false);
+document.getElementById("commentText").addEventListener("focus", function () {
+    keysDown = {}; // 玩家发表评论时清空按键数组
+    pauseTag = true; // 暂停游戏，让玩家好好发表评论
+})
+document.addEventListener("click", function (e) {
+    if (e.target.id != "submit_button")
+        pauseTag = true;
+})
 
 var newGame = function () {
     now = Date.now();

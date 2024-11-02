@@ -117,7 +117,7 @@ var game = {
             if (dir[0] > 0) ty = 3 - ty;
             return [tx, ty];
         }
-        
+
         let hasMoved = false; // 新增标志位
         for (var i = 0; i < 4; i++) {
             var tmp = [];
@@ -147,7 +147,7 @@ var game = {
                 }
             }
         }
-    
+
         if (hasMoved) { // 只有在有效移动后才生成新方块
             draw.produce();
             draw.block();
@@ -161,9 +161,10 @@ var game = {
     }
 }
 
-
+const text = document.getElementById('commentText');
 // 事件监听
 document.onkeydown = function (e) {
+    if (text === document.activeElement) return;
     dir = keycom[(e ? e : event).keyCode];
     game.move(dir);
     console.log(dir);
