@@ -243,18 +243,30 @@ body {
     background: #a29c96;
 }
 
-.commentarea {
-    width: 100%;
-    height: 100vh;
-}
-
-.comment_box input {
-    height: 100px;
-    flex-basis: 80%;
-}
-
 .list-group-item {
-    color: lightskyblue;
+    transition: background-color 1s ease-in-out;
+}
+
+.blue-fade {
+    animation: blueFade 1s forwards;
+    /* Apply animation */
+}
+
+@keyframes blueFade {
+    0% {
+        background-color: white;
+        /* Start white */
+    }
+
+    50% {
+        background-color: lightblue;
+        /* Change to blue */
+    }
+
+    100% {
+        background-color: white;
+        /* Fade back to white */
+    }
 }
 
 /* 加载动画css */

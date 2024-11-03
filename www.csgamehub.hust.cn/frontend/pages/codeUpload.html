@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GameHub - 创作中心</title>
     <link rel="stylesheet" href="./../css/personalCenter.css">
-    <link rel="stylesheet" href="./../css/global.css">
-
+    <link rel="stylesheet" href="./../css/codeUpload.css">
     <link href="./../../src/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="./../../src/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="./../../src/vendor/fontawesome/css/all.min.css">
     <link rel="icon" href="./../../src/images/favicon1.ico" type="image/x-icon">
     <script src="./../../src/vendor/jquery/jquery-3.6.4.min.js"></script>
-
+    <link rel="stylesheet" href="./../css/global.css">
 </head>
 
 <body>
@@ -21,11 +21,12 @@
     </div>
     <div class="my-flex-container" id="background_container">
         <div class="lefter">
-            <div style="height: 30%;place-items: center;display: grid;"><img src="./../../src/images/test_icon.webp"
-                    alt="" class="profile_pic"></div>
+            <div style="height: 30%; place-items: center; display: grid;">
+                <img src="./../../src/images/test_icon.webp" alt="" class="profile_pic">
+            </div>
             <div class="option" onclick="jumpHandle1(event)">
                 <p>消息中心</p>
-            </div class="option">
+            </div>
             <div class="option" style="background-color: #ccc;" onclick="jumpHandle2(event)">
                 <p>创作中心</p>
             </div>
@@ -33,41 +34,146 @@
                 <p>账号管理</p>
             </div>
             <a href="./gamepage.html">
-                <div class="option">
-                    返回首页
-                </div>
+                <div class="option">返回首页</div>
             </a>
         </div>
-        <div class="main">
+        <div class="main" style="background-image: none;">
             <div class="header">
-                <span>投稿: </span>
-                <input type="file">
+                <div>
+                    <h2 style="margin-top: 40px;margin-bottom: 40px;display: inline-block;">上传附件</h2>
+                    <p style="color:gray;margin-bottom: 40px;display: inline-block;margin-left: 40px;">
+                        将所需文件上传至项目中，即可提交你的 canvas 游戏作品！</p>
+                </div>
+                <input type="file" id="fileInput" style="display:none;" multiple>
+                <div class="drop-zone" id="dropZone">
+                    <i class="fa-solid fa-cloud-arrow-up"
+                        style="font-size: 100px;transition: background-color 1s ease-in-out;"></i>
+                    <p style="margin-top: 20px;transition: background-color 1s ease-in-out;">将文件拖放到这里或点击上传</p>
+                </div>
             </div>
+            <button class="btn btn-danger" id="clearAllButton">取消所有已选择文件</button>
+            <div class="uploaded-files" id="uploadedFiles"></div>
+            <button class="btn btn-success" id="submitButton">提交文件</button>
         </div>
     </div>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const uploadedFilesDiv = document.getElementById('uploadedFiles');
+        const fileInput = document.getElementById('fileInput');
+        const uploadText = dropZone.querySelector("p");
+        const uploadImg = dropZone.querySelector("i");
+        const hoverHTML = "松开鼠标以上传文件";
+        const blurHTML = "将文件拖放到这里或点击上传";
+
+        dropZone.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            dropZone.classList.add('hover');
+            uploadText.classList.add('blue-fade');
+            uploadImg.classList.add('blue-fade');
+            uploadText.innerHTML = hoverHTML;
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('hover');
+            uploadText.classList.remove('blue-fade');
+            uploadImg.classList.remove('blue-fade');
+            uploadText.innerHTML = blurHTML;
+        });
+
+        dropZone.addEventListener('drop', (event) => {
+            event.preventDefault();
+            dropZone.classList.remove('hover');
+            uploadText.classList.remove('blue-fade');
+            uploadImg.classList.remove('blue-fade');
+            uploadText.innerHTML = blurHTML;
+            const files = event.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        dropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (event) => {
+            const files = event.target.files;
+            handleFiles(files);
+        });
+
+        function handleFiles(files) {
+            for (const file of files) {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.textContent = file.name;
+
+                const cancelButton = document.createElement('button');
+                cancelButton.textContent = '取消选择';
+                cancelButton.className = 'cancel-btn';
+                cancelButton.onclick = (e) => {
+                    e.stopPropagation();
+                    uploadedFilesDiv.removeChild(fileItem);
+                    fileInput.value = "";
+                }
+                fileItem.appendChild(cancelButton);
+                uploadedFilesDiv.appendChild(fileItem);
+            }
+        }
+
+        document.getElementById('clearAllButton').addEventListener('click', () => {
+            uploadedFilesDiv.innerHTML = '';
+            fileInput.value = "";
+        });
+
+        document.getElementById('submitButton').addEventListener('click', () => {
+            const uploadedFiles = uploadedFilesDiv.children;
+            if (uploadedFiles.length === 0) {
+                alert("请先上传文件！");
+                return;
+            }
+
+            const formData = new FormData();
+            for (let i = 0; i < uploadedFiles.length; i++) {
+                const fileName = uploadedFiles[i].textContent.replace("取消选择", "").trim();
+                const fileEntry = Array.from(fileInput.files).find(f => f.name === fileName);
+                if (fileEntry) {
+                    formData.append('files[]', fileEntry);
+                }
+            }
+
+            fetch('../../backend/api/upload.php', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                    alert("文件已提交给管理员审核！");
+                })
+                .catch(error => {
+                    console.error('上传失败:', error);
+                    alert("文件上传失败，请重试！");
+                });
+        });
+
+        function jumpHandle1(event) {
+            event.preventDefault();
+            window.location.href = "./messageCenter.html";
+        }
+
+        function jumpHandle2(event) {
+            event.preventDefault();
+            window.location.href = "./codeUpload.html";
+        }
+
+        function jumpHandle3(event) {
+            event.preventDefault();
+            window.location.href = "./accountManager.html";
+        }
+        $(window).on("load", function () {
+            $(".loader-wrapper").fadeOut("slow");
+        });
+    </script>
 </body>
-<script>
-    function jumpHandle1(event) {
-        event.preventDefault();
-        console.log("跳转页面事件触发");
-        window.location.href = "./messageCenter.html";
-    }
-
-    function jumpHandle2(event) {
-        event.preventDefault();
-        console.log("跳转页面事件触发");
-        window.location.href = "./codeUpload.html";
-    }
-
-    function jumpHandle3(event) {
-        event.preventDefault();
-        console.log("跳转页面事件触发");
-        window.location.href = "./accountManager.html";
-    }
-
-    $(window).on("load", function () {
-        $(".loader-wrapper").fadeOut("slow");
-    });
-</script>
 
 </html>

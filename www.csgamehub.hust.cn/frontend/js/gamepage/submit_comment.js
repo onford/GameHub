@@ -15,8 +15,12 @@ function commentHandle(event) {
             } else {
                 alert("评论发表成功");
                 console.log(data.data);
-                document.getElementById("commentList").appendChild(comment_item(data.data.comment_id[0], document.getElementById("ivsb_user_name").value,
-                    document.getElementById("commentText").value, data.data.timestamp[0], 0, 0, 0));
+                const child = comment_item(data.data.comment_id[0], document.getElementById("ivsb_user_name").value,
+                    document.getElementById("commentText").value, data.data.timestamp[0], 0, 0, 0);
+                if (document.getElementById("commentList").firstChild)
+                    document.getElementById("commentList").insertBefore(child, document.getElementById("commentList").firstChild);
+                else
+                    document.getElementById("commentList").appendChild(child);
                 document.getElementById("commentText").value = "";
             }
         }).catch(error => {
@@ -37,7 +41,7 @@ function comment_item(id, user, comment, timestamp, likes, liked, unliked) {
     // 评论的详细信息，包括时间戳、点赞数、点踩数、回复按钮和删除按钮
     var detailed = document.createElement("div");
     // 放置时间戳
-    detailed.innerHTML = "<div style=\"color:gray;font-size=16px;margin-top:-2px;display: inline-block; \">" + timestamp + "</div>"; "<div class=\"comment_component\"><div class=\"comment_component\"><i class=\"fa-solid fa-thumbs-down\"></i></div><div class=\"comment_component\">回复</div>"
+    detailed.innerHTML = "<div style=\"color:gray;font-size=16px;margin-top:-2px;display: inline-block; \">" + timestamp + "</div>";
     // 生成点赞数
     var likes_div = document.createElement("div");
     likes_div.className = "comment_component";
@@ -66,6 +70,8 @@ function comment_item(id, user, comment, timestamp, likes, liked, unliked) {
     var reply_div = document.createElement("div");
     reply_div.className = "comment_component";
     reply_div.innerHTML = "回复";
+    reply_div.onclick = function () { reply_area(0, this); }; // 0 表示当前层级
+
     detailed.appendChild(reply_div);
 
     new_item.appendChild(detailed);
@@ -124,6 +130,8 @@ function commit_like_and_unlike() {
         })
 }
 
+var confirmAction;
+
 
 function alert_delete() {
     const id = this.parentElement.parentElement.id;
@@ -133,25 +141,26 @@ function alert_delete() {
     var hint_text = document.getElementById("hint_text");
     overlay.style.display = 'block';
     confirm_box.style.display = 'block';
+    confirmAction = () => {
+        hint_text.style = "color:green;margin-bottom:0;";
+        hint_text.innerHTML = "删除成功";
+        document.getElementById('confirmButton').hidden = true;
+        document.getElementById('cancelButton').hidden = true;
+
+        setTimeout(() => {
+            overlay.style.display = 'none';
+            confirm_box.style.display = 'none';
+            hint_text.innerHTML = "确定删除该条评论？";
+            hint_text.style = "color:#212529;margin-bottom:1rem;";
+            document.getElementById('confirmButton').hidden = false;
+            document.getElementById('cancelButton').hidden = false;
+            document.getElementById('confirmButton').removeEventListener('click', confirmAction);
+        }, 2000);
+        execute_delete(id, comment_to_be_removed);
+    }
+    document.getElementById('confirmButton').addEventListener('click', confirmAction);
+
     if (!listenerAdded) {
-        document.getElementById('confirmButton').addEventListener('click', function () {
-            hint_text.style = "color:green;margin-bottom:0;";
-            hint_text.innerHTML = "删除成功";
-            document.getElementById('confirmButton').hidden = true;
-            document.getElementById('cancelButton').hidden = true;
-
-            setTimeout(() => {
-                overlay.style.display = 'none';
-                confirm_box.style.display = 'none';
-                hint_text.innerHTML = "确定删除该条评论？";
-                hint_text.style = "color:#212529;margin-bottom:1rem;";
-                document.getElementById('confirmButton').hidden = false;
-                document.getElementById('cancelButton').hidden = false;
-
-            }, 2000);
-            execute_delete(id, comment_to_be_removed);
-        });
-
         document.getElementById('cancelButton').addEventListener('click', function () {
             overlay.style.display = 'none';
             confirm_box.style.display = 'none';
@@ -183,3 +192,193 @@ function execute_delete(id, node) {
 }
 
 var listenerAdded = false;
+
+function reply_area(layer, reply_div) {
+    removeReplyBox();
+    box = document.createElement("textarea");
+    box.name = "reply_text";
+    box.addEventListener('input', adjustTextareaHeight);
+    box.addEventListener('keyup', adjustTextareaHeight);
+    box.classList.add("form-control");
+    box.rows = "1";
+    box.style = "resize: none;box-sizing:border-box;padding-top:5px;padding-bottom:5px;padding-left:10px;padding-right:10px;margin-bottom:10px;border-radius:5px;border-width:2px;width:100%";
+    reply_user = reply_div.parentElement.parentElement.querySelector("strong").innerHTML;
+    box.placeholder = "回复 @" + reply_user + ' :';
+    var seal_div = document.createElement("form");
+    if (layer == 0) {
+        seal_div.onsubmit = handle_reply0;
+        reply_div.parentElement.parentElement.appendChild(seal_div);
+    }
+    else {
+        seal_div.onsubmit = function () { handle_reply1(reply_div, this); };
+        reply_div.parentElement.parentElement.parentElement.appendChild(seal_div);
+    }
+    seal_div.style = "padding-left:40px;padding-top:10px;padding-bottom:10px;";
+    seal_div.class = "form-group";
+    seal_div.id = "reply_box";
+    seal_div.appendChild(box);
+
+    reply_button = document.createElement("button");
+    reply_button.style = "float:right;";
+    reply_button.type = "submit";
+    reply_button.classList.add("btn");
+    reply_button.classList.add("btn-primary");
+    reply_button.innerHTML = "回复";
+    seal_div.appendChild(reply_button);
+}
+
+// 回复第 0 层的评论
+function handle_reply0() {
+    event.preventDefault(); // 提交表单之后好像会重新跳转页面？所以要这样
+    var form_data = new FormData(this);// 有 key = "reply_text" 的元素
+    form_data.append("username", localStorage.getItem("username"));
+    form_data.append("gamename", localStorage.getItem("cur_game"));
+    form_data.append("reference_id", this.parentElement.id);
+    form_data.append("root_id", this.parentElement.id);
+
+    fetch("./../../backend/api/post_reply.php", {
+        method: "POST",
+        body: form_data
+    }).then(response => response.json())
+        .then(data => {
+            console.log(data);
+            if (data.code == 1) {
+                alert(data.msg);
+            } else {
+                alert("回复发表成功");
+                const reply_comment = reply_item(data.data.comment_id[0], form_data.get("username"), form_data.get("reply_text"), data.data.timestamp[0], 0, 0, 0, null);
+                insertAfterSecondChild(this.parentElement, reply_comment);
+                removeReplyBox();
+            }
+        }).catch(error => {
+            console.error(error);
+        });
+}
+
+// 回复第 1 层的评论
+function handle_reply1(reply_div, form) {
+    event.preventDefault(); // 提交表单之后好像会重新跳转页面？所以要这样
+    var form_data = new FormData(form);// 有 key = "reply_text" 的元素
+    form_data.append("username", localStorage.getItem("username"));
+    form_data.append("gamename", localStorage.getItem("cur_game"));
+    form_data.append("reference_id", reply_div.parentElement.parentElement.id);
+    form_data.append("root_id", reply_div.parentElement.parentElement.parentElement.id);
+
+    fetch("./../../backend/api/post_reply.php", {
+        method: "POST",
+        body: form_data
+    }).then(response => response.json())
+        .then(data => {
+            console.log(data);
+            if (data.code == 1) {
+                alert(data.msg);
+            } else {
+                alert("回复发表成功");
+                const reply_comment = reply_item(data.data.comment_id[0], form_data.get("username"), form_data.get("reply_text"), data.data.timestamp[0], 0, 0, 0, reply_div.parentElement.parentElement.id);
+                insertAfterSecondChild(form.parentElement, reply_comment);
+                removeReplyBox();
+            }
+        }).catch(error => {
+            console.error(error);
+        });
+}
+
+
+function removeReplyBox() {
+    var box = document.getElementById("reply_box");
+    if (box != null) {
+        box.parentElement.removeChild(box);
+        const replyarea = box.querySelector("textarea");
+        replyarea.removeEventListener('input', adjustTextareaHeight);
+        replyarea.removeEventListener('keyup', adjustTextareaHeight);
+    }
+}
+
+function reply_item(id, user, comment, timestamp, likes, liked, unliked, reply_to) {
+    liked = parseInt(liked);
+    unliked = parseInt(unliked);
+    var new_item = document.createElement("div");
+    new_item.className = "list-group-item";
+    new_item.id = id;
+    new_item.style = "border:0;margin-left:60px;";
+    var user_style = document.createElement("strong");
+    user_style.style = "color:#FB7299;display: inline-block; ";
+    user_style.innerHTML = user;
+
+    var text_style = document.createElement("p");
+    text_style.style = "display: inline-block;margin-top:10px;margin-left:20px;";
+    text_style.innerHTML = comment;
+
+    new_item.appendChild(document.createElement("div"));
+    new_item.firstChild.appendChild(user_style);
+    if (reply_to) {
+        var reply_style = document.createElement("a");
+        reply_style.onclick = () => {
+            document.getElementById(reply_to).classList.add("blue-fade");
+            setTimeout(() => { document.getElementById(reply_to).classList.remove("blue-fade"); }, 1000);
+        };
+        reply_style.style = "display: inline-block;margin-top:10px;margin-left:20px;color:lightblue;text-decoration:none;";
+        reply_style.href = "#" + reply_to;
+        reply_style.innerHTML = " 回复 @" + document.getElementById(reply_to).querySelector("strong").innerHTML + " ：";
+        new_item.firstChild.appendChild(reply_style);
+    }
+    new_item.firstChild.appendChild(text_style);
+
+    // 评论的详细信息，包括时间戳、点赞数、点踩数、回复按钮和删除按钮
+    var detailed = document.createElement("div");
+    // 放置时间戳
+    detailed.innerHTML = "<div style=\"color:gray;font-size=16px;margin-top:-2px;display: inline-block; \">" + timestamp + "</div>";
+    // 生成点赞数
+    var likes_div = document.createElement("div");
+    likes_div.className = "comment_component";
+    likes_div.onclick = commit_like_and_unlike;
+    if (liked) {
+        likes_div.innerHTML = "<div><i class=\"fa-solid fa-thumbs-up\"></i><div class=\"thumb_number\">" + likes + "</div></div>";
+    }
+    else {
+        likes_div.innerHTML = "<div><i class=\"fa-regular fa-thumbs-up\"></i><div class=\"thumb_number\">" + likes + "</div></div>"
+    }
+    detailed.appendChild(likes_div);
+
+    // 生成点踩数
+    var unlikes_div = document.createElement("div");
+    unlikes_div.className = "comment_component";
+    unlikes_div.onclick = commit_like_and_unlike;
+    if (unliked) {
+        unlikes_div.innerHTML = "<i class=\"fa-solid fa-thumbs-down\"></i>";
+    }
+    else {
+        unlikes_div.innerHTML = "<i class=\"fa-regular fa-thumbs-down\"></i>";
+    }
+    detailed.appendChild(unlikes_div);
+
+    // 生成回复
+    var reply_div = document.createElement("div");
+    reply_div.className = "comment_component";
+    reply_div.innerHTML = "回复";
+
+    reply_div.onclick = function () { reply_area(1, this); }; // 1 表示当前层级
+
+    detailed.appendChild(reply_div);
+
+    new_item.appendChild(detailed);
+
+    // 生成删除 div
+    if (document.getElementById("ivsb_user_name").value == user) {
+        var delete_div = document.createElement("div");
+        delete_div.className = "comment_component_deleter";
+        delete_div.innerHTML = "删除";
+        detailed.appendChild(delete_div);
+        delete_div.onclick = alert_delete;
+    }
+
+    return new_item;
+}
+
+function insertAfterSecondChild(parent, new_child) {
+    // 保证至少存在两个儿子
+    if (parent.firstChild.nextSibling.nextSibling)
+        parent.insertBefore(new_child, parent.firstChild.nextSibling.nextSibling);
+    else
+        parent.appendChild(new_child);
+}

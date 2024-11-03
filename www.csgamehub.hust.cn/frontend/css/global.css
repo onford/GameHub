@@ -1,10 +1,10 @@
 /* 加载动画css */
 .loader-wrapper {
-    width: 100%;
+    width: 85%;
     height: 100%;
     position: absolute;
     top: 0;
-    left: 0;
+    left: 15%;
     background-color: #242f3f;
     display: flex;
     justify-content: center;

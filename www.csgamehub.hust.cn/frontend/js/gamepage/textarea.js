@@ -1,14 +1,14 @@
 const textarea = document.getElementById('commentText');
 function adjustTextareaHeight() {
     // Calculate the height based on the scrollHeight  
-    textarea.style.height = 'auto';
-    if (textarea.scrollHeight >= 135) {
-        textarea.style.overflowY = 'auto';
-        textarea.style.height = '135px';
+    this.style.height = 'auto';
+    if (this.scrollHeight >= 135) {
+        this.style.overflowY = 'auto';
+        this.style.height = '135px';
     }
     else {
-        textarea.style.overflowY = 'hidden';
-        textarea.style.height = `${textarea.scrollHeight}px`;
+        this.style.overflowY = 'hidden';
+        this.style.height = `${this.scrollHeight}px`;
     }
 }
 

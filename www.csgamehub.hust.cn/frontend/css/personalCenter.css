@@ -52,7 +52,7 @@
 
 .profile_pic {
     display: block;
-    width: 65%;
+    width: 80%;
     margin: 0 auto;
     border-radius: 50%;
 }
@@ -62,12 +62,17 @@
     background-color: #eeeeee;
     height: 100vh;
     width: 15%;
+    padding: 20px;
 }
 
 .option {
     text-align: center;
     padding: 20px 0;
     font-size: 20px;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
 }
 
 #update_password_form {
@@ -83,12 +88,12 @@
 }
 
 .main {
-    width: 85%;
     height: 100vh;
+    width: 85%;
     padding: 0;
     margin: 0;
-    background-color: white;
     /* 图片将缩放以完全覆盖body元素 */
+    padding: 20px;
 }
 
 .line {
