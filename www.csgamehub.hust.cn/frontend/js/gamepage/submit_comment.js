@@ -15,8 +15,12 @@ function commentHandle(event) {
             } else {
                 alert("评论发表成功");
                 console.log(data.data);
-                document.getElementById("commentList").appendChild(comment_item(data.data.comment_id[0], document.getElementById("ivsb_user_name").value,
-                    document.getElementById("commentText").value, data.data.timestamp[0], 0, 0, 0));
+                const child = comment_item(data.data.comment_id[0], document.getElementById("ivsb_user_name").value,
+                    document.getElementById("commentText").value, data.data.timestamp[0], 0, 0, 0);
+                if (document.getElementById("commentList").firstChild)
+                    document.getElementById("commentList").insertBefore(child, document.getElementById("commentList").firstChild);
+                else
+                    document.getElementById("commentList").appendChild(child);
                 document.getElementById("commentText").value = "";
             }
         }).catch(error => {
@@ -201,10 +205,13 @@ function reply_area(layer, reply_div) {
     reply_user = reply_div.parentElement.parentElement.querySelector("strong").innerHTML;
     box.placeholder = "回复 @" + reply_user + ' :';
     var seal_div = document.createElement("form");
-    if (layer == 0)
+    if (layer == 0) {
         seal_div.onsubmit = handle_reply0;
+        reply_div.parentElement.parentElement.appendChild(seal_div);
+    }
     else {
-        // layer = 1
+        seal_div.onsubmit = function () { handle_reply1(reply_div, this); };
+        reply_div.parentElement.parentElement.parentElement.appendChild(seal_div);
     }
     seal_div.style = "padding-left:40px;padding-top:10px;padding-bottom:10px;";
     seal_div.class = "form-group";
@@ -217,24 +224,19 @@ function reply_area(layer, reply_div) {
     reply_button.classList.add("btn");
     reply_button.classList.add("btn-primary");
     reply_button.innerHTML = "回复";
-
-
     seal_div.appendChild(reply_button);
-
-    reply_div.parentElement.parentElement.appendChild(seal_div);
 }
 
 // 回复第 0 层的评论
-function handle_reply0(event) {
+function handle_reply0() {
     event.preventDefault(); // 提交表单之后好像会重新跳转页面？所以要这样
-    var comment_form = document.getElementById("reply_box");
-    var form_data = new FormData(comment_form);// 有 key = "reply_text" 的元素
+    var form_data = new FormData(this);// 有 key = "reply_text" 的元素
     form_data.append("username", localStorage.getItem("username"));
     form_data.append("gamename", localStorage.getItem("cur_game"));
     form_data.append("reference_id", this.parentElement.id);
     form_data.append("root_id", this.parentElement.id);
 
-    fetch("./../../backend/api/post_reply_to_layer0.php", {
+    fetch("./../../backend/api/post_reply.php", {
         method: "POST",
         body: form_data
     }).then(response => response.json())
@@ -244,13 +246,43 @@ function handle_reply0(event) {
                 alert(data.msg);
             } else {
                 alert("回复发表成功");
-                comment_form.parentElement.appendChild(reply_item(data.data.comment_id[0], form_data.get("username"), form_data.get("reply_text"), data.data.timestamp[0], 0, 0, 0));
+                const reply_comment = reply_item(data.data.comment_id[0], form_data.get("username"), form_data.get("reply_text"), data.data.timestamp[0], 0, 0, 0, null);
+                insertAfterSecondChild(this.parentElement, reply_comment);
                 removeReplyBox();
             }
         }).catch(error => {
             console.error(error);
         });
 }
+
+// 回复第 1 层的评论
+function handle_reply1(reply_div, form) {
+    event.preventDefault(); // 提交表单之后好像会重新跳转页面？所以要这样
+    var form_data = new FormData(form);// 有 key = "reply_text" 的元素
+    form_data.append("username", localStorage.getItem("username"));
+    form_data.append("gamename", localStorage.getItem("cur_game"));
+    form_data.append("reference_id", reply_div.parentElement.parentElement.id);
+    form_data.append("root_id", reply_div.parentElement.parentElement.parentElement.id);
+
+    fetch("./../../backend/api/post_reply.php", {
+        method: "POST",
+        body: form_data
+    }).then(response => response.json())
+        .then(data => {
+            console.log(data);
+            if (data.code == 1) {
+                alert(data.msg);
+            } else {
+                alert("回复发表成功");
+                const reply_comment = reply_item(data.data.comment_id[0], form_data.get("username"), form_data.get("reply_text"), data.data.timestamp[0], 0, 0, 0, reply_div.parentElement.parentElement.id);
+                insertAfterSecondChild(form.parentElement, reply_comment);
+                removeReplyBox();
+            }
+        }).catch(error => {
+            console.error(error);
+        });
+}
+
 
 function removeReplyBox() {
     var box = document.getElementById("reply_box");
@@ -262,14 +294,36 @@ function removeReplyBox() {
     }
 }
 
-function reply_item(id, user, comment, timestamp, likes, liked, unliked) {
+function reply_item(id, user, comment, timestamp, likes, liked, unliked, reply_to) {
     liked = parseInt(liked);
     unliked = parseInt(unliked);
     var new_item = document.createElement("div");
     new_item.className = "list-group-item";
     new_item.id = id;
     new_item.style = "border:0;margin-left:60px;";
-    new_item.innerHTML = "<div><strong style=\"color:#FB7299;display: inline-block; \">" + user + "</strong><p style=\"display: inline-block;margin-top:10px;margin-left:20px;\">" + comment + "</p></div>";
+    var user_style = document.createElement("strong");
+    user_style.style = "color:#FB7299;display: inline-block; ";
+    user_style.innerHTML = user;
+
+    var text_style = document.createElement("p");
+    text_style.style = "display: inline-block;margin-top:10px;margin-left:20px;";
+    text_style.innerHTML = comment;
+
+    new_item.appendChild(document.createElement("div"));
+    new_item.firstChild.appendChild(user_style);
+    if (reply_to) {
+        var reply_style = document.createElement("a");
+        reply_style.onclick = () => {
+            document.getElementById(reply_to).classList.add("blue-fade");
+            setTimeout(() => { document.getElementById(reply_to).classList.remove("blue-fade"); }, 1000);
+        };
+        reply_style.style = "display: inline-block;margin-top:10px;margin-left:20px;color:lightblue;text-decoration:none;";
+        reply_style.href = "#" + reply_to;
+        reply_style.innerHTML = " 回复 @" + document.getElementById(reply_to).querySelector("strong").innerHTML + " ：";
+        new_item.firstChild.appendChild(reply_style);
+    }
+    new_item.firstChild.appendChild(text_style);
+
     // 评论的详细信息，包括时间戳、点赞数、点踩数、回复按钮和删除按钮
     var detailed = document.createElement("div");
     // 放置时间戳
@@ -302,8 +356,8 @@ function reply_item(id, user, comment, timestamp, likes, liked, unliked) {
     var reply_div = document.createElement("div");
     reply_div.className = "comment_component";
     reply_div.innerHTML = "回复";
-    // 暂时先不写
-    // reply_div.onclick = function () { reply_area(0, this); }; // 0 表示当前层级
+
+    reply_div.onclick = function () { reply_area(1, this); }; // 1 表示当前层级
 
     detailed.appendChild(reply_div);
 
@@ -319,4 +373,12 @@ function reply_item(id, user, comment, timestamp, likes, liked, unliked) {
     }
 
     return new_item;
+}
+
+function insertAfterSecondChild(parent, new_child) {
+    // 保证至少存在两个儿子
+    if (parent.firstChild.nextSibling.nextSibling)
+        parent.insertBefore(new_child, parent.firstChild.nextSibling.nextSibling);
+    else
+        parent.appendChild(new_child);
 }

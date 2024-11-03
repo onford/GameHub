@@ -142,7 +142,7 @@ function init_reply_list(layer0_item) {
                 var len = data.data.length;
                 var layer1_item;
                 for (var i = 0; i < len; i++) {
-                    layer1_item = reply_item(data.data[i].id, data.data[i].username, data.data[i].comment, data.data[i].timestamps, data.data[i].likes, data.data[i].liked, data.data[i].unliked);
+                    layer1_item = reply_item(data.data[i].id, data.data[i].username, data.data[i].comment, data.data[i].timestamps, data.data[i].likes, data.data[i].liked, data.data[i].unliked, data.data[i].root_id == data.data[i].reference_id ? null : data.data[i].reference_id);
                     layer0_item.appendChild(layer1_item);
                 }
             }

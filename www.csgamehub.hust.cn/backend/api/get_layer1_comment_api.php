@@ -42,7 +42,7 @@ $sql = "
         (select count(*) from $unliketable where $tablename.id = $unliketable.comment_id) as unlikes 
     from $tablename
     where root_id=$layer_0_comment_id
-    order by `timestamps` desc;
+    order by `timestamps` asc;
 ";
 $res = $conn->query($sql);
 
