@@ -10,6 +10,20 @@
 </head>
 
 <body>
+    <div class="my-gray-layer2 my-not-show">
+        <form action="" class="change_form" onsubmit="change_form_submit_handle(event)">
+            <div class="my-flex-item my-input-box">
+                <span class="my-line">用户名:</span>
+                <input type="text" name="new_username" class="my-username-inputer2">
+            </div>
+            <div class="my-flex-item my-btn-group">
+                <input type="submit" value="确认" class="my-submit-btn2">
+                <button class="my-cancel-btn2" onclick="cancel_btn2_handle(event)">取消</button>
+            </div>
+        </form>
+    </div>
+    </form>
+    </div>
     <div class="my-gray-layer my-not-show">
         <form action="" class="update_form" onsubmit="update_form_submit_handle(event)">
             <div class="my-flex-item my-input-box">
@@ -92,6 +106,56 @@
 </body>
 
 <script>
+    function change_form_submit_handle(event) {
+        event.preventDefault();
+        var change_form = document.getElementsByClassName("change_form")[0];
+        var form_data = new FormData(change_form);
+        form_data.append("username", localStorage.getItem("cur_username"));
+        const update_username_api = "./../../backend/api/update_username_api.php";
+        fetch(update_username_api, {
+            method: "POST",
+            body: form_data
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code != 0) {
+                    alert(data.msg);
+                }
+                else {
+                    alert("用户名更新成功");
+                    var overlay = document.getElementsByClassName("my-gray-layer2")[0];
+                    overlay.classList.add("my-not-show");
+                    location.reload();
+                }
+            })
+            .catch(error => console.error(error));
+    }
+
+    function cancel_btn2_handle(event) {
+        event.preventDefault();
+        var overlay = document.getElementsByClassName("my-gray-layer2")[0];
+        overlay.classList.add("my-not-show");
+    }
+
+    function changeHandle(event) {
+        event.preventDefault();
+        console.log("修改按钮点击事件触发");
+        var overlay = document.getElementsByClassName("my-gray-layer2")[0];
+        overlay.classList.remove('my-not-show');
+        var this_tr = event.target.parentNode.parentNode;
+        var username = "";
+        for (var child of this_tr.childNodes) {
+            if (child.id == 'my-special-td') {
+                username = child.innerHTML;
+                break;
+            }
+        }
+        console.log("username: " + username);
+        localStorage.setItem("cur_username", username);
+        var input_box = document.getElementsByClassName("my-username-inputer2")[0];
+        input_box.value = username;
+    }
+
     function update_form_submit_handle(event) {
         event.preventDefault();
         console.log("修改表单提交成功");
@@ -259,6 +323,10 @@
             new_username_td.id = "my-special-td";
 
             var new_operation_td = document.createElement("td");
+            var new_operation_change_a = document.createElement("a");
+            new_operation_change_a.innerHTML = "修改 ";
+            new_operation_change_a.href = '#';
+            new_operation_change_a.onclick = changeHandle;
             var new_operation_modify_a = document.createElement("a");
             new_operation_modify_a.innerHTML = "管理 ";
             new_operation_modify_a.href = "#";
@@ -267,6 +335,7 @@
             new_operation_delete_a.innerHTML = "删除";
             new_operation_delete_a.href = "#";
             new_operation_delete_a.onclick = deleteUsernameHandle;
+            new_operation_td.appendChild(new_operation_change_a);
             new_operation_td.appendChild(new_operation_modify_a);
             new_operation_td.appendChild(new_operation_delete_a);
 

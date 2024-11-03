@@ -20,6 +20,7 @@
 
 .my-option-table {
     width: 100%;
+    transition: background-color 0.3s;
 }
 
 .my-option-table:hover {
@@ -140,6 +141,33 @@ a {
     color: #657180;
 }
 
+.my-gray-layer2 {
+    /* display: none; */
+    background-color: rgba(58, 58, 58, 0.5) !important;
+    width: 100%;
+    height: 100%;
+    left: 0%;
+    top: 0%;
+    position: fixed;
+}
+
+.change_form {
+    /* display: none; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    /* flex-wrap: wrap; */
+    background-color: white;
+    gap: 25px;
+    position: fixed;
+    left: 40%;
+    top: 35%;
+    width: 450px;
+    height: 150px;
+    /* z-index: 100; */
+}
+
 .update_form {
     /* display: none; */
     display: flex;
@@ -201,6 +229,32 @@ a {
     color: white;
 }
 
+.my-submit-btn2 {
+    border: none;
+    background-color: #00A1D6;
+    color: white;
+    width: 60px;
+    height: 35px;
+}
+
+.my-submit-btn2:hover {
+    background-color: #0bbedd;
+}
+
+.my-cancel-btn2 {
+    border: none;
+    background-color: #ccc;
+    width: 60px;
+    height: 35px;
+    margin-left: 5%;
+}
+
+.my-cancel-btn2:hover {
+    background-color: #77828e;
+    color: white;
+}
+
+
 .my-btn-group {
     /* margin-left: 65%;
     margin-top: 10%; */
@@ -250,4 +304,25 @@ a {
     outline: none !important;
     background-color: white;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.my-username-inputer2:hover {
+    background-color: white;
+    /* cursor: not-allowed; */
+}
+
+.my-username-inputer2:focus {
+    border: 1px solid #657180 !important;
+    outline: none !important;
+    background-color: white;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.my-username-inputer2 {
+    padding: 5px;
+    width: 70%;
+    flex-basis: 100px;
+    height: 30px;
+    /* background-color: #ddd; */
+    border: 1px solid #657180;
 }
