@@ -2,7 +2,7 @@
 // 上传文件实现（但是好像fetch不到）
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // 设置上传目录
-    $targetDirectory = "uploads/";
+    $targetDirectory = "../uploads/";
     $uploadOk = 1;
 
     // 创建上传目录（如果它不存在）
@@ -11,8 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // 处理每个文件
-    foreach ($_FILES['files']['tmp_name'] as $key => $tmp_name) {
-        $fileName = basename($_FILES['files']['name'][$key]);
+    foreach ($_FILES['file']['tmp_name'] as $key => $tmp_name) {
+        $fileName = basename($_FILES['file']['name'][$key]);
         $targetFilePath = $targetDirectory . $fileName;
 
         // 检查文件是否已存在

@@ -50,10 +50,13 @@
                         style="font-size: 100px;transition: background-color 1s ease-in-out;"></i>
                     <p style="margin-top: 20px;transition: background-color 1s ease-in-out;">将文件拖放到这里或点击上传</p>
                 </div>
+                <div>
+                    <ul class="list-group list-group-flush" id="uploadedFiles">
+                    </ul>
+                </div>
+                <button class="btn btn-danger" id="clearAllButton">取消所有已选择文件</button>
+                <button class="btn btn-success" id="submitButton" style="margin-left: 20px;">提交文件</button>
             </div>
-            <button class="btn btn-danger" id="clearAllButton">取消所有已选择文件</button>
-            <div class="uploaded-files" id="uploadedFiles"></div>
-            <button class="btn btn-success" id="submitButton">提交文件</button>
         </div>
     </div>
     </div>
@@ -66,6 +69,7 @@
         const uploadImg = dropZone.querySelector("i");
         const hoverHTML = "松开鼠标以上传文件";
         const blurHTML = "将文件拖放到这里或点击上传";
+        var currentFilesMap = new Map();
 
         dropZone.addEventListener('dragover', (event) => {
             event.preventDefault();
@@ -101,45 +105,57 @@
             handleFiles(files);
         });
 
+
+        function fileSize(size) {
+            size = parseFloat(size);
+            if (size <= 1000)
+                return size.toFixed(2) + 'B';
+            else if (size <= 1000000)
+                return (size / 1024).toFixed(2) + 'KB';
+            else if (size <= 1000000000)
+                return (size / 1024 / 1024).toFixed(2) + 'MB';
+            else if (size <= 1024 * 1024 * 1024)
+                return (size / 1024 / 1024 / 1024).toFixed(2) + 'GB';
+            else return ">1GB";
+        }
+
         function handleFiles(files) {
             for (const file of files) {
-                const fileItem = document.createElement('div');
-                fileItem.className = 'file-item';
-                fileItem.textContent = file.name;
+                currentFilesMap.set(file.name, file);
+                const fileItem = document.createElement('li');
+                fileItem.className = 'list-group-item';
+                fileItem.innerHTML = "<div style=\"margin-right:20px;display:inline-block;\">" + file.name + "</div><div style=\"color:gray;display:inline-block;\">" + fileSize(file.size) + "</div>";
 
                 const cancelButton = document.createElement('button');
                 cancelButton.textContent = '取消选择';
-                cancelButton.className = 'cancel-btn';
+                cancelButton.style = "float:right;";
+                cancelButton.classList.add('btn');
+                cancelButton.classList.add('btn-outline-danger');
                 cancelButton.onclick = (e) => {
                     e.stopPropagation();
                     uploadedFilesDiv.removeChild(fileItem);
-                    fileInput.value = "";
+                    currentFilesMap.delete(file.name);
                 }
                 fileItem.appendChild(cancelButton);
                 uploadedFilesDiv.appendChild(fileItem);
             }
+            fileInput.value = "";
         }
 
-        document.getElementById('clearAllButton').addEventListener('click', () => {
+        document.getElementById('clearAllButton').onclick = () => {
             uploadedFilesDiv.innerHTML = '';
-            fileInput.value = "";
-        });
+            currentFilesMap = new Map();
+        };
 
-        document.getElementById('submitButton').addEventListener('click', () => {
-            const uploadedFiles = uploadedFilesDiv.children;
-            if (uploadedFiles.length === 0) {
+        document.getElementById('submitButton').onclick = () => {
+            if (currentFilesMap.size === 0) {
                 alert("请先上传文件！");
                 return;
             }
-
             const formData = new FormData();
-            for (let i = 0; i < uploadedFiles.length; i++) {
-                const fileName = uploadedFiles[i].textContent.replace("取消选择", "").trim();
-                const fileEntry = Array.from(fileInput.files).find(f => f.name === fileName);
-                if (fileEntry) {
-                    formData.append('files[]', fileEntry);
-                }
-            }
+            currentFilesMap.forEach((value, key) => {
+                formData.append("file[]", value);
+            })
 
             fetch('../../backend/api/upload.php', {
                 method: 'POST',
@@ -154,7 +170,7 @@
                     console.error('上传失败:', error);
                     alert("文件上传失败，请重试！");
                 });
-        });
+        };
 
         function jumpHandle1(event) {
             event.preventDefault();
