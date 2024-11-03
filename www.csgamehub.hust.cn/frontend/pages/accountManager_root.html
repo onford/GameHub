@@ -11,18 +11,20 @@
 
 <body>
     <div class="my-gray-layer my-not-show">
-        <form action="" class="update_form">
+        <form action="" class="update_form" onsubmit="update_form_submit_handle(event)">
             <div class="my-flex-item my-input-box">
                 <span class="my-line">用户名:</span>
-                <input type="text" name="username" class="my-username-inputer">
+                <!-- disabled的元素好像连php端都无法访问 -->
+                <input type="text" name="username" class="my-username-inputer" disabled>
             </div>
             <div class="my-manager-box my-flex-item">
                 <span class="my-line">权限操作:</span>
                 <select name="forbidden-time" id="my-select-box">
-                    <option value="option0"></option>
-                    <option value="option1">禁言十分钟</option>
-                    <option value="option2">禁言一小时</option>
-                    <option value="option3">禁言一天</option>
+                    <option value="0"></option>
+                    <option value="1">禁言十分钟</option>
+                    <option value="2">禁言一小时</option>
+                    <option value="3">禁言一天</option>
+                    <option value="4">撤销禁言</option>
                 </select>
             </div>
             <div class="my-flex-item my-btn-group">
@@ -90,6 +92,54 @@
 </body>
 
 <script>
+    function update_form_submit_handle(event) {
+        event.preventDefault();
+        console.log("修改表单提交成功");
+
+
+        const set_forbidden_time_api = "./../../backend/api/set_forbidden_time_api.php";
+        var update_form = document.getElementsByClassName('update_form')[0];
+        var form_data = new FormData(update_form);
+        var cur_username = localStorage.getItem("cur_username");
+        form_data.append("username", cur_username);
+
+        fetch(set_forbidden_time_api, {
+            method: "POST",
+            body: form_data
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (data.code != 0) {
+                    alert(data.msg);
+                } else {
+                    var option = form_data.get("forbidden-time");
+                    if (option != 0) {
+                        if (option != 4) {
+                            var msg = "用户" + cur_username + "已被禁言";
+                            var option = form_data.get("forbidden-time");
+                            if (option == 1) {
+                                msg += "十分钟"
+                            }
+                            else if (option == 2) {
+                                msg += "一小时"
+                            }
+                            else if (option == 3) {
+                                msg += "一天";
+                            }
+                            alert(msg);
+                        }
+                        else {
+                            alert("用户" + cur_username + "已被撤销禁言");
+                        }
+                    }
+                }
+            })
+            .catch(error => console.error(error))
+        var overlay = document.getElementsByClassName("my-gray-layer")[0];
+        overlay.classList.add("my-not-show");
+    }
+
     function cancel_btn_handle(event) {
         event.preventDefault();
         var overlay = document.getElementsByClassName("my-gray-layer")[0];
@@ -120,6 +170,7 @@
             }
         }
         console.log("username: " + username);
+        localStorage.setItem("cur_username", username);
         var input_box = document.getElementsByClassName("my-username-inputer")[0];
         input_box.value = username;
     }
@@ -209,7 +260,7 @@
 
             var new_operation_td = document.createElement("td");
             var new_operation_modify_a = document.createElement("a");
-            new_operation_modify_a.innerHTML = "修改 ";
+            new_operation_modify_a.innerHTML = "管理 ";
             new_operation_modify_a.href = "#";
             new_operation_modify_a.onclick = updateHandle;
             var new_operation_delete_a = document.createElement("a");

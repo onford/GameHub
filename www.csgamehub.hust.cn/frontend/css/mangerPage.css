@@ -222,6 +222,7 @@ a {
 
 .my-username-inputer:hover {
     background-color: white;
+    cursor: not-allowed;
 }
 
 .my-manager-box {

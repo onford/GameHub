@@ -27,6 +27,7 @@ Table: **userlist**
 |:---:|:---:|:---:|
 |username|varchar(127)|PK|
 |password|varchar(127)|NN|
+|available_time|datetime|DEFAULT '2000-12-12 12:50:50'<br>NN|
 
 Table: **game_list**
 | 列名|类型|限制|
@@ -42,7 +43,7 @@ Table: **comment_list**
 |comment|text|NN|
 |reference_id|int|DEFAULT NULL<br>FK -> comment_list(id)|
 |root_id|int|DEFAULT NULL<br>FK -> comment_list(id)|
-|timestamps|datetime|
+|timestamps|datetime||
 
 Table: **gamescorelist**
 | 列名|类型|限制|

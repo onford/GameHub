@@ -7,7 +7,8 @@ use softwareproject;
 
 create table userlist(
     username varchar(127) primary key,
-    `password` varchar(127) not null
+    `password` varchar(127) not null,
+    available_time datetime not null default '2000-12-12 12:50:50'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
