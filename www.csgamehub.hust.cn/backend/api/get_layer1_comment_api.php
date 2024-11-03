@@ -30,11 +30,19 @@ if ($conn->connect_error) {
 // 子评论无论在什么情况都是按时间排序的
 
 $layer_0_comment_id = intval($_POST["id"]);
+$username = $_POST["username"];
+$tablename = "comment_list";
+$liketable = "likelist";
+$unliketable = "unlikelist";
 $sql = "
-    select *
+    select *,
+    (select count(*) from $liketable where $tablename.id = $liketable.comment_id and $liketable.username = '$username') as liked,
+        (select count(*) from $unliketable where $tablename.id = $unliketable.comment_id and $unliketable.username = '$username') as unliked,
+        (select count(*) from $liketable where $tablename.id = $liketable.comment_id) as likes,
+        (select count(*) from $unliketable where $tablename.id = $unliketable.comment_id) as unlikes 
     from $tablename
-    where post_id=$layer_0_comment_id
-    order by `timestamp` ASC;
+    where root_id=$layer_0_comment_id
+    order by `timestamps` desc;
 ";
 $res = $conn->query($sql);
 
@@ -43,12 +51,14 @@ if ($res) {
         $new_node = [
             "id" => $row["id"],
             "comment" => $row["comment"],
-            "post_id" => $row["post_id"],
+            "root_id" => $row["root_id"],
             "username" => $row["username"],
             "likes" => $row["likes"],
             "unlikes" => $row['unlikes'],
             "timestamps" => $row['timestamps'],
             'reference_id' => $row['reference_id'],
+            "liked" => $row['liked'],
+            "unliked" => $row['unliked'],
         ];
         array_push($rest["data"], $new_node);
     }

@@ -95,8 +95,11 @@ function init_comment_list(option) {
                 console.log("评论查询成功");
                 console.log(data.data);
                 var len = data.data.length;
-                for (var i = 0; i < len; i++)
-                    comment_list.appendChild(comment_item(data.data[i].id, data.data[i].username, data.data[i].comment, data.data[i].timestamps, data.data[i].likes, data.data[i].liked, data.data[i].unliked));
+                for (var i = 0; i < len; i++) {
+                    layer0_item = comment_item(data.data[i].id, data.data[i].username, data.data[i].comment, data.data[i].timestamps, data.data[i].likes, data.data[i].liked, data.data[i].unliked);
+                    comment_list.appendChild(layer0_item);
+                    init_reply_list(layer0_item);
+                }
             }
         })
         .catch(error => {
@@ -121,4 +124,31 @@ function requestComment(code) {
         cur_mode = code;
         init_comment_list(code);
     }
+}
+
+function init_reply_list(layer0_item) {
+    var temp_form_data = new FormData();
+    temp_form_data.append("id", layer0_item.id);
+    temp_form_data.append("username", localStorage.getItem("username"));
+    fetch("./../../backend/api/get_layer1_comment_api.php", {
+        method: "POST",
+        body: temp_form_data
+    }).then(response => response.json())
+        .then(data => {
+            if (data.code != 0) {
+                alert(data.msg);
+            } else {
+                console.log("评论查询成功");
+                var len = data.data.length;
+                var layer1_item;
+                for (var i = 0; i < len; i++) {
+                    layer1_item = reply_item(data.data[i].id, data.data[i].username, data.data[i].comment, data.data[i].timestamps, data.data[i].likes, data.data[i].liked, data.data[i].unliked);
+                    layer0_item.appendChild(layer1_item);
+                }
+            }
+        })
+        .catch(error => {
+            console.error(error);
+        })
+
 }

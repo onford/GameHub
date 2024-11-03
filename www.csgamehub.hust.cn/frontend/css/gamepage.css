@@ -243,16 +243,6 @@ body {
     background: #a29c96;
 }
 
-.commentarea {
-    width: 100%;
-    height: 100vh;
-}
-
-.comment_box input {
-    height: 100px;
-    flex-basis: 80%;
-}
-
 .list-group-item {
     color: lightskyblue;
 }

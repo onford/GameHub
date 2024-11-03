@@ -61,7 +61,7 @@
                                 <textarea class="form-control" id="commentText" name="comment_text"
                                     placeholder="写点评论..." rows="1"
                                     style="resize: none;height: 24px;box-sizing:border-box;"
-                                    onfocus="document.getElementById('submit_div').hidden=false;"
+                                    onfocus="document.getElementById('submit_div').hidden=false;removeReplyBox();"
                                     onblur="if(this.value == '') document.getElementById('submit_div').hidden=true;"></textarea>
                             </div>
                         </div>

@@ -43,4 +43,3 @@ function crown_style(rank) {
     if (rank > 3) return rank;
     return "<i class=\"fa-solid fa-crown\" style=\"color:" + (rank == 1 ? "gold" : (rank == 2 ? "silver" : "rgb(186,110,64)")) + ";\"></i>";
 }
-// window.onload = init();
