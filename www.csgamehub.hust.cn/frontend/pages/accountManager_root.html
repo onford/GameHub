@@ -10,6 +10,28 @@
 </head>
 
 <body>
+    <div class="my-gray-layer my-not-show">
+        <form action="" class="update_form">
+            <div class="my-flex-item my-input-box">
+                <span class="my-line">用户名:</span>
+                <input type="text" name="username" class="my-username-inputer">
+            </div>
+            <div class="my-manager-box my-flex-item">
+                <span class="my-line">权限操作:</span>
+                <select name="forbidden-time" id="my-select-box">
+                    <option value="option0"></option>
+                    <option value="option1">禁言十分钟</option>
+                    <option value="option2">禁言一小时</option>
+                    <option value="option3">禁言一天</option>
+                </select>
+            </div>
+            <div class="my-flex-item my-btn-group">
+                <input type="submit" value="确认" class="my-submit-btn">
+                <button class="my-cancel-btn" onclick="cancel_btn_handle(event)">取消</button>
+            </div>
+        </form>
+    </div>
+
     <div class="my-flex-container">
         <div class="my-lefter">
             <div class="my-option-table">
@@ -68,6 +90,12 @@
 </body>
 
 <script>
+    function cancel_btn_handle(event) {
+        event.preventDefault();
+        var overlay = document.getElementsByClassName("my-gray-layer")[0];
+        overlay.classList.add("my-not-show");
+    }
+
     function jumpHandle1(event) {
         event.preventDefault();
         location.href = './codeReview.html';
@@ -76,6 +104,24 @@
     function jumpHandle2(event) {
         event.preventDefault();
         location.href = './accountManager_root.html';
+    }
+
+    function updateHandle(event) {
+        event.preventDefault();
+        console.log("修改事件触发");
+        var overlay = document.getElementsByClassName("my-gray-layer")[0];
+        overlay.classList.remove('my-not-show');
+        var this_tr = event.target.parentNode.parentNode;
+        var username = "";
+        for (var child of this_tr.childNodes) {
+            if (child.id == 'my-special-td') {
+                username = child.innerHTML;
+                break;
+            }
+        }
+        console.log("username: " + username);
+        var input_box = document.getElementsByClassName("my-username-inputer")[0];
+        input_box.value = username;
     }
 
     function deleteUsernameHandle(event) {
@@ -165,6 +211,7 @@
             var new_operation_modify_a = document.createElement("a");
             new_operation_modify_a.innerHTML = "修改 ";
             new_operation_modify_a.href = "#";
+            new_operation_modify_a.onclick = updateHandle;
             var new_operation_delete_a = document.createElement("a");
             new_operation_delete_a.innerHTML = "删除";
             new_operation_delete_a.href = "#";
