@@ -55,6 +55,14 @@ create table unlikelist(
     foreign key(comment_id) references comment_list(id) on delete cascade on update cascade
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+create table newgame_list(
+    newgame_id int primary key auto_increment, -- 新游戏id，用户提交的压缩包将按照这个命名
+    username varchar(127),
+    newgame_name varchar(127),
+    `status` tinyint, -- 0 待审核 | 1 通过 | 2 打回
+    foreign key(username) references userlist(username) on delete cascade on update cascade
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 -- 下面代码用于加载 game_list，这是一个相对固定的表
 insert into game_list values ('2048'),('senpai');

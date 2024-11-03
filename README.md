@@ -62,6 +62,13 @@ Table: **likelist,unlikelist**
 
 PK = (username,comment_id)
 
+Table: **newgame_list**
+| 列名|类型|限制|
+|:---:|:---:|:---:|
+|newgame_id|int|PK AI|
+|username|varchar(127)|FK -> userlist(username)|
+|newgame_name|varchar(127)||
+|status|tinyint||
 
 其中限制条件的缩写分别是  
 PK: primary key  
