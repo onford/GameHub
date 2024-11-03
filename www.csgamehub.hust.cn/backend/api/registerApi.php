@@ -98,7 +98,7 @@ if ($message != "") {
 
 // 将用户数据插入到用户表当中
 $sql = "
-    insert into $table_name
+    insert into $table_name (username,password)
     values ('$input_username', '$input_password');
 ";
 $res = $conn->query($sql);
