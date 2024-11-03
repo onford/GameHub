@@ -1,0 +1,52 @@
+.header {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.drop-zone {
+    border: 2px dashed #007bff;
+    border-radius: 4px;
+    padding: 40px;
+    text-align: center;
+    margin-bottom: 20px;
+    background-color: #f1f1f1;
+    transition: background-color 0.3s;
+}
+
+.drop-zone.hover {
+    background-color: #e1e7ff;
+}
+
+.uploaded-files {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.file-item {
+    background-color: whitesmoke;
+    color: black;
+    padding: 10px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.file-name {
+    flex-grow: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.cancel-btn {
+    background-color: transparent;
+    color: black;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 10px;
+    flex-shrink: 0;
+}
