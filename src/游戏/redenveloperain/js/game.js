@@ -1,10 +1,10 @@
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
-const gameDuration = 15000; // 游戏持续15秒
-let envelopes = []; //信封集合
-let score = 0;
-let startTime = Date.now();
-let timer;
+var canvas = document.getElementById('rainCanvas');
+var ctx = canvas.getContext('2d');
+var gameDuration = 10000; // 游戏持续10秒
+var envelopes = []; //信封集合
+var score = 0;
+var startTime = Date.now();
+var timer;
 document.body.appendChild(canvas);
 
 canvas.style.position = 'absolute';
@@ -47,13 +47,6 @@ function updateTimeRemaining() {
   timeRemainingElement.textContent = `剩余时间: ${seconds}s`;
 }
 
-// 游戏音乐
-const gameAudio = document.createElement("audio");
-gameAudio.id = 'endAudio';
-gameAudio.src = "music/gamebegin.mp4";
-gameAudio.type = "audio/mpeg";
-gameAudio.loop = false;
-document.body.appendChild(gameAudio);
 
 // 游戏结束音乐
 const endAudio = document.createElement("audio");
@@ -153,7 +146,7 @@ function startGame() {
   startTime = Date.now();
   updateScore();
   updateTimeRemaining();
-  timer = setInterval(createEnvelope, 500); // 每秒生成一个红包
+  timer = setInterval(createEnvelope, 500); // 每0.5秒生成一个红包
   canvas.addEventListener('click', handleClick);
   gameLoop = setInterval(() => {
     // 游戏逻辑
@@ -162,11 +155,9 @@ function startGame() {
     updateEnvelopes();
     updateScore();
     updateTimeRemaining();
-    gameAudio.play();
 
     // 检查游戏是否结束
     if (Date.now() - startTime >= gameDuration) {
-      gameAudio.pause();
       clearInterval(gameLoop);
       clearInterval(timer);
       canvas.removeEventListener('click', handleClick);
@@ -175,4 +166,4 @@ function startGame() {
   }, 1000 / 60); // 以60帧/秒更新游戏
 }
 
-window.onload = startGame;
+startGame();
