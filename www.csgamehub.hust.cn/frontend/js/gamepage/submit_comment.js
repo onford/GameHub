@@ -126,6 +126,8 @@ function commit_like_and_unlike() {
         })
 }
 
+var confirmAction;
+
 
 function alert_delete() {
     const id = this.parentElement.parentElement.id;
@@ -135,25 +137,26 @@ function alert_delete() {
     var hint_text = document.getElementById("hint_text");
     overlay.style.display = 'block';
     confirm_box.style.display = 'block';
+    confirmAction = () => {
+        hint_text.style = "color:green;margin-bottom:0;";
+        hint_text.innerHTML = "删除成功";
+        document.getElementById('confirmButton').hidden = true;
+        document.getElementById('cancelButton').hidden = true;
+
+        setTimeout(() => {
+            overlay.style.display = 'none';
+            confirm_box.style.display = 'none';
+            hint_text.innerHTML = "确定删除该条评论？";
+            hint_text.style = "color:#212529;margin-bottom:1rem;";
+            document.getElementById('confirmButton').hidden = false;
+            document.getElementById('cancelButton').hidden = false;
+            document.getElementById('confirmButton').removeEventListener('click', confirmAction);
+        }, 2000);
+        execute_delete(id, comment_to_be_removed);
+    }
+    document.getElementById('confirmButton').addEventListener('click', confirmAction);
+
     if (!listenerAdded) {
-        document.getElementById('confirmButton').addEventListener('click', function () {
-            hint_text.style = "color:green;margin-bottom:0;";
-            hint_text.innerHTML = "删除成功";
-            document.getElementById('confirmButton').hidden = true;
-            document.getElementById('cancelButton').hidden = true;
-
-            setTimeout(() => {
-                overlay.style.display = 'none';
-                confirm_box.style.display = 'none';
-                hint_text.innerHTML = "确定删除该条评论？";
-                hint_text.style = "color:#212529;margin-bottom:1rem;";
-                document.getElementById('confirmButton').hidden = false;
-                document.getElementById('cancelButton').hidden = false;
-
-            }, 2000);
-            execute_delete(id, comment_to_be_removed);
-        });
-
         document.getElementById('cancelButton').addEventListener('click', function () {
             overlay.style.display = 'none';
             confirm_box.style.display = 'none';
