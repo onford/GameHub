@@ -51,6 +51,7 @@
                     <p style="margin-top: 20px;transition: background-color 1s ease-in-out;">将文件拖放到这里或点击上传<br>支持 zip/rar
                         等压缩包形式</p>
                 </div>
+                <div>建议在压缩文件中添加 <code>README.md</code> 文件，细说如何游玩你的游戏！</div>
                 <div>
                     <ul class="list-group list-group-flush" id="uploadedFiles">
                     </ul>
@@ -61,6 +62,7 @@
     </div>
 
     <script>
+        const header = document.querySelector(".header");
         const dropZone = document.getElementById('dropZone');
         const uploadedFilesDiv = document.getElementById('uploadedFiles');
         const fileInput = document.getElementById('fileInput');
@@ -68,6 +70,19 @@
         const uploadImg = dropZone.querySelector("i");
         const hoverHTML = "松开鼠标以上传文件";
         const blurHTML = "将文件拖放到这里或点击上传<br>支持 zip/rar等压缩包形式";
+
+        const gamenameText = document.createElement("textarea");
+        gamenameText.name = "newgamename";
+        gamenameText.placeholder = "给新游戏起个名吧！不要超过 30 个字哦~";
+        gamenameText.maxLength = "30";
+        gamenameText.rows = "1";
+        gamenameText.style = "resize: none;box-sizing:border-box;padding-top:5px;padding-bottom:5px;padding-left:10px;padding-right:10px;margin-bottom:10px;border-radius:5px;border-width:2px;width:100%;"
+
+        const seal_div = document.createElement("form");
+        seal_div.style = "padding-left:10px;padding-top:10px;padding-bottom:10px;";
+        seal_div.class = "form-group";
+        seal_div.id = "seal_div";
+        seal_div.appendChild(gamenameText);
 
         const dragoverListener = (event) => {
             event.preventDefault();
@@ -142,6 +157,8 @@
                         uploadedFilesDiv.innerHTML = '';
                         fileInput.value = "";
                         restoreUpload();
+                        header.removeChild(seal_div);
+                        gamenameText.value = "";
                     }
                     const confirmButton = document.createElement('button');
                     confirmButton.textContent = '确认上传';
@@ -150,6 +167,11 @@
                     confirmButton.classList.add('btn-outline-success');
                     confirmButton.onclick = (e) => {
                         e.stopPropagation();
+                        if (repeateName() == 0) {
+                            alert("游戏名不可用，请换一个游戏名");
+                            gamenameText.value = "";
+                            return;
+                        }
                         uploadedFilesDiv.innerHTML = '';
                         restoreUpload();
                         const formData = new FormData();
@@ -162,6 +184,7 @@
                             .then(data => {
                                 console.log(data);
                                 alert("文件已提交给管理员审核！");
+                                gamenameText.value = "";
                             })
                             .catch(error => {
                                 console.error('上传失败:', error);
@@ -192,7 +215,9 @@
                     fileItem.appendChild(downloadButton);
 
                     uploadedFilesDiv.appendChild(fileItem);
+
                     forbidUpload();
+                    header.appendChild(seal_div);
                 }
                 else alert("请上传压缩包文件！");
             }
@@ -218,6 +243,31 @@
             dropZone.querySelector("i").classList.remove("fa-circle-check");
             dropZone.querySelector("i").classList.add("fa-cloud-arrow-up");
             dropZone.querySelector("p").innerHTML = blurHTML;
+        }
+
+        function repeateName() {
+            // 返回新游戏注册的 id 值。若游戏名非法，返回 0
+            return 1; // 先就这样
+            // var gamename = gamenameText.value;
+            // var form_data = new FormData();
+            // form_data.append("gamename", gamename);
+            // fetch("./../../backend/api/check_repeated_name.php", {
+            //     method: "POST",
+            //     body: form_data
+            // }).then(response => response.json())
+            //     .then(data => {
+            //         console.log(data);
+            //         if (data.code == 1) {
+            //             alert(data.msg);
+            //             return 0;
+            //         } else {
+            //             console.log("游戏注册成功");
+            //             return data.newgame_id;
+            //         }
+            //     }).catch(error => {
+            //         console.error(error);
+            //         return 0;
+            //     });
         }
 
         function jumpHandle1(event) {
