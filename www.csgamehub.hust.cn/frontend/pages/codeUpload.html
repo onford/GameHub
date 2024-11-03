@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="./../css/codeUpload.css">
     <link href="./../../src/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="./../../src/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="./../../src/vendor/fontawesome/css/all.min.css">
     <link rel="icon" href="./../../src/images/favicon1.ico" type="image/x-icon">
     <script src="./../../src/vendor/jquery/jquery-3.6.4.min.js"></script>
     <link rel="stylesheet" href="./../css/global.css">
@@ -36,35 +37,57 @@
                 <div class="option">返回首页</div>
             </a>
         </div>
-        <div class="main">
+        <div class="main" style="background-image: none;">
             <div class="header">
-                <span>投稿: </span>
+                <div>
+                    <h2 style="margin-top: 40px;margin-bottom: 40px;display: inline-block;">上传附件</h2>
+                    <p style="color:gray;margin-bottom: 40px;display: inline-block;margin-left: 40px;">
+                        将所需文件上传至项目中，即可提交你的 canvas 游戏作品！</p>
+                </div>
                 <input type="file" id="fileInput" style="display:none;" multiple>
-                <div class="drop-zone" id="dropZone">将文件拖放到这里或点击上传</div>
-                <button class="btn btn-danger" id="clearAllButton">取消所有已选择文件</button>
-                <div class="uploaded-files" id="uploadedFiles"></div>
-                <button class="btn btn-success" id="submitButton">提交文件</button>
+                <div class="drop-zone" id="dropZone">
+                    <i class="fa-solid fa-cloud-arrow-up"
+                        style="font-size: 100px;transition: background-color 1s ease-in-out;"></i>
+                    <p style="margin-top: 20px;transition: background-color 1s ease-in-out;">将文件拖放到这里或点击上传</p>
+                </div>
             </div>
+            <button class="btn btn-danger" id="clearAllButton">取消所有已选择文件</button>
+            <div class="uploaded-files" id="uploadedFiles"></div>
+            <button class="btn btn-success" id="submitButton">提交文件</button>
         </div>
+    </div>
     </div>
 
     <script>
         const dropZone = document.getElementById('dropZone');
         const uploadedFilesDiv = document.getElementById('uploadedFiles');
         const fileInput = document.getElementById('fileInput');
+        const uploadText = dropZone.querySelector("p");
+        const uploadImg = dropZone.querySelector("i");
+        const hoverHTML = "松开鼠标以上传文件";
+        const blurHTML = "将文件拖放到这里或点击上传";
 
         dropZone.addEventListener('dragover', (event) => {
             event.preventDefault();
             dropZone.classList.add('hover');
+            uploadText.classList.add('blue-fade');
+            uploadImg.classList.add('blue-fade');
+            uploadText.innerHTML = hoverHTML;
         });
 
         dropZone.addEventListener('dragleave', () => {
             dropZone.classList.remove('hover');
+            uploadText.classList.remove('blue-fade');
+            uploadImg.classList.remove('blue-fade');
+            uploadText.innerHTML = blurHTML;
         });
 
         dropZone.addEventListener('drop', (event) => {
             event.preventDefault();
             dropZone.classList.remove('hover');
+            uploadText.classList.remove('blue-fade');
+            uploadImg.classList.remove('blue-fade');
+            uploadText.innerHTML = blurHTML;
             const files = event.dataTransfer.files;
             handleFiles(files);
         });

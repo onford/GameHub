@@ -1,6 +1,6 @@
 .header {
     margin-bottom: 20px;
-    font-size: 24px;
+    margin-left: 40px;
 }
 
 .drop-zone {
@@ -49,4 +49,20 @@
     font-weight: bold;
     margin-left: 10px;
     flex-shrink: 0;
+}
+
+.blue-fade {
+    animation: blueFade 0.3s forwards;
+}
+
+@keyframes blueFade {
+    0% {
+        color: black;
+        /* Start white */
+    }
+
+    100% {
+        color: deepskyblue;
+        /* Change to blue */
+    }
 }
