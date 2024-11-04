@@ -2,7 +2,10 @@
 $rest = [
     "code" => 0,
     "msg" => "",
-    "data" => [],
+    "data" => [
+        "usernames" => [],
+        "accountnumbers" => [],
+    ],
 ];
 
 function error_and_die($msg)
@@ -28,7 +31,7 @@ if ($conn->connect_error) {
 $tablename = "userlist";
 $input_text = $_POST["part_username"];
 $sql = "
-    select username
+    select username,accountnumber
     from $tablename
     where username like '%$input_text%';
 ";
@@ -36,7 +39,8 @@ $res = $conn->query($sql);
 
 if ($res) {
     while ($row = $res->fetch_assoc()) {
-        array_push($rest["data"], $row["username"]);
+        array_push($rest["data"]["usernames"], $row["username"]);
+        array_push($rest["data"]["accountnumbers"], $row["accountnumber"]);
     }
 } else {
     $conn->close();

@@ -2,7 +2,10 @@
 $rest = [
     "code" => 0,
     "msg" => "",
-    "data" => [],
+    "data" => [
+        "usernames" => [],
+        "accountnumbers" => [],
+    ],
 ];
 
 function error_and_die($msg)
@@ -27,14 +30,15 @@ if ($conn->connect_error) {
 
 $tablename = "userlist";
 $sql = "
-    select username
+    select username,accountnumber
     from $tablename;
 ";
 $res = $conn->query($sql);
 
 if ($res) {
     while ($row = $res->fetch_assoc()) {
-        array_push($rest["data"], $row["username"]);
+        array_push($rest["data"]["usernames"], $row["username"]);
+        array_push($rest["data"]["accountnumbers"], $row["accountnumber"]);
     }
 } else {
     $conn->close();

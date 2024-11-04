@@ -111,6 +111,7 @@
         var change_form = document.getElementsByClassName("change_form")[0];
         var form_data = new FormData(change_form);
         form_data.append("username", localStorage.getItem("cur_username"));
+        form_data.append("accountnumber", localStorage.getItem("cur_accountnumber"));
         const update_username_api = "./../../backend/api/update_username_api.php";
         fetch(update_username_api, {
             method: "POST",
@@ -144,14 +145,18 @@
         overlay.classList.remove('my-not-show');
         var this_tr = event.target.parentNode.parentNode;
         var username = "";
+        var accountnumber = "";
         for (var child of this_tr.childNodes) {
             if (child.id == 'my-special-td') {
                 username = child.innerHTML;
-                break;
+            }
+            if (child.id == 'my-accountnumber-td') {
+                accountnumber = child.innerHTML;
             }
         }
         console.log("username: " + username);
         localStorage.setItem("cur_username", username);
+        localStorage.setItem("cur_accountnumber", accountnumber);
         var input_box = document.getElementsByClassName("my-username-inputer2")[0];
         input_box.value = username;
     }
@@ -164,8 +169,9 @@
         const set_forbidden_time_api = "./../../backend/api/set_forbidden_time_api.php";
         var update_form = document.getElementsByClassName('update_form')[0];
         var form_data = new FormData(update_form);
+        var cur_accountnumber = localStorage.getItem("cur_accountnumber");
         var cur_username = localStorage.getItem("cur_username");
-        form_data.append("username", cur_username);
+        form_data.append("accountnumber", cur_accountnumber);
 
         fetch(set_forbidden_time_api, {
             method: "POST",
@@ -226,14 +232,18 @@
         var overlay = document.getElementsByClassName("my-gray-layer")[0];
         overlay.classList.remove('my-not-show');
         var this_tr = event.target.parentNode.parentNode;
+        var accountnumber = "";
         var username = "";
         for (var child of this_tr.childNodes) {
+            if (child.id == 'my-accountnumber-td') {
+                accountnumber = child.innerHTML;
+            }
             if (child.id == 'my-special-td') {
                 username = child.innerHTML;
-                break;
             }
         }
-        console.log("username: " + username);
+        // console.log("username: " + username);
+        localStorage.setItem("cur_accountnumber", accountnumber);
         localStorage.setItem("cur_username", username);
         var input_box = document.getElementsByClassName("my-username-inputer")[0];
         input_box.value = username;
@@ -248,15 +258,15 @@
         const delete_username_api = "./../../backend/api/delete_username_api.php";
         var form_data = new FormData();
         var event_target = event.target;
-        var username = "";
+        var accountnumber = "";
         var this_tr = event_target.parentNode.parentNode;
         for (var child of this_tr.childNodes) {
-            if (child.id == 'my-special-td') {
-                username = child.innerHTML;
+            if (child.id == 'my-accountnumber-td') {
+                accountnumber = child.innerHTML;
                 break;
             }
         }
-        form_data.append("username", username);
+        form_data.append("accountnumber", accountnumber);
         fetch(delete_username_api, {
             method: "POST",
             body: form_data
@@ -292,7 +302,7 @@
         my_table.appendChild(my_thead);
     }
 
-    function generateTable(usernames) {
+    function generateTable(usernames, accountnumbers) {
         var my_table = document.getElementsByTagName("table")[0];
         // 先将子节点全部删除
         var table_children = my_table.childNodes;
@@ -302,12 +312,15 @@
 
         var my_thead = document.createElement("thead");
         var my_id_td = document.createElement("td");
+        var my_account_td = document.createElement("td");
         var my_username_td = document.createElement("td");
         var my_operation_td = document.createElement("td");
         my_id_td.innerHTML = "序号";
+        my_account_td.innerHTML = "账号名";
         my_username_td.innerHTML = "用户名";
         my_operation_td.innerHTML = "操作";
         my_thead.appendChild(my_id_td);
+        my_thead.appendChild(my_account_td);
         my_thead.appendChild(my_username_td);
         my_thead.appendChild(my_operation_td);
         my_table.appendChild(my_thead);
@@ -315,12 +328,16 @@
 
 
         var my_tbody = document.createElement("tbody");
+        console.log("usernames: " + usernames);
+        console.log("accountnumbers: " + accountnumbers);
 
         for (var i = 0; i < usernames.length; i++) {
             var new_tr = document.createElement("tr");
             var new_id_td = document.createElement("td");
+            var new_account_td = document.createElement("td");
             var new_username_td = document.createElement("td");
             new_username_td.id = "my-special-td";
+            new_account_td.id = 'my-accountnumber-td';
 
             var new_operation_td = document.createElement("td");
             var new_operation_change_a = document.createElement("a");
@@ -340,9 +357,11 @@
             new_operation_td.appendChild(new_operation_delete_a);
 
             new_id_td.innerHTML = i + 1;
+            new_account_td.innerHTML = accountnumbers[i];
             new_username_td.innerHTML = usernames[i];
 
             new_tr.appendChild(new_id_td);
+            new_tr.appendChild(new_account_td);
             new_tr.appendChild(new_username_td);
             new_tr.appendChild(new_operation_td);
 
@@ -369,14 +388,16 @@
                 }
                 else {
                     console.log("用户名查询成功");
+                    console.log(data.data);
                     if (data.data.length != 0) {
-                        generateTable(data.data);
+                        generateTable(data.data.usernames, data.data.accountnumbers);
                     }
                     else {
                         generateEmptyTable("没有搜索到相关结果");
                     }
                 }
             })
+            .catch(error => console.error(error))
     }
 
     function init() {
@@ -390,10 +411,10 @@
                     alert(data.msg);
                 } else {
                     console.log("用户名查询成功");
-                    if (data.data.length == 0) {
+                    if (data.data.usernames.length == 0) {
                         generateEmptyTable("当前用户表为空");
                     } else {
-                        generateTable(data.data);
+                        generateTable(data.data.usernames, data.data.accountnumbers);
 
                     }
                 }

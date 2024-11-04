@@ -25,6 +25,7 @@ if ($conn->connect_error) {
     error_and_die("数据库连接失败");
 }
 
+$accountnumber = $_POST["accountnumber"];
 $username = $_POST["username"];
 $new_username = $_POST["new_username"];
 
@@ -54,7 +55,7 @@ if ($res) {
 $sql = "
     update $tablename
     set username='$new_username'
-    where username='$username';
+    where accountnumber='$accountnumber';
 ";
 
 $res = $conn->query($sql);

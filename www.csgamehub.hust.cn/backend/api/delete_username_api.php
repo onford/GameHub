@@ -25,13 +25,13 @@ if ($conn->connect_error) {
     error_and_die("数据库连接失败");
 }
 
-$username = $_POST['username'];
+$accountnumber = $_POST['accountnumber'];
 $tablename = "userlist";
 
 $sql = "
     delete
     from $tablename
-    where username='$username';
+    where accountnumber='$accountnumber';
 ";
 
 $res = $conn->query($sql);

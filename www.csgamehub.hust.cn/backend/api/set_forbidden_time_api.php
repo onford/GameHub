@@ -32,7 +32,7 @@ if ($conn->connect_error) {
     error_and_die("数据库连接失败");
 }
 
-$username = $_POST["username"];
+$accountnumber = $_POST["accountnumber"];
 $option = $_POST['forbidden-time'];
 
 // array_push($rest["data"], $option);
@@ -62,7 +62,7 @@ $tablename = "userlist";
 $sql = "
     update $tablename
     set available_time='$new_timestamps'
-    where username='$username';
+    where accountnumber='$accountnumber';
 ";
 
 $res = $conn->query($sql);
