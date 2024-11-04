@@ -24,7 +24,7 @@
                     alt="" class="profile_pic"></div>
             <div class="option" onclick="jumpHandle1(event)">
                 <p>消息中心</p>
-            </div class="option">
+            </div>
             <div class="option" onclick="jumpHandle2(event)">
                 <p>创作中心</p>
             </div>
@@ -38,21 +38,23 @@
             </a>
         </div>
         <div class="main my-flex-container">
-            <form action="" onsubmit=submitForm(event) class="my-flex-container" id="update_password_form">
+            <form action="" onsubmit="submitForm(event)" class="my-flex-container" id="update_password_form">
                 <ul>
                     <li class="line">
                         <div class="heading">修改密码</div>
                         <i class="fa fa-lock"></i>&emsp;
-                        <input type="password" name="old_password" placeholder="请输入旧密码" class="fill_in">
+                        <input type="password" name="old_password" placeholder="请输入旧密码" class="fill_in" id="old_password">
+                        <button type="button" onclick="togglePasswordVisibility('old_password')"><i class="fa fa-eye" id="eye_old"></i></button>
                     </li>
                     <li class="line">
                         <i class="fa fa-lock"></i>&emsp;
-                        <input type="password" name="new_password" placeholder="请输入新密码" class="fill_in"><br>
-                        <!-- <p id="errormsg"></p> -->
+                        <input type="password" name="new_password" placeholder="请输入新密码" class="fill_in" id="new_password">
+                        <button type="button" onclick="togglePasswordVisibility('new_password')"><i class="fa fa-eye" id="eye_new"></i></button>
                     </li>
                     <li class="line">
                         <i class="fa fa-lock"></i>&emsp;
-                        <input type="password" name="re_new_password" placeholder="确认新密码" class="fill_in"><br>
+                        <input type="password" name="re_new_password" placeholder="确认新密码" class="fill_in" id="re_new_password">
+                        <button type="button" onclick="togglePasswordVisibility('re_new_password')"><i class="fa fa-eye" id="eye_re_new"></i></button>
                     </li>
                     <li class="line" style="margin-right: 10px;margin-top:20px;">
                         <input type="submit" value="确认" class="confirm_button" disabled>&emsp;&emsp;
@@ -64,6 +66,20 @@
     </div>
 </body>
 <script>
+    function togglePasswordVisibility(inputId) {
+        const input = document.getElementById(inputId);
+        const eyeIcon = document.getElementById(`eye_${inputId}`);
+        if (input.type === "password") {
+            input.type = "text"; // Show password
+            eyeIcon.classList.remove('fa-eye');
+            eyeIcon.classList.add('fa-eye-slash');
+        } else {
+            input.type = "password"; // Hide password
+            eyeIcon.classList.remove('fa-eye-slash');
+            eyeIcon.classList.add('fa-eye');
+        }
+    }
+
     function jumpHandle1(event) {
         event.preventDefault();
         console.log("跳转页面事件触发");
@@ -75,7 +91,7 @@
         console.log("跳转页面事件触发");
         window.location.href = "./codeUpload.html";
     }
-
+    
     function jumpHandle3(event) {
         event.preventDefault();
         console.log("跳转页面事件触发");
@@ -99,19 +115,14 @@
                 }
                 else {
                     alert("修改成功");
+                    // 清空输入框内容
+                    update_form.reset();
                 }
             })
             .catch(error => {
                 console.log(error);
-            })
+            });
     }
-
-    // function init() { // 完全没有用
-    //     var sp_input = document.getElementById("invisible_input_box");
-    //     sp_input.value = localStorage.getItem("username");
-    // }
-
-    // window.onload = init();
 
     function logoutHandle(event) {
         event.preventDefault();
@@ -125,8 +136,6 @@
     //表单不允许输入空格
     Array.from(document.getElementsByClassName('fill_in')).forEach(function (input) {
         input.addEventListener('keypress', function (event) {
-            // 现代浏览器通常只使用event.key，但为了兼容旧版浏览器，这里仍然保留了event.keyCode的检查  
-            // 但实际上，你应该只使用event.key，因为keyCode已被弃用  
             if (event.key === ' ') {
                 event.preventDefault();
             }
@@ -136,9 +145,8 @@
     var old_password_ready = false, new_password_ready = false, re_new_password_ready = false;
     var confirm_button = document.getElementsByClassName("confirm_button")[0];
 
-    //三个输入框都加个监听器
     Array.from(document.getElementsByClassName("fill_in")).forEach(element => {
-        element.addEventListener('input', function () { // 箭头函数没有this关键字, 所以用普通函数
+        element.addEventListener('input', function () {
             if (this.name == "old_password" && this.value !== '') {
                 old_password_ready = true;
             }
@@ -151,7 +159,7 @@
             if (old_password_ready && new_password_ready && re_new_password_ready) {
                 confirm_button.disabled = false;
             }
-        })
+        });
     });
 
     $(window).on("load", function () {
