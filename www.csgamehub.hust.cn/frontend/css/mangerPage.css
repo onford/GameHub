@@ -91,6 +91,7 @@ a {
 .my-page-btn {
     border: 1px solid #d7dde4;
     border-radius: 5%;
+    margin: 0 1px;
     padding: 0 10px;
     color: #657180;
     background-color: white;
@@ -325,4 +326,9 @@ a {
     height: 30px;
     /* background-color: #ddd; */
     border: 1px solid #657180;
+}
+
+.my-omit-btn {
+    font-size: 20px;
+    color: #aaa;
 }

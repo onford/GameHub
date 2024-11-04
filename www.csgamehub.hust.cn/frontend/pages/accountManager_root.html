@@ -72,33 +72,10 @@
             </div>
             <div class="my-main-body">
                 <table>
-                    <!-- <thead>
-                        <td>序号</td>
-                        <td>用户名</td>
-                        <td>操作</td>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Njaso</td>
-                            <td>
-                                <a href="">修改</a>
-                                <a href="">删除</a>
-                            </td>
-                        </tr>
-                    </tbody> -->
                 </table>
             </div>
             <div class="my-main-bottom my-flex-container">
                 <div class="my-page-navigation-table">
-                    <button class="my-page-btn">上一页</button>
-                    <button class="my-page-btn" style="background-color: #00A1D6; color:white;">1</button>
-                    <button class="my-page-btn">2</button>
-                    <button class="my-page-btn">3</button>
-                    <!-- <button class="my-page-btn my-omit-btn">...</button> -->
-                    <span style="font-size: 20px; color: #aaa;">...</span>
-                    <button class="my-page-btn">114514</button>
-                    <button class="my-page-btn">下一页</button>
                 </div>
             </div>
         </div>
@@ -278,8 +255,19 @@
                 }
                 else {
                     console.log("用户删除成功");
+                    var cur_userlist_length = Number(localStorage.getItem("cur_userlist_length"));
+                    cur_userlist_length--;
+                    var pre_page_no = Number(localStorage.getItem("max_page_no"));
+                    var max_page_no = Math.trunc((cur_userlist_length + 8) / 9);
+                    max_page_no = Math.max(1, max_page_no);
+                    localStorage.setItem("max_page_no", max_page_no);
                     var this_tr_parent = this_tr.parentNode;
                     this_tr_parent.removeChild(this_tr);
+                    if (max_page_no != pre_page_no) {
+                        init();
+                    } else {
+                        init(max_page_no);
+                    }
                 }
             })
             .catch(error => console.error(error));
@@ -297,6 +285,7 @@
         var only_td = document.createElement("td");
         only_td.className = "my-only-td";
         only_td.innerHTML = msg;
+        console.log(msg);
         only_tr.appendChild(only_td);
         my_thead.appendChild(only_tr);
         my_table.appendChild(my_thead);
@@ -356,7 +345,8 @@
             new_operation_td.appendChild(new_operation_modify_a);
             new_operation_td.appendChild(new_operation_delete_a);
 
-            new_id_td.innerHTML = i + 1;
+            var now_page_no = Number(localStorage.getItem("cur_page_no"));
+            new_id_td.innerHTML = 9 * (Math.trunc(now_page_no) - 1) + i + 1;
             new_account_td.innerHTML = accountnumbers[i];
             new_username_td.innerHTML = usernames[i];
 
@@ -369,6 +359,14 @@
         }
 
         my_table.appendChild(my_tbody);
+    }
+
+    function clearPageTable() {
+        var pageTable = document.getElementsByClassName("my-page-navigation-table")[0];
+        var children = pageTable.childNodes;
+        while (children.length > 0) {
+            pageTable.removeChild(children[0]);
+        }
     }
 
     function searchHandle(event) {
@@ -389,8 +387,10 @@
                 else {
                     console.log("用户名查询成功");
                     console.log(data.data);
-                    if (data.data.length != 0) {
+                    if (data.data.usernames.length != 0) {
+                        localStorage.setItem("cur_page_no", 1);
                         generateTable(data.data.usernames, data.data.accountnumbers);
+                        clearPageTable();
                     }
                     else {
                         generateEmptyTable("没有搜索到相关结果");
@@ -400,10 +400,97 @@
             .catch(error => console.error(error))
     }
 
-    function init() {
+    function pageButtonHandle(event) {
+        event.preventDefault();
+        var new_page_no = Number(event.target.innerHTML);
+        localStorage.setItem("cur_page_no", new_page_no);
+        init(new_page_no);
+    }
+
+    function previousPageButtonHandle(event) {
+        event.preventDefault();
+        var cur_page_no = Number(localStorage.getItem("cur_page_no"));
+        if (cur_page_no == 1) {
+            return;
+        }
+        cur_page_no--;
+        init(cur_page_no);
+    }
+
+    function nextPageButtonHandle(event) {
+        event.preventDefault();
+        var cur_page_no = Number(localStorage.getItem("cur_page_no"));
+        var maxPageNo = localStorage.getItem("max_page_no");
+        if (cur_page_no == maxPageNo) {
+            return;
+        }
+        cur_page_no++;
+        init(cur_page_no);
+    }
+
+    function generatePageControl() {
+        var pageTable = document.getElementsByClassName("my-page-navigation-table")[0];
+        var children = pageTable.childNodes;
+        while (children.length > 0) {
+            pageTable.removeChild(children[0]);
+        }
+        var previousPageButton = document.createElement("button");
+        var nextPageButton = document.createElement("button");
+        previousPageButton.classList.add("my-page-btn");
+        nextPageButton.classList.add("my-page-btn");
+        previousPageButton.innerHTML = "上一页";
+        nextPageButton.innerHTML = '下一页';
+        previousPageButton.onclick = previousPageButtonHandle;
+        nextPageButton.onclick = nextPageButtonHandle;
+
+        pageTable.appendChild(previousPageButton);
+
+        const get_userlist_length_api = "./../../backend/api/get_userlist_length.php";
+
+        //至多显示四个按钮
+        //超过四个,从第三个开始显示省略号,然后再显示最后一页的按钮
+        //一版九个为上限
+        var userlist_length = 0;
+        fetch(get_userlist_length_api, {
+            method: "GET"
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code != 0) {
+                    alert(data.msg);
+                }
+                else {
+                    console.log("userlist长度获取成功");
+                    console.log(data.data);
+                    var len = Number(data.data);
+                    var max_page_no = Math.trunc((len + 8) / 9);
+                    localStorage.setItem("max_page_no", max_page_no);
+                    localStorage.setItem("cur_userlist_length", data.data);
+                    for (var i = 0; i < max_page_no; i++) {
+                        var new_page_btn = document.createElement("button");
+                        new_page_btn.classList.add("my-page-btn");
+                        new_page_btn.innerHTML = i + 1;
+                        new_page_btn.onclick = pageButtonHandle;
+                        if (i == Number(localStorage.getItem("cur_page_no")) - 1) {
+                            new_page_btn.style.backgroundColor = "#00A1D6";
+                            new_page_btn.style.color = "white";
+                        }
+                        pageTable.appendChild(new_page_btn);
+                    }
+                    pageTable.appendChild(nextPageButton);
+                }
+            })
+            .catch(error => console.error(error))
+    }
+
+    function init(page_no = 1) {
+        var form_data = new FormData();
+        form_data.append("page_no", page_no);
+        localStorage.setItem("cur_page_no", page_no);
         const select_username_api = "./../../backend/api/select_username_api.php";
         fetch(select_username_api, {
-            method: "GET",
+            method: "POST",
+            body: form_data
         })
             .then(response => response.json())
             .then(data => {
@@ -415,7 +502,7 @@
                         generateEmptyTable("当前用户表为空");
                     } else {
                         generateTable(data.data.usernames, data.data.accountnumbers);
-
+                        generatePageControl(); //不要放在函数末尾,并行会出错
                     }
                 }
             })

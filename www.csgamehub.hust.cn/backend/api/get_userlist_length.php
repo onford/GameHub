@@ -2,10 +2,7 @@
 $rest = [
     "code" => 0,
     "msg" => "",
-    "data" => [
-        "usernames" => [],
-        "accountnumbers" => [],
-    ],
+    "data" => [],
 ];
 
 function error_and_die($msg)
@@ -29,24 +26,12 @@ if ($conn->connect_error) {
 }
 
 $tablename = "userlist";
-$page_no = $_POST["page_no"];
-$offset = ($page_no - 1) * 9;
-$sql = "
-    select username,accountnumber
-    from $tablename
-    limit $offset,9;
-";
+$sql = "select count(*) as len from $tablename;";
+
 $res = $conn->query($sql);
-
-if ($res) {
-    while ($row = $res->fetch_assoc()) {
-        array_push($rest["data"]["usernames"], $row["username"]);
-        array_push($rest["data"]["accountnumbers"], $row["accountnumber"]);
-    }
-} else {
-    $conn->close();
-    error_and_die($conn->error);
+if (!$res) {
+    error_and_die($rest);
 }
-
+array_push($rest["data"], $res->fetch_assoc()["len"]);
 $conn->close();
 echo json_encode($rest);

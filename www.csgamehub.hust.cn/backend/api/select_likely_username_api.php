@@ -30,6 +30,7 @@ if ($conn->connect_error) {
 
 $tablename = "userlist";
 $input_text = $_POST["part_username"];
+
 $sql = "
     select username,accountnumber
     from $tablename
