@@ -6,11 +6,11 @@ create database softwareproject;
 use softwareproject;
 
 create table userlist(
-    username varchar(127) primary key,
+    accountnumber varchar(127) primary key,
+    username varchar(127) unique,
     `password` varchar(127) not null,
     available_time datetime not null default '2000-12-12 12:50:50'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 create table game_list(
     gamename varchar(127) primary key

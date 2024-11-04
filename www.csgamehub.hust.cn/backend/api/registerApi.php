@@ -15,7 +15,7 @@ function assign(&$var, $value)
 }
 
 // 检查表单是否有空项
-foreach (["username", "password", "re_password"] as $key) {
+foreach (["accountnumber", "password", "re_password"] as $key) {
     array_push($result["data"], $_POST[$key]);
     if ($_POST[$key] == "") {
         assign($message, "表单有未填项");
@@ -51,11 +51,35 @@ if ($message != "") {
 
 $table_name = "userlist";
 
-// 检查用户名是否已被使用
-$input_username = $_POST["username"];
+// 检查账号名是否已被使用
+$input_account = $_POST["accountnumber"];
 $sql = "
     select * from $table_name
-    where username = '$input_username';
+    where accountnumber = '$input_account';
+";
+
+$res = $conn->query($sql);
+if ($res) {
+    while ($row = $res->fetch_assoc()) {
+        assign($message, "账号名已被使用");
+        break;
+    }
+} else {
+    assign($message, $conn->error);
+}
+
+if ($message != "") {
+    $result["code"] = 1;
+    $result["msg"] = $message;
+    echo json_encode($result);
+    $conn->close();
+    die();
+}
+
+// 检查用户名是否已被使用
+$sql = "
+    select * from $table_name
+    where username = '$input_account';
 ";
 
 $res = $conn->query($sql);
@@ -98,8 +122,8 @@ if ($message != "") {
 
 // 将用户数据插入到用户表当中
 $sql = "
-    insert into $table_name (username,password)
-    values ('$input_username', '$input_password');
+    insert into $table_name (accountnumber,username,password)
+    values ('$input_account','$input_account', '$input_password');
 ";
 $res = $conn->query($sql);
 if (!$res) {

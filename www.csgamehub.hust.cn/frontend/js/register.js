@@ -40,7 +40,7 @@ Array.from(document.getElementsByClassName('fill_in')).forEach(function (input) 
 var account_ready = false;
 var password_ready = false;
 var confirm_ready = false;
-document.getElementsByName("username")[0].addEventListener('input', function () {
+document.getElementsByName("accountnumber")[0].addEventListener('input', function () {
     account_ready = this.value !== '';
     if (account_ready && password_ready && confirm_ready) document.querySelector('.register_button').disabled = false;
     else document.querySelector('.register_button').disabled = true;

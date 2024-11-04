@@ -42,7 +42,7 @@ Array.from(document.getElementsByClassName('fill_in')).forEach(function (input) 
 // 没有输入账号密码不准登录
 var account_ready = false;
 var password_ready = false;
-document.getElementsByName("username")[0].addEventListener('input', function () {
+document.getElementsByName("accountnumber")[0].addEventListener('input', function () {
     account_ready = this.value !== '';
     if (account_ready && password_ready) document.querySelector('.login_button').disabled = false;
     else document.querySelector('.login_button').disabled = true;

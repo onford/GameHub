@@ -25,7 +25,8 @@
 Table: **userlist**
 | 列名|类型|限制|
 |:---:|:---:|:---:|
-|username|varchar(127)|PK|
+|accountnumber|varchar(127)|PK|
+|username|varchar(127)|UQ|
 |password|varchar(127)|NN|
 |available_time|datetime|DEFAULT '2000-12-12 12:50:50'<br>NN|
 
@@ -76,6 +77,7 @@ AI: auto_increment
 NN: not null  
 FK: foreign key（所有外码在参照对象被删除/修改时，会采取级联删除/修改的策略——`on delete cascade`以及`on update cascade`）  
 UN: unsigned
+UQ: unique
 
 ### 关于样式库
 直接使用 cdn 引入会受到网络质量的影响，建议直接将代码下载到本地。样式库位于`/www.csgamehub.hust.cn/src/vendor`。

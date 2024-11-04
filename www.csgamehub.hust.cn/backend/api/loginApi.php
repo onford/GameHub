@@ -15,10 +15,10 @@ function assign(&$var, $value)
 
 //// 检查表单数据
 // 检查是否存在未填项
-foreach (["username", "password"] as $key) {
+foreach (["accountnumber", "password"] as $key) {
     if ($_POST[$key] == "") {
-        if ($key == "username") {
-            assign($message, "用户名为必填项");
+        if ($key == "accountnumber") {
+            assign($message, "账号名为必填项");
         } else {
             assign($message, "密码为必填项");
         }
@@ -66,10 +66,10 @@ if ($message != "") {
 $tableName = "userlist"; // 表名
 
 // 查询用户名是否存在
-$input_username = $_POST["username"];
+$input_account = $_POST["accountnumber"];
 $sql = "
     select * from $tableName
-    where username = '$input_username';
+    where accountnumber = '$input_account';
 ";
 $res = $conn->query($sql);
 $real_password = "";
@@ -84,7 +84,7 @@ if ($res) {
 }
 
 if ($real_password == "") {
-    assign($message, "用户名不存在");
+    assign($message, "账号名不存在");
 }
 
 // 检查密码是否正确
@@ -103,7 +103,7 @@ if ($message != "") {
 
 $conn->close();
 
-$result["data"] = [$_POST["username"]];
+$result["data"] = [$_POST["accountnumber"]];
 
 // 以json格式返回报文
 echo json_encode($result);
