@@ -2,7 +2,7 @@
 $rest = [
     "code" => 0,
     "msg" => "",
-    "newgame_id" => 0,
+    "data" => [ "code" => 3,],
 ];
 
 function error_and_die($msg)
@@ -24,32 +24,36 @@ if ($conn->connect_error) {
     error_and_die("数据库连接失败");
 }
 
+function check_empty_and_assign($sql,$val){
+    global $rest;
+    global $conn;
+    $res = $conn->query($sql);
+    if ($res) {
+        if($res->fetch_assoc()){
+            $rest["data"]["code"] = $val;
+            $conn->close();
+            echo json_encode($rest);
+            die();
+        }
+    } else {
+        $conn->close();
+        error_and_die($conn->error);
+    }
+}
+
 $newgamename = $_POST["gamename"];
-$sql = "select count(*) as OK from game_list where gamename = $newgamename;";
+$username = $_POST["username"];
+$sql = "select * from game_list where gamename = '$newgamename';";
 
-$res = $conn->query($sql);
-if ($res) {
-    if($res->fetch_assoc()["OK"]){
-        error_and_die("存在已注册的游戏名");
-    }
-} else {
-    $conn->close();
-    error_and_die($conn->error);
-}
+check_empty_and_assign($sql,0);
 
-$sql = "select count(*) as OK from newgame_list where newgame_name = $newgamename;";
+$sql = "select * from newgame_list where newgame_name = '$newgamename' and username <> '$username';";
 
-$res = $conn->query($sql);
-if ($res) {
-    if($res->fetch_assoc()["OK"]){
-        error_and_die("审核数据库中存在该游戏名");
-    }
-} else {
-    $conn->close();
-    error_and_die($conn->error);
-}
+check_empty_and_assign($sql,0);
 
-// $sql = "select count(*) as OK from newgame_list where newgame_name = $newgamename;";
+$sql = "select * from newgame_list where newgame_name = '$newgamename' and username = '$username' and `status` = 0;";
+
+check_empty_and_assign($sql,1);
 
 $conn->close();
 echo json_encode($rest);

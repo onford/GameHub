@@ -57,219 +57,18 @@
                     </ul>
                 </div>
             </div>
+            <div class="confirm_overlay">
+                <div class="confirm">
+                    <p id="hint_text"></p>
+                    <button class="btn btn-success" id="confirmButton">确定</button>
+                    <button class="btn btn-danger" id="cancelButton">取消</button>
+                </div>
+            </div>
         </div>
     </div>
     </div>
 
     <script>
-        const header = document.querySelector(".header");
-        const dropZone = document.getElementById('dropZone');
-        const uploadedFilesDiv = document.getElementById('uploadedFiles');
-        const fileInput = document.getElementById('fileInput');
-        const uploadText = dropZone.querySelector("p");
-        const uploadImg = dropZone.querySelector("i");
-        const hoverHTML = "松开鼠标以上传文件";
-        const blurHTML = "将文件拖放到这里或点击上传<br>支持 zip/rar等压缩包形式";
-
-        const gamenameText = document.createElement("textarea");
-        gamenameText.name = "newgamename";
-        gamenameText.placeholder = "给新游戏起个名吧！不要超过 30 个字哦~";
-        gamenameText.maxLength = "30";
-        gamenameText.rows = "1";
-        gamenameText.style = "resize: none;box-sizing:border-box;padding-top:5px;padding-bottom:5px;padding-left:10px;padding-right:10px;margin-bottom:10px;border-radius:5px;border-width:2px;width:100%;"
-
-        const seal_div = document.createElement("form");
-        seal_div.style = "padding-left:10px;padding-top:10px;padding-bottom:10px;";
-        seal_div.class = "form-group";
-        seal_div.id = "seal_div";
-        seal_div.appendChild(gamenameText);
-
-        const dragoverListener = (event) => {
-            event.preventDefault();
-            dropZone.classList.add('hover');
-            uploadText.classList.add('blue-fade');
-            uploadImg.classList.add('blue-fade');
-            uploadText.innerHTML = hoverHTML;
-        };
-        dropZone.addEventListener('dragover', dragoverListener);
-
-        const dragleaveListener = () => {
-            dropZone.classList.remove('hover');
-            uploadText.classList.remove('blue-fade');
-            uploadImg.classList.remove('blue-fade');
-            uploadText.innerHTML = blurHTML;
-        };
-        dropZone.addEventListener('dragleave', dragleaveListener);
-
-        const dropListener = (event) => {
-            event.preventDefault();
-            dropZone.classList.remove('hover');
-            uploadText.classList.remove('blue-fade');
-            uploadImg.classList.remove('blue-fade');
-            uploadText.innerHTML = blurHTML;
-            const files = event.dataTransfer.files;
-            handleFiles(files);
-        };
-        dropZone.addEventListener('drop', dropListener);
-
-        const clickListner = () => {
-            fileInput.click();
-        };
-        dropZone.addEventListener('click', clickListner);
-
-        fileInput.addEventListener('change', (event) => {
-            const files = event.target.files;
-            handleFiles(files);
-        });
-
-
-        function fileSize(size) {
-            size = parseFloat(size);
-            if (size <= 1000)
-                return size.toFixed(2) + 'B';
-            else if (size <= 1000000)
-                return (size / 1024).toFixed(2) + 'KB';
-            else if (size <= 1000000000)
-                return (size / 1024 / 1024).toFixed(2) + 'MB';
-            else if (size <= 1024 * 1024 * 1024)
-                return (size / 1024 / 1024 / 1024).toFixed(2) + 'GB';
-            else return ">1GB";
-        }
-
-        function handleFiles(files) {
-            if (Array.from(files).length > 1) {
-                alert('请上传单个文件压缩包！');
-                fileInput.value = "";
-            }
-            else for (const file of files) {
-                if (file.name.endsWith(".zip") || file.name.endsWith(".rar")) {
-                    const fileItem = document.createElement('li');
-                    fileItem.className = 'list-group-item';
-                    fileItem.innerHTML = "<strong>已上传文件：</strong><div style=\"margin-right:20px;display:inline-block;\"> " + file.name + "</div><div style=\"color:gray;display:inline-block;\">" + fileSize(file.size) + "</div>";
-
-                    const cancelButton = document.createElement('button');
-                    cancelButton.textContent = '取消选择';
-                    cancelButton.style = "float:right;margin-left:20px;";
-                    cancelButton.classList.add('btn');
-                    cancelButton.classList.add('btn-outline-danger');
-                    cancelButton.onclick = (e) => {
-                        e.stopPropagation();
-                        uploadedFilesDiv.innerHTML = '';
-                        fileInput.value = "";
-                        restoreUpload();
-                        header.removeChild(seal_div);
-                        gamenameText.value = "";
-                    }
-                    const confirmButton = document.createElement('button');
-                    confirmButton.textContent = '确认上传';
-                    confirmButton.classList.add('btn');
-                    confirmButton.style = "float:right;";
-                    confirmButton.classList.add('btn-outline-success');
-                    confirmButton.onclick = (e) => {
-                        e.stopPropagation();
-                        if (repeateName() == 0) {
-                            alert("游戏名不可用，请换一个游戏名");
-                            gamenameText.value = "";
-                            return;
-                        }
-                        uploadedFilesDiv.innerHTML = '';
-                        restoreUpload();
-                        const formData = new FormData();
-                        formData.append("file[]", file);
-                        fetch('../../backend/api/upload.php', {
-                            method: 'POST',
-                            body: formData
-                        })
-                            .then(response => response.text())
-                            .then(data => {
-                                console.log(data);
-                                alert("文件已提交给管理员审核！");
-                                gamenameText.value = "";
-                            })
-                            .catch(error => {
-                                console.error('上传失败:', error);
-                                alert("文件上传失败，请重试！");
-                            });
-                    }
-                    const downloadButton = document.createElement('button');
-                    downloadButton.textContent = '下载文件';
-                    downloadButton.classList.add('btn');
-                    downloadButton.style = "float:right;margin-right:20px;";
-                    downloadButton.classList.add('btn-outline-primary');
-                    downloadButton.onclick = () => {
-                        var url = URL.createObjectURL(file); // 创建指向文件的URL
-                        var a = document.createElement('a'); // 创建一个<a>元素  
-                        a.style.display = 'none'; // 隐藏<a>元素  
-                        a.href = url; // 设置<a>元素的href属性为文件的URL  
-                        a.download = file.name; // 设置<a>元素的download属性为文件名  
-
-                        document.body.appendChild(a); // 将<a>元素添加到文档中（虽然它是隐藏的）  
-                        a.click(); // 触发<a>元素的点击事件以下载文件  
-                        setTimeout(function () {
-                            document.body.removeChild(a); // 从文档中移除<a>元素  
-                            window.URL.revokeObjectURL(url); // 释放URL对象  
-                        }, 0); // 使用setTimeout是为了确保在下载开始后再移除元素和释放URL
-                    }
-                    fileItem.appendChild(cancelButton);
-                    fileItem.appendChild(confirmButton);
-                    fileItem.appendChild(downloadButton);
-
-                    uploadedFilesDiv.appendChild(fileItem);
-
-                    forbidUpload();
-                    header.appendChild(seal_div);
-                }
-                else alert("请上传压缩包文件！");
-            }
-        }
-
-        function forbidUpload() {
-            dropZone.removeEventListener('dragover', dragoverListener);
-            dropZone.removeEventListener('dragleave', dragleaveListener);
-            dropZone.removeEventListener('drop', dropListener);
-            dropZone.removeEventListener('click', clickListner);
-            dropZone.style = "border:none;";
-            dropZone.querySelector("i").classList.remove("fa-cloud-arrow-up");
-            dropZone.querySelector("i").classList.add("fa-circle-check");
-            dropZone.querySelector("p").innerHTML = "已上传压缩文件";
-        }
-
-        function restoreUpload() {
-            dropZone.addEventListener('dragover', dragoverListener);
-            dropZone.addEventListener('dragleave', dragleaveListener);
-            dropZone.addEventListener('drop', dropListener);
-            dropZone.addEventListener('click', clickListner);
-            dropZone.style = "";
-            dropZone.querySelector("i").classList.remove("fa-circle-check");
-            dropZone.querySelector("i").classList.add("fa-cloud-arrow-up");
-            dropZone.querySelector("p").innerHTML = blurHTML;
-        }
-
-        function repeateName() {
-            // 返回新游戏注册的 id 值。若游戏名非法，返回 0
-            return 1; // 先就这样
-            // var gamename = gamenameText.value;
-            // var form_data = new FormData();
-            // form_data.append("gamename", gamename);
-            // fetch("./../../backend/api/check_repeated_name.php", {
-            //     method: "POST",
-            //     body: form_data
-            // }).then(response => response.json())
-            //     .then(data => {
-            //         console.log(data);
-            //         if (data.code == 1) {
-            //             alert(data.msg);
-            //             return 0;
-            //         } else {
-            //             console.log("游戏注册成功");
-            //             return data.newgame_id;
-            //         }
-            //     }).catch(error => {
-            //         console.error(error);
-            //         return 0;
-            //     });
-        }
-
         function jumpHandle1(event) {
             event.preventDefault();
             window.location.href = "./messageCenter.html";
@@ -288,6 +87,7 @@
             $(".loader-wrapper").fadeOut("slow");
         });
     </script>
+    <script src="./../js/PersonalCenter/codeUpload.js"></script>
 </body>
 
 </html>
