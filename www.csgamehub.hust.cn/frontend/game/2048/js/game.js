@@ -200,6 +200,22 @@ canvas.ontouchend = function (event) {
 
 game.init();
 
+function bindKeyEvent() {
+    document.onkeydown = function (e) {
+        if (text === document.activeElement) return; // 确保评论框没有被激活
+        dir = keycom[(e ? e : event).keyCode];
+        if (dir) {
+            game.move(dir);
+        }
+    };
+
+    document.addEventListener('keydown', function (event) {
+        // 检查是否按下了箭头键  
+        if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)) {
+            event.preventDefault(); // 禁止箭头键的默认行为  
+        }
+    });
+}
 
 document.getElementById("btn").onclick = function () {
     ctx.clearRect(0, 0, c.width, c.height);
@@ -214,6 +230,6 @@ document.getElementById("btn").onclick = function () {
     document.getElementById("score").innerText = "Score: " + String(score);
     draw.block();
     game.init();
-
+    bindKeyEvent(); // 重新绑定键盘事件
 
 };
