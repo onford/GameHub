@@ -236,14 +236,12 @@ function alert_overwrite(file) {
 }
 
 function uploadGame(file) {
-    uploadedFilesDiv.innerHTML = '';
     restoreUpload();
     const formData = new FormData();
     formData.append("file[]", file);
     formData.append("newgame_name", gamenameText.value);
     formData.append("username", localStorage.getItem("username"));
-    fileInput.value = "";
-    gamenameText.value = "";
+
     fetch('../../backend/api/upload.php', {
         method: 'POST',
         body: formData
@@ -255,7 +253,10 @@ function uploadGame(file) {
                 return 2; // 发生错误
             } else {
                 alert("文件已提交给管理员审核！");
+                fileInput.value = "";
                 gamenameText.value = "";
+                uploadedFilesDiv.innerHTML = '';
+                restoreUpload();
             }
         })
         .catch(error => {
