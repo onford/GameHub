@@ -64,6 +64,17 @@ create table newgame_list(
     foreign key(username) references userlist(username) on delete cascade on update cascade
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `message_list` (
+  `message_id` int primary key auto_increment,
+  `message_type` tinyint NOT NULL,
+  `message_title` varchar(127) NOT NULL,
+  `timestamps` datetime NOT NULL,
+  `recognize_id` int DEFAULT NULL,
+  `status` tinyint default 0,
+  `receive_accountnumber` varchar(127) references userlist(accountnumber) on delete cascade on update cascade
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 
 -- 下面代码用于加载 game_list，这是一个相对固定的表
 insert into game_list values ('2048'),('senpai');
