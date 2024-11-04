@@ -70,13 +70,14 @@ Table: **newgame_list**
 |username|varchar(127)|FK -> userlist(username)|
 |newgame_name|varchar(127)||
 |status|tinyint||
+|version|int||
 
 其中限制条件的缩写分别是  
 PK: primary key  
 AI: auto_increment  
 NN: not null  
 FK: foreign key（所有外码在参照对象被删除/修改时，会采取级联删除/修改的策略——`on delete cascade`以及`on update cascade`）  
-UN: unsigned
+UN: unsigned  
 UQ: unique
 
 ### 关于样式库
