@@ -277,7 +277,7 @@
         var my_table = document.getElementsByTagName("table")[0];
         // 先将子节点全部删除
         var table_children = my_table.childNodes;
-        while (table_children.length > 0) {
+        while (table_children && table_children.length > 0) {
             my_table.removeChild(table_children[0]);
         }
         var my_thead = document.createElement("thead");

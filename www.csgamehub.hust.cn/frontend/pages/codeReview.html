@@ -153,8 +153,8 @@
                 </div>
             </div>
             <div class="my-main-body">
-                <table>
-                    <thead>
+                <table class="message_table">
+                    <!-- <thead>
                         <tr>
                             <td>
                                 序号
@@ -229,22 +229,22 @@
                                 <a class='my-operation' href="#">删除</a>
                                 <a class='my-operation' href="#">通过</a>
                                 <a class='my-operation' href="#">下载压缩包</a>
-                            </td>
-                        </tr>
-                        <!-- 这里插入作品数据 -->
-                    </tbody>
+                            </td> -->
+                    <!-- </tr> -->
+                    <!-- 这里插入作品数据 -->
+                    <!-- </tbody> -->
                 </table>
             </div>
             <div class="my-main-bottom my-flex-container">
                 <div class="my-page-navigation-table">
-                    <button class="my-page-btn">上一页</button>
+                    <!-- <button class="my-page-btn">上一页</button>
                     <button class="my-page-btn" style="background-color: #00A1D6; color:white;">1</button>
                     <button class="my-page-btn">2</button>
-                    <button class="my-page-btn">3</button>
+                    <button class="my-page-btn">3</button> -->
                     <!-- <button class="my-page-btn my-omit-btn">...</button> -->
-                    <span style="font-size: 20px; color: #aaa;">...</span>
+                    <!-- <span style="font-size: 20px; color: #aaa;">...</span>
                     <button class="my-page-btn">114514</button>
-                    <button class="my-page-btn">下一页</button>
+                    <button class="my-page-btn">下一页</button> -->
                 </div>
             </div>
         </div>
@@ -273,6 +273,131 @@
         localStorage.setItem("search_box_text", "");
         location.href = './accountManager_root.html';
     }
+
+    function generateEmptyTable(msg) {
+        var message_table = document.getElementsByClassName("message_table")[0];
+        console.log(message_table);
+        clearTable();
+        var thead = document.createElement("thead");
+        var new_tr = document.createElement("tr");
+        var new_td = document.createElement("td");
+        new_td.classList.add("my-only-td");
+        new_td.innerHTML = msg;
+        new_tr.appendChild(new_td);
+        thead.appendChild(new_tr);
+        message_table.appendChild(thead);
+    }
+
+    function clearTable() {
+        var message_table = document.getElementsByClassName("message_table")[0];
+        var children = message_table.childNodes;
+        while (children && children.length > 0) {
+            message_table.removeChild(children[0]);
+        }
+    }
+
+    function generateMessageTable(accountnumbers, message_titles, timestamps, message_status) {
+        clearTable();
+        var message_table = document.getElementsByClassName("message_table")[0];
+        var len = accountnumbers.length;
+
+        var const_thead = document.createElement("thead");
+        message_table.appendChild(const_thead);
+
+        var const_tr = document.createElement("tr");
+        var const_id_td = document.createElement("td");
+        var const_accountnumber_td = document.createElement("td");
+        var const_timestamps_td = document.createElement("td");
+        var const_status_td = document.createElement("td");
+        var const_operation_td = document.createElement("td");
+
+        const_id_td.innerHTML = "序号";
+        const_accountnumber_td.innerHTML = "账号名";
+        const_timestamps_td.innerHTML = "上载时间";
+        const_status_td.innerHTML = "状态";
+        const_operation_td.innerHTML = "操作";
+
+        const_tr.appendChild(const_id_td);
+        const_tr.appendChild(const_accountnumber_td);
+        const_tr.appendChild(const_timestamps_td);
+        const_tr.appendChild(const_status_td);
+        const_tr.appendChild(const_operation_td);
+
+        const_thead.appendChild(const_tr);
+        var const_tbody = document.createElement("tbody");
+
+        for (var i = 0; i < len; i++) {
+            var new_tr = document.createElement("tr");
+            var new_id_td = document.createElement("td");
+            var new_accountnumber_td = document.createElement("td");
+            var new_timestamps_td = document.createElement("td");
+            var new_status_td = document.createElement("td"); //这个状态不是已读未读
+            var new_operation_td = document.createElement("td");
+
+            new_id_td.innerHTML = i + 1;
+            new_accountnumber_td.innerHTML = accountnumbers[i]; // 这个也要去newgame_list搜
+            new_timestamps_td.innerHTML = timestamps[i];
+            new_status_td.innerHTML = "待审核"; // 这里要去newgame_list
+            new_status_td.classList.add("my-not-read");
+
+            //操作组件的子组件
+            var new_delete_a = document.createElement("a");
+            new_delete_a.href = "#";
+            new_delete_a.innerHTML = "删除 ";
+            var new_accept_a = document.createElement("a");
+            new_accept_a.href = "#";
+            new_accept_a.innerHTML = "通过 ";
+            var new_download_a = document.createElement("a");
+            new_download_a.href = "#";
+            new_download_a.innerHTML = "下载压缩包 ";
+
+            //把子组件都放在操作组件里面
+            new_operation_td.appendChild(new_delete_a);
+            new_operation_td.appendChild(new_accept_a);
+            new_operation_td.appendChild(new_download_a);
+
+            new_tr.appendChild(new_id_td);
+            new_tr.appendChild(new_accountnumber_td);
+            new_tr.appendChild(new_timestamps_td);
+            new_tr.appendChild(new_status_td);
+            new_tr.appendChild(new_operation_td);
+
+            const_tbody.appendChild(new_tr);
+        }
+
+        message_table.appendChild(const_tbody);
+    }
+
+    function init() {
+        const select_production_message_api = "./../../backend/api/select_production_message_api.php";
+
+        fetch(select_production_message_api, {
+            method: "GET"
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code != 0) {
+                    alert(data.msg);
+                }
+                else {
+                    console.log("全部消息查询成功");
+                    console.log(data.dada);
+                    if (data.data.accountnumbers.length == 0) {
+                        generateEmptyTable("消息列表为空");
+                    }
+                    else {
+                        var accountnumbers = data.data.accountnumbers;
+                        var message_titles = data.data.message_titles;
+                        var timestamps = data.data.timestamps;
+                        var message_status = data.data.message_status;
+                        generateMessageTable(accountnumbers, message_titles, timestamps, message_status);
+                    }
+                }
+            })
+            .catch(error => console.error(error))
+    }
+
+    window.onload = init();
 </script>
 
 </html>
