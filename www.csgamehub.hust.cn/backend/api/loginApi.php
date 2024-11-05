@@ -36,6 +36,7 @@ $result = [
     "code" => 0, // 0代表无错误, 1代表有错误
     "msg" => $message,
     "data" => [],
+    "username" => "",
 ];
 if ($message != "") {
     $result["msg"] = $message;
@@ -101,9 +102,13 @@ if ($message != "") {
     die();
 }
 
-$conn->close();
 
 $result["data"] = [$_POST["accountnumber"]];
+
+$result["username"] = $conn->query("select username from $tableName where accountnumber = '$input_account';")->fetch_assoc()["username"];
+
+
+$conn->close();
 
 // 以json格式返回报文
 echo json_encode($result);
