@@ -3,6 +3,7 @@ $rest = [
     "code" => 0,
     "msg" => "",
     "data" => [
+        "message_ids" => [],
         "timestampss" => [],
         // "recognize_ids" => [], 不需要了
         "statuss" => [],
@@ -66,6 +67,7 @@ if ($res1) {
                 continue;
             }
 
+            array_push($rest["data"]["message_ids"], $row1["message_id"]);
             array_push($rest["data"]["timestampss"], $row1["timestamps"]);
             array_push($rest["data"]["usernames"], $row2["username"]);
             array_push($rest["data"]["statuss"], intval($row2["status"]));

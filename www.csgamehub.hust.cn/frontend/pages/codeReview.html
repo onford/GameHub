@@ -216,6 +216,35 @@
         location.href = './accountManager_root.html';
     }
 
+    function deleteHandle(event) {
+        event.preventDefault();
+        var this_tr = event.target.parentNode.parentNode;
+        var message_id = Number(this_tr.id);
+        var const_tbody = document.getElementById("my-table-body");
+        // console.log(event.target.parentNode.parentNode);
+        console.log(message_id);
+
+        var form_data = new FormData();
+        form_data.append("message_id", message_id);
+        const delete_root_message_api = "./../../backend/api/delete_root_message_api.php";
+        var yes = confirm("确定删除这条消息记录吗");
+        if (!yes) return;
+        fetch(delete_root_message_api, {
+            method: "POST",
+            body: form_data
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code != 0) {
+                    alert(data.msg);
+                } else {
+                    console.log("消息删除成功");
+                    const_tbody.removeChild(this_tr);
+                }
+            })
+            .catch(error => console.error(error));
+    }
+
     function generateEmptyTable(msg) {
         var message_table = document.getElementsByClassName("message_table")[0];
         console.log(message_table);
@@ -238,32 +267,25 @@
         }
     }
 
-    function get_username_and_status_by_receive_id(receive_id) {
-        const select_username_and_status_by_receive_id_api = "./../../backend/api/select_username_and_status_by_receive_id_api.php";
-        var form_data = new FormData();
-        form_data.append("receive_id", receive_id);
-        fetch(select_username_and_status_by_receive_id_api, {
-            method: "POST",
-            body: form_data
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.code != 0) {
-                    alert(data.msg);
-                    return [null, null];
-                }
-                else {
-                    console.log("用账号名查询用户名成功");
-                    console.log("receive_id: " + receive_id);
-                    console.log(data.data);
-                    return [data.data.username, data.data.status];
-                }
-            })
-            .catch(error => console.error(error))
-        return [null, null];
+    function generateEmptyTable(msg) {
+        var my_table = document.getElementsByTagName("table")[0];
+        // 先将子节点全部删除
+        var table_children = my_table.childNodes;
+        while (table_children && table_children.length > 0) {
+            my_table.removeChild(table_children[0]);
+        }
+        var my_thead = document.createElement("thead");
+        var only_tr = document.createElement("tr");
+        var only_td = document.createElement("td");
+        only_td.className = "my-only-td";
+        only_td.innerHTML = msg;
+        console.log(msg);
+        only_tr.appendChild(only_td);
+        my_thead.appendChild(only_tr);
+        my_table.appendChild(my_thead);
     }
 
-    function generateMessageTable(timestampss, statuss, usernames, newgame_names, versions) {
+    function generateMessageTable(message_ids, timestampss, statuss, usernames, newgame_names, versions) {
         clearTable();
         var message_table = document.getElementsByClassName("message_table")[0];
         var len = timestampss.length;
@@ -298,9 +320,11 @@
 
         const_thead.appendChild(const_tr);
         var const_tbody = document.createElement("tbody");
+        const_tbody.id = "my-table-body";
 
         for (var i = 0; i < len; i++) {
             var new_tr = document.createElement("tr");
+            new_tr.id = message_ids[i];
             var new_id_td = document.createElement("td");
             var new_username_td = document.createElement("td");
             var new_gamename_td = document.createElement("td");
@@ -335,6 +359,7 @@
             var new_delete_a = document.createElement("a");
             new_delete_a.href = "#";
             new_delete_a.innerHTML = "删除 ";
+            new_delete_a.onclick = deleteHandle;
             var new_accept_a = document.createElement("a");
             new_accept_a.href = "#";
             new_accept_a.innerHTML = "通过 ";
@@ -375,14 +400,19 @@
                 if (data.code != 0) {
                     alert(data.msg);
                 } else {
-                    console.log("管理员消息中心资料请求成功");
-                    console.log(data.data);
-                    var timestampss = data.data.timestampss;
-                    var statuss = data.data.statuss;
-                    var usernames = data.data.usernames;
-                    var newgame_names = data.data.newgame_names;
-                    var versions = data.data.versions;
-                    generateMessageTable(timestampss, statuss, usernames, newgame_names, versions);
+                    if (data.data.message_ids.length == 0) {
+                        generateEmptyTable("没有相关结果");
+                    } else {
+                        console.log("管理员消息中心资料请求成功");
+                        console.log(data.data);
+                        var message_ids = data.data.message_ids;
+                        var timestampss = data.data.timestampss;
+                        var statuss = data.data.statuss;
+                        var usernames = data.data.usernames;
+                        var newgame_names = data.data.newgame_names;
+                        var versions = data.data.versions;
+                        generateMessageTable(message_ids, timestampss, statuss, usernames, newgame_names, versions);
+                    }
                 }
             })
             .catch(error => console.error(error));
