@@ -29,22 +29,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $tablename = "newgame_list";
     $username = $_POST["username"];
     $newgame_name = $_POST["newgame_name"];
+    $cur_time = date('Y-m-d H:i:s');
+
     $sql = "select * from $tablename where newgame_name = '$newgame_name';";
     if($conn->query($sql)->fetch_assoc()){
         $sql = "select * from $tablename where newgame_name = '$newgame_name' and `status` = 0;";
         $res = $conn->query($sql)->fetch_assoc();
         if($res){
             $zip_name = $res["newgame_id"];
+            $sql = "update $tablename set uploadtime = '$cur_time' where newgame_id = $zip_name;";
+            $conn->query($sql);
         } else {
             $sql = "select 1 + max(version) as nv from $tablename where newgame_name = '$newgame_name';";
             $next_version = $conn->query($sql)->fetch_assoc()["nv"];
-            $sql = "insert into $tablename (username,newgame_name,status,version) values ('$username','$newgame_name',0,$next_version);";
+            $sql = "insert into $tablename (username,newgame_name,status,version,uploadtime) values ('$username','$newgame_name',0,$next_version,'$cur_time');";
             $conn->query($sql);
             $zip_name = $conn->query("select last_insert_id() as id")->fetch_assoc()["id"];
         }
     } else {
         $next_version = 0;
-        $sql = "insert into $tablename (username,newgame_name,status,version) values ('$username','$newgame_name',0,0);";
+        $sql = "insert into $tablename (username,newgame_name,status,version,uploadtime) values ('$username','$newgame_name',0,0,'$cur_time');";
         $conn->query($sql);
         $zip_name = $conn->query("select last_insert_id() as id")->fetch_assoc()["id"];
     }
@@ -65,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     foreach ($_FILES['file']['tmp_name'] as $key => $tmp_name) {
         $fileName = basename($_FILES['file']['name'][$key]);
 
-        // 允许覆盖，如何正确命名，避免错误的覆盖，是另一个 php 应该做的事情。
+        // 允许覆盖，如何正确命名，避免错误的覆盖，是另一个 php(check_repeated_name) 应该做的事情。
 
         // 检查文件是否已存在
         // if (file_exists($targetFilePath)) {

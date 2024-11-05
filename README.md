@@ -58,26 +58,27 @@ PK = (username,gamename)
 Table: **likelist,unlikelist**
 | 列名|类型|限制|
 |:---:|:---:|:---:|
-|username|varchar(127)|FK -> userlist(username)|
-|comment_id|int|FK -> comment_list(id)|
+|username   |varchar(127)|FK -> userlist(username)|
+|comment_id |int|FK -> comment_list(id)|
 
 PK = (username,comment_id)
 
 Table: **newgame_list**
-| 列名|类型|限制|
-|:---:|:---:|:---:|
-|newgame_id|int|PK AI|
-|username|varchar(127)|FK -> userlist(username)|
-|newgame_name|varchar(127)||
-|status|tinyint||
-|version|int||
+| 列名          | 类型           | 限制                      |
+| :-----------: | :-----------: | :-----------------------: |
+| newgame_id    | int           | PK AI                     |
+| username      | varchar(127)  | FK -> userlist(username)  |
+| newgame_name  | varchar(127)  |                           |
+| status        | tinyint       |                           |
+| version       | int           |                           |
+|uploadtime     | datetime      |                           |
 
 
 
-Table: message_list
+Table: **message_list**
 
 | 列名                  | 类型         | 限制                          |
-| --------------------- | ------------ | ----------------------------- |
+| :-------------------: | :----------: | :---------------------------: |
 | message_id            | int          | PK AI                         |
 | message_type          | tinyint      | NN                            |
 | message_title         | varchar(127) | NN                            |

@@ -72,6 +72,30 @@ function changeDirection() {
     senpai.speed = Math.min(senpai.speed + 11.4, 1145.);
 }
 
+// 重置游戏状态
+function resetGame() {
+    score = 0; 
+    punish = 1145; 
+    lastCaught = false; 
+    nowCaught = false; 
+    senpai.x = 270; 
+    senpai.y = 360; 
+    escaper.x = 0;  
+    escaper.y = 0;  
+    endTag = false; 
+    pauseTag = false;
+
+    // 停止音效并重置播放时间
+    caughtAudio.pause(); 
+    caughtAudio.currentTime = 0; 
+    failAudio.pause(); 
+    failAudio.currentTime = 0; 
+
+    if (!bgAudio.paused) {
+        bgAudio.currentTime = 0; 
+        bgAudio.play(); // 播放背景音乐
+    }
+}
 
 var endTag = false, beginTag = false;
 // Update yourself
@@ -210,4 +234,11 @@ var render = function () {
 var main = function () {
     timer = setInterval(render, 50);
 };
+
+// 绑定“New Game”按钮的点击事件
+document.getElementById("btn").onclick = function () {
+    resetGame(); // 重置游戏状态
+    main(); // 启动或重新开始游戏循环
+};
+
 main();

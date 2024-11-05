@@ -61,6 +61,7 @@ create table newgame_list(
     newgame_name varchar(127),
     `status` tinyint, -- 0 待审核 | 1 通过 | 2 打回
     `version` int,
+    uploadtime datetime,
     foreign key(username) references userlist(username) on delete cascade on update cascade
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
