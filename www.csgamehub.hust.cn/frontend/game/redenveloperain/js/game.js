@@ -19,7 +19,7 @@ canvas.style.border = '2px solid #000000'; // 设置边框为2像素宽，黑色
 // 游戏结束音乐
 const endAudio = document.createElement("audio");
 endAudio.id = 'endAudio';
-endAudio.src = "music/gameover.mp3";
+endAudio.src = "./../game/redenveloperain/music/gameover.mp3";
 endAudio.type = "audio/mpeg";
 endAudio.loop = false;
 document.body.appendChild(endAudio);
@@ -91,10 +91,31 @@ function handleClick(event) {
   }
 }
 
+//更新游戏得分
+function updatescore() {
+  ctx.fillStyle = "rgb(250, 250, 250)";
+  ctx.font = "24px Helvetica";
+  ctx.textAlign = "left";
+  ctx.textBaseline = "top";
+  ctx.fillText("得分: " + score, 11.4, 11.4);
+}
+
+//更新游戏剩余时间
+function updatetimelast() {
+  var remainingTime = gameDuration - (Date.now() - startTime);
+  var seconds = Math.ceil(remainingTime / 1000);
+  ctx.fillStyle = "purple";
+  ctx.font = "24px Helvetica";
+  ctx.textAlign = "left";
+  ctx.textBaseline = "top";
+  ctx.fillText("剩余时间: " + seconds, 11.4, 51.4);
+}
 
 // 开始游戏的函数
 function startGame() {
   score=0;
+  updatescore();
+  updatetimelast();
   startTime = Date.now();
   timer = setInterval(createEnvelope, 500); // 每0.5秒生成一个红包
   canvas.addEventListener('click', handleClick);
@@ -103,13 +124,15 @@ function startGame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawEnvelopes();
     updateEnvelopes();
+    updatescore();
+    updatetimelast();
 
     // 检查游戏是否结束
     if (Date.now() - startTime >= gameDuration) {
       clearInterval(gameLoop);
       clearInterval(timer);
       canvas.removeEventListener('click', handleClick);
-      //showGameOver();
+      endAudio.play();
     }
   }, 1000 / 60); // 以60帧/秒更新游戏
 }
