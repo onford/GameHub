@@ -280,6 +280,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 100;
 }
 
 .loader {
@@ -436,3 +437,49 @@ body {
         height: 0%;
     }
 }
+
+.image-container:hover{
+    cursor: pointer;
+}
+
+.image-container {
+    display: block;
+    position: relative;
+    width: 65%; /* 与 profile_pic 的宽度保持一致 */
+    margin-left: auto; /* 使其居中 */
+    margin-right: auto; /* 使其居中 */
+    margin-top: 20px; /* 使其位置更好看 */
+    border-radius: 50%;
+}
+
+.image-container img {
+    width: 100%;
+    height: auto; /* 保持纵横比 */
+    transition: opacity 0.5s ease;
+}
+
+.text-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    font-size: 20px;
+}
+
+.image-container:hover img {
+    opacity: 0; /* 鼠标悬停时隐藏头像 */
+}
+
+.image-container:hover .text-overlay {
+    opacity: 1; /* 鼠标悬停时显示文字 */
+}
+
+
