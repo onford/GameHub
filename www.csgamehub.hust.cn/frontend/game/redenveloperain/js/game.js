@@ -136,7 +136,7 @@ function startGame() {
       clearInterval(gameLoop);
       clearInterval(timer);
       canvas.removeEventListener('click', handleClick);
-      recordscore(score); //得分上传数据库
+      recordScore(score); //得分上传数据库
       score = 0;
       endAudio.play();
     }
