@@ -8,3 +8,42 @@ li.list-group-item {
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
+.info-container {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    /* 两列，每列占据相同的空间 */
+    align-items: center;
+    /* 顶部对齐，你可以根据需要更改为 end（底部对齐）或 center（中心对齐，但注意高度不同的问题） */
+    /* 如果你想要中心对齐并且处理高度不同，你可能需要额外的布局技巧 */
+}
+
+.confirm {
+    display: none;
+    /* 初始隐藏 */
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 30%;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    text-align: center;
+}
+
+.confirm_overlay {
+    display: none;
+    /* 初始隐藏 */
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}

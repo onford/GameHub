@@ -41,6 +41,38 @@
         <div class="main" style="background-image: none;">
             <div class="header">
                 <div>
+                    <h2 style="margin-bottom: 40px;display: inline-block;font-weight: bold;">个人信息</h2>
+                    <p style="color:gray;margin-bottom: 40px;display: inline-block;margin-left: 40px;">
+                        在这里可以查看和修改你的个人信息。</p>
+                </div>
+                <div>
+                    <div class="info-container" style="width:30%;grid-template-columns: auto auto 1fr;">
+                        <div style="display: inline-block;margin-right: 20px;">头像</div>
+                        <img src="./../../src/images/test_icon.webp" class="profile_pic"
+                            style="width:75px;height:75px;margin-left: 20px;margin-bottom: 10px;"></img>
+                        <div></div>
+                    </div>
+                    <div class=" info-container" style="width:30%;margin-bottom: 10px;">
+                        <div style="display: inline-block;margin-right: 20px;">账号名</div>
+                        <textarea class="form-control" disabled rows="1"
+                            style="resize: none;height: 24px;box-sizing:border-box;color: gray;"
+                            id="accountnumber"></textarea>
+                    </div>
+                    <div class="info-container" style="width:30%;">
+                        <div style="display: inline-block;margin-right: 20px;">用户名</div>
+                        <textarea class="form-control" rows="1" style="resize: none;height: 24px;box-sizing:border-box;"
+                            id="username"></textarea>
+                    </div>
+                    <div style="text-align: right;width: 30%;" id="hint"></div>
+                    <div style="text-align: center;width: 30%;margin-top: 10px;">
+                        <button class="btn btn-primary">更改头像</button>&emsp;<button class="btn btn-primary"
+                            id="username_chg" disabled>更改用户名</button>
+                    </div>
+                </div>
+            </div>
+            <hr class="divider" style="margin-top: 40px;">
+            <div class="header">
+                <div>
                     <h2 style="margin-bottom: 40px;display: inline-block;font-weight: bold;">修改密码</h2>
                     <p style="color:gray;margin-bottom: 40px;display: inline-block;margin-left: 40px;">
                         如果你觉得自己的密码不够安全的话。</p>
@@ -71,7 +103,13 @@
                     </form>
                 </div>
             </div>
-
+            <div class="confirm_overlay">
+                <div class="confirm">
+                    <p id="hint_text"></p>
+                    <button class="btn btn-success" id="confirmButton">确定</button>
+                    <button class="btn btn-danger" id="cancelButton">取消</button>
+                </div>
+            </div>
         </div>
     </div>
 </body>
@@ -94,73 +132,10 @@
         window.location.href = "./accountManager.html";
     }
 
-    function submitForm(event) {
-        event.preventDefault();
-        console.log("表单已被提交");
-        const url = "./../../backend/api/change_password_api.php";
-        var update_form = document.getElementById("update_password_form");
-        var formData = new FormData(update_form);
-        formData.append("username", localStorage.getItem("username"));
-        fetch(url, {
-            method: "POST",
-            body: formData
-        }).then(response => response.json())
-            .then(data => {
-                if (data.code != 0) {
-                    alert(data.msg);
-                }
-                else {
-                    alert("修改成功");
-                    // 清空输入框内容
-                    update_form.reset();
-                }
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }
-
-    function logoutHandle(event) {
-        event.preventDefault();
-        console.log("登出事件触发");
-        const flag = confirm("确定登出账号吗?");
-        if (flag == true) {
-            window.location.href = "./login.html";
-        }
-    }
-
-    //表单不允许输入空格
-    Array.from(document.getElementsByClassName('fill_in')).forEach(function (input) {
-        input.addEventListener('keypress', function (event) {
-            if (event.key === ' ') {
-                event.preventDefault();
-            }
-        });
-    });
-
-    var old_password_ready = false, new_password_ready = false, re_new_password_ready = false;
-    var confirm_button = document.getElementsByClassName("confirm_button")[0];
-
-    Array.from(document.getElementsByClassName("fill_in")).forEach(element => {
-        element.addEventListener('input', function () {
-            if (this.name == "old_password" && this.value !== '') {
-                old_password_ready = true;
-            }
-            if (this.name == "new_password" && this.value !== '') {
-                new_password_ready = true;
-            }
-            if (this.name == "re_new_password" && this.value !== '') {
-                re_new_password_ready = true;
-            }
-            if (old_password_ready && new_password_ready && re_new_password_ready) {
-                confirm_button.disabled = false;
-            }
-        });
-    });
-
     $(window).on("load", function () {
         $(".loader-wrapper").fadeOut("slow");
     });
 </script>
+<script src="./../js/PersonalCenter/accountManager.js"></script>
 
 </html>
