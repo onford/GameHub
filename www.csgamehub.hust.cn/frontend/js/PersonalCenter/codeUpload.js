@@ -258,6 +258,7 @@ function uploadGame(file) {
                 fileInput.value = "";
                 gamenameText.value = "";
                 uploadedFilesDiv.innerHTML = '';
+                getAllGamesByName(null);
                 restoreUpload();
             }
         })
@@ -288,9 +289,11 @@ function getAllGamesByName(gamename) {
                 if (gamename)
                     console.log("成功获取游戏 ", gamename, " 的所有上传记录");
                 else console.log("成功获取所有游戏的上传记录");
+                tablebody.innerHTML = "";
                 for (var i = 0; i < data.data.length; i++) {
                     tablebody.appendChild(newgameRecord(data.data[i].newgame_id, data.data[i].gamename, data.data[i].version, data.data[i].uploadtime, data.data[i].status));
                 }
+                tablebody.querySelectorAll(".btn-primary").forEach((element) => { element.onclick = getGameZip; });
             }
         }).catch(error => {
             console.error(error);
@@ -306,9 +309,37 @@ function newgameRecord(newgame_id, gamename, version, uploadtime, status) {
     };
     tr.appendChild(createTd(newgame_id));
     tr.appendChild(createTd(gamename));
-    tr.appendChild(createTd(version));
-    tr.appendChild(createTd(uploadtime));
-    tr.appendChild(createTd(status));
-    tr.appendChild(createTd(""));
+    tr.appendChild(createTd(1 + parseInt(version) + ".0"));
+    tr.appendChild(createTd("<span class='message-time ms-2'><i class='bi bi-clock' style='font-size: 1rem;'></i> " + uploadtime + "</span>"));
+    tr.appendChild(createTd(statusGenerator(status)));
+    tr.appendChild(createTd("<button type='button' class='btn btn-primary' onclick=getGameZip>下载</button>"));
     return tr;
+}
+
+function statusGenerator(status) {
+    if (status == 0)
+        return "<div style='color:gray;'>待审核</div>";
+    else if (status == 1)
+        return "<div style='color:green;'>已通过</div>";
+    else
+        return "<div style='color:red;'>未通过</div>";
+}
+
+function getGameZip() {
+    const id = this.parentElement.parentElement.querySelector("td").innerHTML;
+    const url = "./../../backend/uploads/" + id;
+    fetch(url + ".rar", { method: 'HEAD' })
+        .then(response => {
+            if (response.ok) {
+                window.location.href = url + ".rar";
+                return true;
+            } else {
+                window.location.href = url + ".zip";
+                return false;
+            }
+        })
+        .catch(() => {
+            alert('发生错误');
+            return false;
+        });
 }
