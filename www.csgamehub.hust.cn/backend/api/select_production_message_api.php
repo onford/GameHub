@@ -3,10 +3,12 @@ $rest = [
     "code" => 0,
     "msg" => "",
     "data" => [
+        "message_ids" => [],
         "message_titles" => [],
         "message_status" => [],
         "timestamps" => [],
         "accountnumbers" => [],
+        "recognize_ids" => [],
     ],
 ];
 
@@ -49,10 +51,12 @@ $sql = "
 $res = $conn->query($sql);
 if ($res) {
     while ($row = $res->fetch_assoc()) {
+        array_push($rest["data"]["message_ids"], $row["message_id"]);
         array_push($rest["data"]["message_titles"], $row["message_title"]);
         array_push($rest["data"]["message_status"], $row["message_status"]);
         array_push($rest["data"]["timestamps"], $row["timestamps"]);
         array_push($rest["data"]["accountnumbers"], $row["receive_accountnumber"]);
+        array_push($rest["data"]["recognize_ids"], intval($row["recognize_id"]));
     }
 } else {
     $conn->close();

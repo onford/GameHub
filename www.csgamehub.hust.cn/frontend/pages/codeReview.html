@@ -296,29 +296,60 @@
         }
     }
 
-    function generateMessageTable(accountnumbers, message_titles, timestamps, message_status) {
+    function get_username_and_status_by_receive_id(receive_id) {
+        const select_username_and_status_by_receive_id_api = "./../../backend/api/select_username_and_status_by_receive_id_api.php";
+        var form_data = new FormData();
+        form_data.append("receive_id", receive_id);
+        fetch(select_username_and_status_by_receive_id_api, {
+            method: "POST",
+            body: form_data
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code != 0) {
+                    alert(data.msg);
+                    return [null, null];
+                }
+                else {
+                    console.log("用账号名查询用户名成功");
+                    console.log("receive_id: " + receive_id);
+                    console.log(data.data);
+                    return [data.data.username, data.data.status];
+                }
+            })
+            .catch(error => console.error(error))
+        return [null, null];
+    }
+
+    function generateMessageTable(timestampss, statuss, usernames, newgame_names, versions) {
         clearTable();
         var message_table = document.getElementsByClassName("message_table")[0];
-        var len = accountnumbers.length;
+        var len = timestampss.length;
 
         var const_thead = document.createElement("thead");
         message_table.appendChild(const_thead);
 
         var const_tr = document.createElement("tr");
         var const_id_td = document.createElement("td");
-        var const_accountnumber_td = document.createElement("td");
+        var const_username_td = document.createElement("td");
+        var const_gamename_td = document.createElement("td");
+        var const_version_td = document.createElement("td");
         var const_timestamps_td = document.createElement("td");
         var const_status_td = document.createElement("td");
         var const_operation_td = document.createElement("td");
 
         const_id_td.innerHTML = "序号";
-        const_accountnumber_td.innerHTML = "账号名";
+        const_username_td.innerHTML = "用户名";
+        const_gamename_td.innerHTML = "游戏名";
+        const_version_td.innerHTML = "版本号";
         const_timestamps_td.innerHTML = "上载时间";
         const_status_td.innerHTML = "状态";
         const_operation_td.innerHTML = "操作";
 
         const_tr.appendChild(const_id_td);
-        const_tr.appendChild(const_accountnumber_td);
+        const_tr.appendChild(const_username_td);
+        const_tr.appendChild(const_gamename_td);
+        const_tr.appendChild(const_version_td);
         const_tr.appendChild(const_timestamps_td);
         const_tr.appendChild(const_status_td);
         const_tr.appendChild(const_operation_td);
@@ -329,16 +360,70 @@
         for (var i = 0; i < len; i++) {
             var new_tr = document.createElement("tr");
             var new_id_td = document.createElement("td");
-            var new_accountnumber_td = document.createElement("td");
+            var new_username_td = document.createElement("td");
+            var new_gamename_td = document.createElement("td");
+            var new_version_td = document.createElement("td");
             var new_timestamps_td = document.createElement("td");
             var new_status_td = document.createElement("td"); //这个状态不是已读未读
             var new_operation_td = document.createElement("td");
 
+            var username = "";
+            var status = "";
+
+
+            // //向接口获取用户名和游戏审核状态
+            // const select_newgame_list_info_by_newgame_id_api = "./../../backend/api/select_newgame_list_info_by_newgame_id_api.php";
+            // var form_data = new FormData();
+            // form_data.append("recognize_id", recognize_ids[i]);
+            // fetch(select_newgame_list_info_by_newgame_id_api, {
+            //     method: "POST",
+            //     body: form_data
+            // })
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         if (data.code != 0) {
+            //             alert(data.msg);
+            //         }
+            //         else {
+            //             console.log("查询游戏资讯成功");
+            //             console.log(data.data);
+            //             new_username_td.innerHTML = data.data.username; //不放在这里又会被异步优化掉,username直接为空
+            //             new_gamename_td.innerHTML = data.data.newgame_name;
+            //             new_version_td.innerHTML = data.data.version + 1 + ".0";
+            //             if (data.data.status == 0) {
+            //                 new_status_td.innerHTML = "待审核";
+            //                 new_status_td.classList.add("my-not-read");
+            //             }
+            //             else if (data.data.status == 1) {
+            //                 new_status_td.innerHTML = "已通过";
+            //                 new_status_td.classList.add("my-accept");
+            //             }
+            //             else if (data.data.status == 2) {
+            //                 new_status_id.innerHTML = "已驳回";
+            //                 new_status_td.classList.add("my-reject");
+            //             }
+            //         }
+            //     })
+            //     .catch(error => console.error(error))
+
             new_id_td.innerHTML = i + 1;
-            new_accountnumber_td.innerHTML = accountnumbers[i]; // 这个也要去newgame_list搜
-            new_timestamps_td.innerHTML = timestamps[i];
-            new_status_td.innerHTML = "待审核"; // 这里要去newgame_list
-            new_status_td.classList.add("my-not-read");
+            new_username_td.innerHTML = usernames[i];
+            new_gamename_td.innerHTML = newgame_names[i];
+            new_timestamps_td.innerHTML = timestampss[i];
+            new_version_td.innerHTML = versions[i];
+            new_timestamps_td.innerHTML = timestampss[i];
+
+            // 状态列特判一下
+            if (statuss[i] == 0) {
+                new_status_td.innerHTML = "待审核";
+                new_status_td.classList.add("my-not-read");
+            } else if (statuss[i] == 1) {
+                new_status_td.innerHTML = "已通过";
+                new_status_td.classList.add("my-accept");
+            } else {
+                new_status_td.innerHTML = "已驳回";
+                new_status_td.classList.add("my-reject");
+            }
 
             //操作组件的子组件
             var new_delete_a = document.createElement("a");
@@ -357,7 +442,9 @@
             new_operation_td.appendChild(new_download_a);
 
             new_tr.appendChild(new_id_td);
-            new_tr.appendChild(new_accountnumber_td);
+            new_tr.appendChild(new_username_td);
+            new_tr.appendChild(new_gamename_td);
+            new_tr.appendChild(new_version_td);
             new_tr.appendChild(new_timestamps_td);
             new_tr.appendChild(new_status_td);
             new_tr.appendChild(new_operation_td);
@@ -369,32 +456,90 @@
     }
 
     function init() {
-        const select_production_message_api = "./../../backend/api/select_production_message_api.php";
+        // const select_production_message_api = "./../../backend/api/select_production_message_api.php";
 
-        fetch(select_production_message_api, {
+        // //向接口获取用户名和游戏审核状态
+        // const select_newgame_list_info_by_newgame_id_api = "./../../backend/api/select_newgame_list_info_by_newgame_id_api.php";
+        // var form_data = new FormData();
+        // form_data.append("recognize_id", recognize_ids[i]);
+        // fetch(select_newgame_list_info_by_newgame_id_api, {
+        //     method: "POST",
+        //     body: form_data
+        // })
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         if (data.code != 0) {
+        //             alert(data.msg);
+        //         }
+        //         else {
+        //             console.log("查询游戏资讯成功");
+        //             console.log(data.data);
+        //             new_username_td.innerHTML = data.data.username; //不放在这里又会被异步优化掉,username直接为空
+        //             new_gamename_td.innerHTML = data.data.newgame_name;
+        //             new_version_td.innerHTML = data.data.version + 1 + ".0";
+        //             if (data.data.status == 0) {
+        //                 new_status_td.innerHTML = "待审核";
+        //                 new_status_td.classList.add("my-not-read");
+        //             }
+        //             else if (data.data.status == 1) {
+        //                 new_status_td.innerHTML = "已通过";
+        //                 new_status_td.classList.add("my-accept");
+        //             }
+        //             else if (data.data.status == 2) {
+        //                 new_status_id.innerHTML = "已驳回";
+        //                 new_status_td.classList.add("my-reject");
+        //             }
+        //             fetch(select_production_message_api, {
+        //                 method: "GET"
+        //             })
+        //                 .then(response => response.json())
+        //                 .then(data => {
+        //                     if (data.code != 0) {
+        //                         alert(data.msg);
+        //                     }
+        //                     else {
+        //                         console.log("全部消息查询成功");
+        //                         console.log(data.dada);
+        //                         if (data.data.accountnumbers.length == 0) {
+        //                             generateEmptyTable("消息列表为空");
+        //                         }
+        //                         else {
+        //                             var message_ids = data.data.message_ids;
+        //                             var accountnumbers = data.data.accountnumbers;
+        //                             var message_titles = data.data.message_titles;
+        //                             var timestamps = data.data.timestamps;
+        //                             var message_status = data.data.message_status;
+        //                             var recognize_ids = data.data.recognize_ids;
+        //                             console.log(data.data);
+        //                             generateMessageTable(accountnumbers, message_titles, timestamps, message_status, recognize_ids);
+        //                         }
+        //                     }
+        //                 })
+        //                 .catch(error => console.error(error))
+        //         }
+        //     })
+        //     .catch(error => console.error(error))
+
+        const select_root_message_info_api = "./../../backend/api/select_root_message_info_api.php";
+        fetch(select_root_message_info_api, {
             method: "GET"
         })
             .then(response => response.json())
             .then(data => {
+                console.log(data);
                 if (data.code != 0) {
                     alert(data.msg);
-                }
-                else {
-                    console.log("全部消息查询成功");
-                    console.log(data.dada);
-                    if (data.data.accountnumbers.length == 0) {
-                        generateEmptyTable("消息列表为空");
-                    }
-                    else {
-                        var accountnumbers = data.data.accountnumbers;
-                        var message_titles = data.data.message_titles;
-                        var timestamps = data.data.timestamps;
-                        var message_status = data.data.message_status;
-                        generateMessageTable(accountnumbers, message_titles, timestamps, message_status);
-                    }
+                } else {
+                    console.log("管理员消息中心资料请求成功");
+                    var timestampss = data.data.timestampss;
+                    var statuss = data.data.statuss;
+                    var usernames = data.data.usernames;
+                    var newgame_names = data.data.newgame_names;
+                    var versions = data.data.versions;
+                    generateMessageTable(timestampss, statuss, usernames, newgame_names, versions);
                 }
             })
-            .catch(error => console.error(error))
+            .catch(error => console.error(error));
     }
 
     window.onload = init();
