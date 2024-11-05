@@ -139,100 +139,21 @@
                 <hr>
                 <div class="my-flex-container">
                     <div class="my-view-option-table" style="border-bottom: 2px solid rgb(0, 153, 255);">
-                        <p class="my-view-option">全部</p>
+                        <p class="my-view-option" id="my-all-view-option" onclick="viewOptionHandle(event)">全部</p>
                     </div>
                     <div class="my-view-option-table">
-                        <p class="my-view-option">待审核 </p>
+                        <p class="my-view-option" id="my-waiting-view-option" onclick="viewOptionHandle(event)">待审核 </p>
                     </div>
                     <div class="my-view-option-table">
-                        <p class="my-view-option">已通过 </p>
+                        <p class="my-view-option" id="my-accept-view-option" onclick="viewOptionHandle(event)">已通过 </p>
                     </div>
                     <div class="my-view-option-table">
-                        <p class="my-view-option">已驳回 </p>
+                        <p class="my-view-option" id="my-reject-view-option" onclick="viewOptionHandle(event)">已驳回 </p>
                     </div>
                 </div>
             </div>
             <div class="my-main-body">
                 <table class="message_table">
-                    <!-- <thead>
-                        <tr>
-                            <td>
-                                序号
-                            </td>
-                            <td>
-                                用户名
-                            </td>
-                            <td>
-                                上载时间
-                            </td>
-                            <td>
-                                状态
-                            </td>
-                            <td>
-                                操作
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                1
-                            </td>
-                            <td>
-                                Njaso
-                            </td>
-                            <td>
-                                2024.11.2 17:32:53
-                            </td>
-                            <td class="my-accpet">
-                                已通过
-                            </td>
-                            <td>
-                                <a href="#">删除</a>
-                                <a href="#">通过</a>
-                                <a href="#">下载压缩包</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                2
-                            </td>
-                            <td>
-                                Tommy
-                            </td>
-                            <td>
-                                2024.11.2 17:41:53
-                            </td>
-                            <td class="my-not-read">
-                                待审核
-                            </td>
-                            <td>
-                                <a href="#">删除</a>
-                                <a href="#">通过</a>
-                                <a href="#">下载压缩包</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                2
-                            </td>
-                            <td>
-                                Sunny
-                            </td>
-                            <td>
-                                2019.12.12 10:41:53
-                            </td>
-                            <td class="my-reject">
-                                已驳回
-                            </td>
-                            <td>
-                                <a class='my-operation' href="#">删除</a>
-                                <a class='my-operation' href="#">通过</a>
-                                <a class='my-operation' href="#">下载压缩包</a>
-                            </td> -->
-                    <!-- </tr> -->
-                    <!-- 这里插入作品数据 -->
-                    <!-- </tbody> -->
                 </table>
             </div>
             <div class="my-main-bottom my-flex-container">
@@ -252,6 +173,27 @@
 </body>
 
 <script>
+    function viewOptionHandle(event) {
+        event.preventDefault();
+        var view_option = event.target.id;
+        console.log(event.target);
+        console.log(view_option);
+        switch (view_option) {
+            case 'my-all-view-option':
+                init(-1);
+                break;
+            case 'my-waiting-view-option':
+                init(0);
+                break;
+            case 'my-accept-view-option':
+                init(1);
+                break;
+            case 'my-reject-view-option':
+                init(2);
+                break;
+        }
+    }
+
     Array.from(document.getElementsByClassName('my-view-option-table')).forEach(element => {
         element.addEventListener('click', function () {
             this.style.borderBottom = '2px solid rgb(0, 153, 255)'
@@ -370,47 +312,11 @@
             var username = "";
             var status = "";
 
-
-            // //向接口获取用户名和游戏审核状态
-            // const select_newgame_list_info_by_newgame_id_api = "./../../backend/api/select_newgame_list_info_by_newgame_id_api.php";
-            // var form_data = new FormData();
-            // form_data.append("recognize_id", recognize_ids[i]);
-            // fetch(select_newgame_list_info_by_newgame_id_api, {
-            //     method: "POST",
-            //     body: form_data
-            // })
-            //     .then(response => response.json())
-            //     .then(data => {
-            //         if (data.code != 0) {
-            //             alert(data.msg);
-            //         }
-            //         else {
-            //             console.log("查询游戏资讯成功");
-            //             console.log(data.data);
-            //             new_username_td.innerHTML = data.data.username; //不放在这里又会被异步优化掉,username直接为空
-            //             new_gamename_td.innerHTML = data.data.newgame_name;
-            //             new_version_td.innerHTML = data.data.version + 1 + ".0";
-            //             if (data.data.status == 0) {
-            //                 new_status_td.innerHTML = "待审核";
-            //                 new_status_td.classList.add("my-not-read");
-            //             }
-            //             else if (data.data.status == 1) {
-            //                 new_status_td.innerHTML = "已通过";
-            //                 new_status_td.classList.add("my-accept");
-            //             }
-            //             else if (data.data.status == 2) {
-            //                 new_status_id.innerHTML = "已驳回";
-            //                 new_status_td.classList.add("my-reject");
-            //             }
-            //         }
-            //     })
-            //     .catch(error => console.error(error))
-
             new_id_td.innerHTML = i + 1;
             new_username_td.innerHTML = usernames[i];
             new_gamename_td.innerHTML = newgame_names[i];
             new_timestamps_td.innerHTML = timestampss[i];
-            new_version_td.innerHTML = versions[i];
+            new_version_td.innerHTML = versions[i] + 1 + ".0";
             new_timestamps_td.innerHTML = timestampss[i];
 
             // 状态列特判一下
@@ -455,74 +361,13 @@
         message_table.appendChild(const_tbody);
     }
 
-    function init() {
-        // const select_production_message_api = "./../../backend/api/select_production_message_api.php";
-
-        // //向接口获取用户名和游戏审核状态
-        // const select_newgame_list_info_by_newgame_id_api = "./../../backend/api/select_newgame_list_info_by_newgame_id_api.php";
-        // var form_data = new FormData();
-        // form_data.append("recognize_id", recognize_ids[i]);
-        // fetch(select_newgame_list_info_by_newgame_id_api, {
-        //     method: "POST",
-        //     body: form_data
-        // })
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         if (data.code != 0) {
-        //             alert(data.msg);
-        //         }
-        //         else {
-        //             console.log("查询游戏资讯成功");
-        //             console.log(data.data);
-        //             new_username_td.innerHTML = data.data.username; //不放在这里又会被异步优化掉,username直接为空
-        //             new_gamename_td.innerHTML = data.data.newgame_name;
-        //             new_version_td.innerHTML = data.data.version + 1 + ".0";
-        //             if (data.data.status == 0) {
-        //                 new_status_td.innerHTML = "待审核";
-        //                 new_status_td.classList.add("my-not-read");
-        //             }
-        //             else if (data.data.status == 1) {
-        //                 new_status_td.innerHTML = "已通过";
-        //                 new_status_td.classList.add("my-accept");
-        //             }
-        //             else if (data.data.status == 2) {
-        //                 new_status_id.innerHTML = "已驳回";
-        //                 new_status_td.classList.add("my-reject");
-        //             }
-        //             fetch(select_production_message_api, {
-        //                 method: "GET"
-        //             })
-        //                 .then(response => response.json())
-        //                 .then(data => {
-        //                     if (data.code != 0) {
-        //                         alert(data.msg);
-        //                     }
-        //                     else {
-        //                         console.log("全部消息查询成功");
-        //                         console.log(data.dada);
-        //                         if (data.data.accountnumbers.length == 0) {
-        //                             generateEmptyTable("消息列表为空");
-        //                         }
-        //                         else {
-        //                             var message_ids = data.data.message_ids;
-        //                             var accountnumbers = data.data.accountnumbers;
-        //                             var message_titles = data.data.message_titles;
-        //                             var timestamps = data.data.timestamps;
-        //                             var message_status = data.data.message_status;
-        //                             var recognize_ids = data.data.recognize_ids;
-        //                             console.log(data.data);
-        //                             generateMessageTable(accountnumbers, message_titles, timestamps, message_status, recognize_ids);
-        //                         }
-        //                     }
-        //                 })
-        //                 .catch(error => console.error(error))
-        //         }
-        //     })
-        //     .catch(error => console.error(error))
-
+    function init(mode = -1) { // -1是全部, 0是待审核, 1是已通过, 2是已驳回
         const select_root_message_info_api = "./../../backend/api/select_root_message_info_api.php";
+        var form_data = new FormData();
+        form_data.append("mode", mode);
         fetch(select_root_message_info_api, {
-            method: "GET"
+            method: "POST",
+            body: form_data
         })
             .then(response => response.json())
             .then(data => {
@@ -531,6 +376,7 @@
                     alert(data.msg);
                 } else {
                     console.log("管理员消息中心资料请求成功");
+                    console.log(data.data);
                     var timestampss = data.data.timestampss;
                     var statuss = data.data.statuss;
                     var usernames = data.data.usernames;

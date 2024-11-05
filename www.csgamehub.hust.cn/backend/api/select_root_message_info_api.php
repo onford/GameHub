@@ -32,6 +32,7 @@ if ($conn->connect_error) {
 }
 
 $tablename1 = "message_list";
+$mode = intval($_POST["mode"]);
 
 $sql1 = "
     select *
@@ -43,7 +44,7 @@ $res1 = $conn->query($sql1);
 
 if ($res1) {
     while ($row1 = $res1->fetch_assoc()) {
-        array_push($rest["data"]["timestampss"], $row1["timestamps"]);
+
         // array_push($rest["data"]["recognize_ids"], $row1["recognize_id"]); // 已经不需要这个数据了
         // 利用recognize_id在newgame_list再进行一次查询
 
@@ -51,15 +52,21 @@ if ($res1) {
         $recognize_id = $row1["recognize_id"];
 
         $sql2 = "
-            select *
-            from $tablename2
-            where newgame_id = $recognize_id;
+        select *
+        from $tablename2
+        where newgame_id = $recognize_id;
         ";
 
         $res2 = $conn->query($sql2);
 
         if ($res2) {
             $row2 = $res2->fetch_assoc();
+
+            if (intval($row2["status"]) != $mode && $mode != -1) {
+                continue;
+            }
+
+            array_push($rest["data"]["timestampss"], $row1["timestamps"]);
             array_push($rest["data"]["usernames"], $row2["username"]);
             array_push($rest["data"]["statuss"], intval($row2["status"]));
             array_push($rest["data"]["newgame_names"], $row2["newgame_name"]);
