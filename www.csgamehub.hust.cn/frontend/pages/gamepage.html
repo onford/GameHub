@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="./../../src/vendor/fontawesome/css/all.min.css">
     <link rel="icon" href="./../../src/images/favicon1.ico" type="image/x-icon">
     <script src="./../../src/vendor/jquery/jquery-3.6.4.min.js"></script>
+    
 
 </head>
 
@@ -21,7 +22,10 @@
         </div>
         <div class="lefter">
             <img src="./../../src/images/gamehubfont.png">
-            <img src="./../../src/images/test_icon.webp" alt="" class="profile_pic">
+            <div class="image-container">
+                <img src="./../../src/images/test_icon.webp" alt="" class="profile_pic">
+                <div class="text-overlay">进入个人中心</div> <!-- 新增的文字覆盖 -->
+            </div>
             <p class="username"></p>
             <p class="gamename"></p>
             <p class="history_best"></p>
@@ -144,8 +148,8 @@
     }
 
 
-    var profile_pic = document.getElementsByClassName("profile_pic")[0];
-    profile_pic.onclick = function () {
+    var image_container = document.getElementsByClassName("image-container")[0];
+    image_container.onclick = function () {
         console.log("头像点击事件触发");
         window.location.href = "./messageCenter.html";
     }
