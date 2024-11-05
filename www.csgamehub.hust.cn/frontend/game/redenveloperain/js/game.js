@@ -6,6 +6,8 @@ var envelopes = []; //信封集合
 var score = 0;
 var startTime = Date.now();
 var timer;
+var gameLoop;
+var isgameover = false;
 //document.body.appendChild(canvas);
 
 
@@ -113,6 +115,7 @@ function updatetimelast() {
 
 // 开始游戏的函数
 function startGame() {
+  isgameover = false;
   score=0;
   updatescore();
   updatetimelast();
@@ -129,12 +132,33 @@ function startGame() {
 
     // 检查游戏是否结束
     if (Date.now() - startTime >= gameDuration) {
+      isgameover = true;
       clearInterval(gameLoop);
       clearInterval(timer);
       canvas.removeEventListener('click', handleClick);
+      recordscore(score); //得分上传数据库
+      score = 0;
       endAudio.play();
     }
   }, 1000 / 60); // 以60帧/秒更新游戏
 }
+
+//重新启动游戏
+function resetGame() {
+  score = 0;
+  endAudio.pause();
+  endAudio.currentTime = 0;
+}
+
+// 绑定“New Game”按钮的点击事件
+document.getElementById("btn").onclick = function () {
+  if(isgameover == true){
+    resetGame(); // 重置游戏状态
+    startGame(); // 启动或重新开始游戏循环
+  }
+  else{
+    alert("只能在红包雨游戏结束后重新开始游戏！");
+  }
+};
 
 startGame();
