@@ -51,6 +51,23 @@
     animation: blueFade 0.3s forwards;
 }
 
+table {
+    width: 100%;
+    border: 1px solid #ccc;
+}
+
+tr {
+    border: 1px solid #ccc;
+
+}
+
+td,
+th {
+    border: 1px solid #ccc !important;
+    text-align: center !important;
+    padding: 10px;
+}
+
 @keyframes blueFade {
     0% {
         color: black;

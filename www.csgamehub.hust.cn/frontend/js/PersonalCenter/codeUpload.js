@@ -1,4 +1,6 @@
-const header = document.querySelector(".header");
+// 上传新游戏
+
+const header = document.querySelectorAll(".header")[0];
 const dropZone = document.getElementById('dropZone');
 const uploadedFilesDiv = document.getElementById('uploadedFiles');
 const fileInput = document.getElementById('fileInput');
@@ -262,4 +264,51 @@ function uploadGame(file) {
         .catch(error => {
             console.error('上传失败:', error);
         });
+}
+
+// 已上传的游戏
+
+const tablebody = document.querySelector("tbody");
+getAllGamesByName(null);
+
+function getAllGamesByName(gamename) {
+    var form_data = new FormData();
+    form_data.append("username", localStorage.getItem("username"));
+    form_data.append("gamename", gamename ? gamename : "");
+
+    fetch("./../../backend/api/get_uploaded_games.php", {
+        method: "POST",
+        body: form_data
+    }).then(response => response.json())
+        .then(data => {
+            console.log(data);
+            if (data.code == 1) {
+                alert(data.msg);
+            } else {
+                if (gamename)
+                    console.log("成功获取游戏 ", gamename, " 的所有上传记录");
+                else console.log("成功获取所有游戏的上传记录");
+                for (var i = 0; i < data.data.length; i++) {
+                    tablebody.appendChild(newgameRecord(data.data[i].newgame_id, data.data[i].gamename, data.data[i].version, data.data[i].uploadtime, data.data[i].status));
+                }
+            }
+        }).catch(error => {
+            console.error(error);
+        });
+}
+
+function newgameRecord(newgame_id, gamename, version, uploadtime, status) {
+    const tr = document.createElement("tr");
+    const createTd = (val) => {
+        const td = document.createElement("td");
+        td.innerHTML = val;
+        return td;
+    };
+    tr.appendChild(createTd(newgame_id));
+    tr.appendChild(createTd(gamename));
+    tr.appendChild(createTd(version));
+    tr.appendChild(createTd(uploadtime));
+    tr.appendChild(createTd(status));
+    tr.appendChild(createTd(""));
+    return tr;
 }
