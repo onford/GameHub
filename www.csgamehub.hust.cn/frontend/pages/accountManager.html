@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GameHub - 账号管理</title>
     <link rel="stylesheet" href="./../css/personalCenter.css">
+    <link rel="stylesheet" href="./../css/accountManager.css">
     <link href="./../../src/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script src="./../../src/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="./../../src/vendor/fontawesome/css/all.min.css">
@@ -37,49 +38,44 @@
                 </div>
             </a>
         </div>
-        <div class="main my-flex-container">
-            <form action="" onsubmit="submitForm(event)" class="my-flex-container" id="update_password_form">
-                <ul>
-                    <li class="line">
-                        <div class="heading">修改密码</div>
-                        <i class="fa fa-lock"></i>&emsp;
-                        <input type="password" name="old_password" placeholder="请输入旧密码" class="fill_in" id="old_password">
-                        <button type="button" onclick="togglePasswordVisibility('old_password')"><i class="fa fa-eye" id="eye_old"></i></button>
-                    </li>
-                    <li class="line">
-                        <i class="fa fa-lock"></i>&emsp;
-                        <input type="password" name="new_password" placeholder="请输入新密码" class="fill_in" id="new_password">
-                        <button type="button" onclick="togglePasswordVisibility('new_password')"><i class="fa fa-eye" id="eye_new"></i></button>
-                    </li>
-                    <li class="line">
-                        <i class="fa fa-lock"></i>&emsp;
-                        <input type="password" name="re_new_password" placeholder="确认新密码" class="fill_in" id="re_new_password">
-                        <button type="button" onclick="togglePasswordVisibility('re_new_password')"><i class="fa fa-eye" id="eye_re_new"></i></button>
-                    </li>
-                    <li class="line" style="margin-right: 10px;margin-top:20px;">
-                        <input type="submit" value="确认" class="confirm_button" disabled>&emsp;&emsp;
-                        <button class='logout_button' onclick="logoutHandle(event);">登出</button>
-                    </li>
-                </ul>
-            </form>
+        <div class="main" style="background-image: none;">
+            <div class="header">
+                <div>
+                    <h2 style="margin-bottom: 40px;display: inline-block;font-weight: bold;">修改密码</h2>
+                    <p style="color:gray;margin-bottom: 40px;display: inline-block;margin-left: 40px;">
+                        如果你觉得自己的密码不够安全的话。</p>
+                </div>
+                <div>
+                    <form action="" onsubmit="submitForm(event)" id="update_password_form">
+                        <ul style="width: 300px;padding-left: 0;">
+                            <li class="list-group-item">
+                                <i class="fa fa-lock"></i>&emsp;
+                                <input type="password" name="old_password" placeholder="请输入旧密码" class="fill_in"
+                                    id="old_password">
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fa fa-lock"></i>&emsp;
+                                <input type="password" name="new_password" placeholder="请输入新密码" class="fill_in"
+                                    id="new_password">
+                            </li>
+                            <li class="list-group-item">
+                                <i class="fa fa-lock"></i>&emsp;
+                                <input type="password" name="re_new_password" placeholder="确认新密码" class="fill_in"
+                                    id="re_new_password">
+                            </li>
+                            <li class="list-group-item" style="margin-right: 10px;margin-top:20px;">
+                                <input type="submit" value="确认" class="confirm_button" disabled>&emsp;&emsp;
+                                <button class='logout_button' onclick="logoutHandle(event);">登出</button>
+                            </li>
+                        </ul>
+                    </form>
+                </div>
+            </div>
+
         </div>
     </div>
 </body>
 <script>
-    function togglePasswordVisibility(inputId) {
-        const input = document.getElementById(inputId);
-        const eyeIcon = document.getElementById(`eye_${inputId}`);
-        if (input.type === "password") {
-            input.type = "text"; // Show password
-            eyeIcon.classList.remove('fa-eye');
-            eyeIcon.classList.add('fa-eye-slash');
-        } else {
-            input.type = "password"; // Hide password
-            eyeIcon.classList.remove('fa-eye-slash');
-            eyeIcon.classList.add('fa-eye');
-        }
-    }
-
     function jumpHandle1(event) {
         event.preventDefault();
         console.log("跳转页面事件触发");
@@ -91,7 +87,7 @@
         console.log("跳转页面事件触发");
         window.location.href = "./codeUpload.html";
     }
-    
+
     function jumpHandle3(event) {
         event.preventDefault();
         console.log("跳转页面事件触发");

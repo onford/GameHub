@@ -55,7 +55,7 @@ senpaiImage.src = "./../game/senpai/image/senpai.jpg";
 lossImage.src = "./../game/senpai/image/loss.jpg";
 
 
-var epsilon = 1e-6;
+const epsilon = 1e-6;
 var size = 40;
 var ratio = 0.7;
 var escaper = { speed: 256., x: 0., y: 0. }
@@ -74,25 +74,26 @@ function changeDirection() {
 
 // 重置游戏状态
 function resetGame() {
-    score = 0; 
-    punish = 1145; 
-    lastCaught = false; 
-    nowCaught = false; 
-    senpai.x = 270; 
-    senpai.y = 360; 
-    escaper.x = 0;  
-    escaper.y = 0;  
-    endTag = false; 
+    score = 0;
+    punish = 1145;
+    lastCaught = false;
+    nowCaught = false;
+    senpai.x = 270;
+    senpai.y = 360;
+    escaper.x = 0;
+    escaper.y = 0;
+    senpai.speed = 114.;
+    endTag = false;
     pauseTag = false;
 
     // 停止音效并重置播放时间
-    caughtAudio.pause(); 
-    caughtAudio.currentTime = 0; 
-    failAudio.pause(); 
-    failAudio.currentTime = 0; 
+    caughtAudio.pause();
+    caughtAudio.currentTime = 0;
+    failAudio.pause();
+    failAudio.currentTime = 0;
 
     if (!bgAudio.paused) {
-        bgAudio.currentTime = 0; 
+        bgAudio.currentTime = 0;
         bgAudio.play(); // 播放背景音乐
     }
 }

@@ -75,14 +75,6 @@
     transition: background-color 0.3s;
 }
 
-#update_password_form {
-    width: 450px;
-    height: 400px;
-    margin: 0 auto;
-    background-color: white;
-    border-radius: 10px;
-}
-
 .option:hover {
     cursor: pointer;
 }
