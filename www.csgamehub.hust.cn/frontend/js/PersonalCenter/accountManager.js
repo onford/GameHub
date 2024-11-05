@@ -64,6 +64,8 @@ const account = document.getElementById("accountnumber");
 const user = document.getElementById("username");
 const hint = document.getElementById("hint");
 const username_btn = document.getElementById("username_chg");
+const icon_btn = document.getElementById("icon_chg");
+const icon_input = document.getElementById("iconInput");
 init_info();
 
 
@@ -81,6 +83,7 @@ function init_info() {
                 alert(data.msg);
             } else {
                 account.value = data.data.accountnumber;
+                localStorage.setItem("cur_accountnumber", data.data.accountnumber);
             }
         }).catch(error => {
             console.error(error);
@@ -183,4 +186,37 @@ function change_username() {
         .catch(error => {
             console.log(error);
         });
+}
+
+icon_btn.onclick = () => { icon_input.click(); }
+icon_input.addEventListener('change', (event) => { handleFiles(event.target.files); });
+function handleFiles(files) {
+    for (const file of files) {
+        if (file.name.endsWith(".jpg") || file.name.endsWith(".png")) {
+            const formData = new FormData();
+            formData.append("file[]", file);
+            formData.append("account", localStorage.getItem("cur_accountnumber"));
+
+            fetch('../../backend/api/upload_icon.php', {
+                method: 'POST',
+                body: formData
+            }).then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    if (data.code == 1) {
+                        alert(data.msg);
+                    } else {
+                        alert("上传成功");
+                        location.reload();
+                    }
+                })
+                .catch(error => {
+                    console.error('上传失败:', error);
+                });
+        }
+        else {
+            alert("只允许选择jpg或png形式的图片。");
+            icon_input.value = "";
+        }
+    }
 }

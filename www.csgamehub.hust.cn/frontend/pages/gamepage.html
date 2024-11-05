@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="./../../src/vendor/fontawesome/css/all.min.css">
     <link rel="icon" href="./../../src/images/favicon1.ico" type="image/x-icon">
     <script src="./../../src/vendor/jquery/jquery-3.6.4.min.js"></script>
-    
+    <script src="./../js/iconLoad.js"></script>
 
 </head>
 
@@ -23,7 +23,7 @@
         <div class="lefter">
             <img src="./../../src/images/gamehubfont.png">
             <div class="image-container">
-                <img src="./../../src/images/test_icon.webp" alt="" class="profile_pic">
+                <img class="iconImg" src="./../../backend/user_icon/default/default.jpg" alt="" class="profile_pic">
                 <div class="text-overlay">进入个人中心</div> <!-- 新增的文字覆盖 -->
             </div>
             <p class="username"></p>
@@ -58,8 +58,9 @@
                 <form id="commentForm" onsubmit="commentHandle(event)">
                     <div style="display: flex;" width="100%">
                         <div style="float: left;flex-basis: 10%;display: flex;
-                        justify-content: center;align-items: baseline;"><img src="./../../src/images/test_icon.webp"
-                                width="50%" style="border-radius: 50%;margin-top: -5px;"></img></div>
+                        justify-content: center;align-items: baseline;"><img class="iconImg"
+                                src="./../../backend/user_icon/default/default.jpg" width="50%"
+                                style="border-radius: 50%;margin-top: -5px;"></img></div>
                         <div class="card mb-4" style="float: right;width: 90%;">
                             <div class="form-group" width="100%" height="24px">
                                 <textarea class="form-control" id="commentText" name="comment_text"
