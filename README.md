@@ -87,6 +87,17 @@ Table: **message_list**
 | status                | tinyint      | DEFAULT 0                     |
 | receive_accountnumber | varchar(127) | FK -> userlist(accountnumber) |
 
+
+
+Table: **content_list**
+
+|      列名       | 类型 |              限制              |
+| :-------------: | :--: | :----------------------------: |
+|  recognize_id   | int  | FK -> newgame_list(newgame_id) |
+| message_content | text |               NN               |
+
+
+
 其中限制条件的缩写分别是  
 PK: primary key  
 AI: auto_increment  

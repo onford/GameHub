@@ -75,6 +75,10 @@ CREATE TABLE `message_list` (
   `receive_accountnumber` varchar(127) references userlist(accountnumber) on delete cascade on update cascade
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+create table content_list(
+    recognize_id int references newgame_list(newgame_id) on update cascade,
+    message_content text not null
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 -- 下面代码用于加载 game_list，这是一个相对固定的表
