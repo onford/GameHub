@@ -26,7 +26,7 @@
                 <!-- <input type="text" class="opinion-input-box"> -->
             </div>
             <div class="my-btn-group my-flex-item">
-                <button type="submit" class="my-submit-btn">确认</button>
+                <button type="submit" class="my-submit-btn" onclick="confirmHandle(event)">确认</button>
                 <button class="my-cancel-btn" onclick="cancelHandle(event)">取消</button>
             </div>
         </form>
@@ -209,10 +209,77 @@
         my_table.appendChild(my_thead);
     }
 
+    function confirmHandle(event) {
+        event.preventDefault();
+        var judge_select = Number(document.getElementById("my-judge-select").value);
+        var my_textarea = document.getElementById("opinion-input-box");
+        var content = my_textarea.value;
+
+        var now_tr_status = localStorage.getItem("cur_tr_status");
+        if (now_tr_status != "0") { //已经审核过
+            return;
+        }
+
+        var form_data = new FormData();
+        form_data.append("message_id", localStorage.getItem("cur_message_id"));
+        form_data.append("content", content);
+        form_data.append("status", judge_select);
+        const change_game_status_api = "./../../backend/api/change_game_status_api.php";
+        fetch(change_game_status_api, {
+            method: "POST",
+            body: form_data
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code != 0) {
+                    alert(data.msg);
+                } else {
+                    console.log("游戏状态修改成功");
+                    location.reload();
+                }
+            })
+            .catch(error => console.error(error));
+    }
+
     function judgeHandle(event) {
         event.preventDefault();
         var overlay = document.getElementsByClassName("my-gray-layer")[0];
         overlay.classList.remove("my-not-show");
+        var this_tr = event.target.parentNode.parentNode;
+        for (var child of this_tr.childNodes) {
+            if (child.innerHTML == "待审核" || child.innerHTML == "已通过" || child.innerHTML == "已驳回") {
+                console.log(child);
+                localStorage.setItem("cur_tr_status", child.id);
+            }
+        }
+        localStorage.setItem("cur_message_id", this_tr.id);
+        var cur_select = document.getElementsByName("judge_select")[0];
+        var cur_tr_status = localStorage.getItem("cur_tr_status");
+        console.log("cur_tr_status: " + cur_tr_status);
+        cur_select.value = Number(cur_tr_status); //要是整型才是正确的
+        cur_select.disabled = false;
+        var my_textarea = document.getElementById("opinion-input-box");
+        my_textarea.disabled = false;
+        if (cur_tr_status != '0') { //被审核过,那么应该是要有评语的
+            cur_select.disabled = true;
+            var form_data = new FormData();
+            form_data.append("message_id", localStorage.getItem("cur_message_id"));
+            const select_content_by_message_id_api = "./../../backend/api/select_content_by_message_id_api.php";
+            fetch(select_content_by_message_id_api, {
+                method: "POST",
+                body: form_data
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code != 0) {
+                        alert(data.msg);
+                    } else {
+                        var content = data.data;
+                        my_textarea.value = content;
+                        my_textarea.disabled = true;
+                    }
+                })
+        }
     }
 
     function generateMessageTable(message_ids, timestampss, statuss, usernames, newgame_names, versions) {
@@ -275,12 +342,15 @@
 
             // 状态列特判一下
             if (statuss[i] == 0) {
+                new_status_td.id = "0";
                 new_status_td.innerHTML = "待审核";
                 new_status_td.classList.add("my-not-read");
             } else if (statuss[i] == 1) {
+                new_status_td.id = "1";
                 new_status_td.innerHTML = "已通过";
                 new_status_td.classList.add("my-accept");
             } else {
+                new_status_td.id = "2";
                 new_status_td.innerHTML = "已驳回";
                 new_status_td.classList.add("my-reject");
             }

@@ -482,7 +482,7 @@ a {
     resize: none;
 }
 
-#opinion-input-box:hover {
+#opinion-input-box:focus {
     border: 1px solid #657180;
     outline: none;
     background-color: white;
