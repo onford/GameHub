@@ -1,4 +1,4 @@
-var canvas = document.getElementById("canvas");
+const canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 var path=[]; //存储单元格
 var cnt=0;
@@ -19,11 +19,14 @@ for(var i=0;i<6;i++){
 
 //在画布上画单元格图片
 function draw() {
-    for(var i=0;i<450;i=i+45){
-        for(var j=0;j<450;j=j+45){
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // 清空画布
+    path = []; // 清空 path
+    cnt = 0; // 重新计数
+    for(var i=0;i<400;i=i+40){
+        for(var j=0;j<400;j=j+40){
             var a=Math.floor(Math.random()*6);
             path[cnt++]=a;  //记录图片信息
-            ctx.drawImage(imgs[a],j,i,45,45);
+            ctx.drawImage(imgs[a],j,i,40,40);
         }
     }
 }
@@ -47,8 +50,8 @@ function endGame() {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "black";
-    ctx.fillText("游戏结束！", canvas.width / 2, canvas.height / 2);
+    ctx.fillStyle = "white";
+    ctx.fillText("END", canvas.width / 2, canvas.height / 2);
 }
 
 
@@ -59,12 +62,10 @@ function startGame() {
     };
     canvas.addEventListener('click',function(event){
         //消图，处理点击事件
-        var x=Math.ceil(event.clientY/40)-1;  //拿到点击的坐标
-        var y=Math.ceil(event.clientX/40)-1;
-        if(x>=10){
-            return;
-        }
-        if(y>=10){
+        var x=Math.ceil((event.clientY-canvas.offsetTop)/40)-1;  //拿到点击的坐标
+        var y=Math.ceil((event.clientX-canvas.offsetLeft)/40)-1; //警钟长鸣，绝对位置转相对位置
+        // 检查边界
+        if (x < 0 || x >= 10 || y < 0 || y >= 10) {
             return;
         }
         var dic=x*10+y;
@@ -108,6 +109,7 @@ function startGame() {
         //score-=1; //消除横、竖排重复部分
         if(isGameOver()){
             endGame();
+            recordScore(score);
         }
     });
 }
