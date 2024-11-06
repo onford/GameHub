@@ -208,8 +208,8 @@ body {
 
 .username {
     margin-top: 20px;
-    font-size: 20px;
-    margin-left: 17%;
+    font-size: 18px;
+    margin-left: 7%;
     text-align: left;
     font-weight: bold;
     color: white;
@@ -224,8 +224,8 @@ body {
 
 .gamename {
     margin-top: 10px;
-    font-size: 20px;
-    margin-left: 17%;
+    font-size: 16px;
+    margin-left: 7%;
     text-align: left;
     font-weight: bold;
     color: whitesmoke;
@@ -241,7 +241,7 @@ body {
 .history_best {
     margin-top: 10px;
     font-size: 20px;
-    margin-left: 17%;
+    margin-left: 7%;
     text-align: left;
     font-weight: bold;
     color: white;
