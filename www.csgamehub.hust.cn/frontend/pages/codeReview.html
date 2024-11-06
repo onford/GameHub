@@ -217,6 +217,8 @@
 
         var now_tr_status = localStorage.getItem("cur_tr_status");
         if (now_tr_status != "0") { //已经审核过
+            var overlay = document.getElementsByClassName("my-gray-layer")[0];
+            overlay.classList.add("my-not-show");
             return;
         }
 
