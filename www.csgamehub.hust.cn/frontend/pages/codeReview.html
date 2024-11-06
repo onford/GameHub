@@ -240,6 +240,10 @@
                 } else {
                     console.log("消息删除成功");
                     const_tbody.removeChild(this_tr);
+                    console.log(const_tbody.childNodes);
+                    if (const_tbody.childNodes.length == 0) {
+                        generateEmptyTable("没有相关结果");
+                    }
                 }
             })
             .catch(error => console.error(error));
