@@ -37,7 +37,7 @@ function comment_item(id, user, comment, timestamp, likes, liked, unliked) {
     new_item.className = "list-group-item";
     new_item.id = id;
     new_item.style = "border-left:0;border-right:0;border-radius:0;display:inline-block;float:right;";
-    new_item.innerHTML = "<div style=\"display:inline-block;\"><img src=\"./../../backend/user_icon/default/default.jpg\" width=\"50px\" style=\"border-radius: 50%;margin-top: -60px;\" class=\"comment-avatar\"></img></div><div style=\"display:inline-block;margin-left:15px;    \"><strong style=\"color:#FB7299\">" + user + "</strong><br><p style=\"margin-top:10px;margin-bottom:5px;\">" + comment + "</p></div>";
+    new_item.innerHTML = "<div style=\"display:inline-block;\"><img onload=\"renewCommentIcon(this);\" src=\"./../../backend/user_icon/default/default.jpg\" width=\"50px\" style=\"border-radius: 50%;margin-top: -60px;\" class=\"comment-avatar\"></img></div><div style=\"display:inline-block;margin-left:15px;    \"><strong style=\"color:#FB7299\">" + user + "</strong><br><p style=\"margin-top:10px;margin-bottom:5px;\">" + comment + "</p></div>";
     // 评论的详细信息，包括时间戳、点赞数、点踩数、回复按钮和删除按钮
     var detailed = document.createElement("div");
     // 放置时间戳
@@ -308,7 +308,7 @@ function reply_item(id, user, comment, timestamp, likes, liked, unliked, reply_t
     var text_style = document.createElement("p");
     text_style.style = "display: inline-block;margin-top:10px;margin-left:20px;";
     text_style.innerHTML = comment;
-    new_item.innerHTML = "<div style=\"display:inline-block;\"><img src=\"./../../backend/user_icon/default/default.jpg\" width=\"50px\" style=\"border-radius: 50%;margin-top: 0px;\" class=\"comment-avatar\"></img></div>";
+    new_item.innerHTML = "<div style=\"display:inline-block;\"><img onload=\"renewCommentIcon(this);\" src=\"./../../backend/user_icon/default/default.jpg\" width=\"50px\" style=\"border-radius: 50%;margin-top: 0px;\" class=\"comment-avatar\"></img></div>";
     const user_text = document.createElement("div");
     user_text.style = "display:inline-block;margin-left:15px;";
     new_item.appendChild(user_text);
@@ -386,34 +386,32 @@ function insertAfterThirdChild(parent, new_child) {
         parent.appendChild(new_child);
 }
 
-function renewCommentIcon() {
-    document.querySelectorAll(".comment-avatar").forEach((e) => {
-        const formData = new FormData();
-        formData.append("username", e.parentElement.parentElement.querySelector("strong").innerHTML);
-        fetch("./../../backend/api/get_account_number.php", {
-            method: "POST",
-            body: formData
-        }).then(response => response.json())
-            .then(data => {
-                if (data.code == 1) {
-                    alert(data.msg);
-                } else {
-                    const url = "./../../backend/user_icon/" + data.data.accountnumber + ".jpg";
-                    fetch(url, { method: 'HEAD' })
-                        .then(response => {
-                            var icon_path = "./../../backend/user_icon/default/default.jpg";
-                            if (response.ok) {
-                                icon_path = url;
-                            }
-                            e.src = icon_path;
-                        })
-                        .catch(() => {
-                            alert('获取头像发生错误');
-                            return false;
-                        });
-                }
-            }).catch(error => {
-                console.error(error);
-            });
-    });
+function renewCommentIcon(e) {
+    e.onload = null;
+    const formData = new FormData();
+    formData.append("username", e.parentElement.parentElement.querySelector("strong").innerHTML);
+    fetch("./../../backend/api/get_account_number.php", {
+        method: "POST",
+        body: formData
+    }).then(response => response.json())
+        .then(data => {
+            if (data.code == 1) {
+                alert(data.msg);
+            } else {
+                const url = "./../../backend/user_icon/" + data.data.accountnumber + ".jpg";
+                fetch(url, { method: 'HEAD' })
+                    .then(response => {
+                        var icon_path = "./../../backend/user_icon/default/default.jpg";
+                        if (response.ok) {
+                            icon_path = url;
+                        }
+                        e.src = icon_path;
+                    })
+                    .catch(() => {
+                        alert('获取头像发生错误');
+                    });
+            }
+        }).catch(error => {
+            console.error(error);
+        });
 }
