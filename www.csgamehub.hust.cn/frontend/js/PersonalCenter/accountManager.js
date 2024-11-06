@@ -94,6 +94,12 @@ function init_info() {
 
 
 document.getElementById("username").addEventListener('input', () => {
+    if (document.getElementById("username").value == "") {
+        hint.style.color = "red";
+        hint.innerHTML = "用户名不能为空";
+        username_btn.disabled = true;
+        return;
+    }
     var form_data = new FormData();
     form_data.append("username", document.getElementById("username").value);
     form_data.append("account", account.value);

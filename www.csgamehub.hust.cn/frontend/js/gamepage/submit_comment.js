@@ -194,37 +194,57 @@ function execute_delete(id, node) {
 var listenerAdded = false;
 
 function reply_area(layer, reply_div) {
-    removeReplyBox();
-    box = document.createElement("textarea");
-    box.name = "reply_text";
-    box.addEventListener('input', adjustTextareaHeight);
-    box.addEventListener('keyup', adjustTextareaHeight);
-    box.classList.add("form-control");
-    box.rows = "1";
-    box.style = "resize: none;box-sizing:border-box;padding-top:5px;padding-bottom:5px;padding-left:10px;padding-right:10px;margin-bottom:10px;border-radius:5px;border-width:2px;width:100%";
-    reply_user = reply_div.parentElement.parentElement.querySelector("strong").innerHTML;
-    box.placeholder = "回复 @" + reply_user + ' :';
-    var seal_div = document.createElement("form");
-    if (layer == 0) {
-        seal_div.onsubmit = handle_reply0;
-        reply_div.parentElement.parentElement.appendChild(seal_div);
-    }
-    else {
-        seal_div.onsubmit = function () { handle_reply1(reply_div, this); };
-        reply_div.parentElement.parentElement.parentElement.appendChild(seal_div);
-    }
-    seal_div.style = "padding-left:40px;padding-top:10px;padding-bottom:10px;";
-    seal_div.class = "form-group";
-    seal_div.id = "reply_box";
-    seal_div.appendChild(box);
+    const formData = new FormData();
+    formData.append("account", localStorage.getItem("cur_accountnumber"));
+    fetch("./../../backend/api/speakable.php", {
+        method: "POST",
+        body: formData
+    }).then(response => response.json())
+        .then(data => {
+            if (data.code != 0) {
+                alert(data.msg);
+            } else {
+                if (data.data == 0) {
+                    alert("您已被禁言，暂时无法回复其它用户。");
+                }
+                else {
+                    removeReplyBox();
+                    box = document.createElement("textarea");
+                    box.name = "reply_text";
+                    box.addEventListener('input', adjustTextareaHeight);
+                    box.addEventListener('keyup', adjustTextareaHeight);
+                    box.classList.add("form-control");
+                    box.rows = "1";
+                    box.style = "resize: none;box-sizing:border-box;padding-top:5px;padding-bottom:5px;padding-left:10px;padding-right:10px;margin-bottom:10px;border-radius:5px;border-width:2px;width:100%";
+                    reply_user = reply_div.parentElement.parentElement.querySelector("strong").innerHTML;
+                    box.placeholder = "回复 @" + reply_user + ' :';
+                    var seal_div = document.createElement("form");
+                    if (layer == 0) {
+                        seal_div.onsubmit = handle_reply0;
+                        reply_div.parentElement.parentElement.appendChild(seal_div);
+                    }
+                    else {
+                        seal_div.onsubmit = function () { handle_reply1(reply_div, this); };
+                        reply_div.parentElement.parentElement.parentElement.appendChild(seal_div);
+                    }
+                    seal_div.style = "padding-left:40px;padding-top:10px;padding-bottom:10px;";
+                    seal_div.class = "form-group";
+                    seal_div.id = "reply_box";
+                    seal_div.appendChild(box);
 
-    reply_button = document.createElement("button");
-    reply_button.style = "float:right;";
-    reply_button.type = "submit";
-    reply_button.classList.add("btn");
-    reply_button.classList.add("btn-primary");
-    reply_button.innerHTML = "回复";
-    seal_div.appendChild(reply_button);
+                    reply_button = document.createElement("button");
+                    reply_button.style = "float:right;";
+                    reply_button.type = "submit";
+                    reply_button.classList.add("btn");
+                    reply_button.classList.add("btn-primary");
+                    reply_button.innerHTML = "回复";
+                    seal_div.appendChild(reply_button);
+                }
+            }
+        })
+        .catch(error => {
+            console.error(error);
+        })
 }
 
 // 回复第 0 层的评论
