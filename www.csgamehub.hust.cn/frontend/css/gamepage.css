@@ -22,13 +22,15 @@ body {
 .lefter {
     width: 15%;
     height: 100vh;
-    background-color: rgb(58,58,58);
+    background-color: rgb(58, 58, 58);
     align-items: none;
 }
 
 .lefter img {
-    width: 100%; /* 设置图片宽度为100% */
-    height: auto; /*使高度自动，以保持比例*/
+    width: 100%;
+    /* 设置图片宽度为100% */
+    height: auto;
+    /*使高度自动，以保持比例*/
 }
 
 .righter {
@@ -135,7 +137,7 @@ body {
 #gametable_container {
     height: 20vh;
     background-image: linear-gradient(to top, #ffffff 0%, #94d2bd 100%);
-    
+
 }
 
 .profile_pic:hover {
@@ -156,14 +158,15 @@ body {
     border-radius: 50%;
 }
 
-.image-container:hover{
+.image-container:hover {
     cursor: pointer;
 }
 
 .image-container {
     display: block;
     position: relative;
-    width: 65%; /* 与 profile_pic 的宽度保持一致 */
+    width: 65%;
+    /* 与 profile_pic 的宽度保持一致 */
     margin-left: auto;
     margin-right: auto;
     margin-top: 20px;
@@ -172,7 +175,8 @@ body {
 
 .image-container img {
     width: 100%;
-    height: auto; /* 保持纵横比 */
+    height: auto;
+    /* 保持纵横比 */
     transition: opacity 0.5s ease;
 }
 
@@ -193,11 +197,13 @@ body {
 }
 
 .image-container:hover img {
-    opacity: 0; /* 鼠标悬停时隐藏头像 */
+    opacity: 0;
+    /* 鼠标悬停时隐藏头像 */
 }
 
 .image-container:hover .text-overlay {
-    opacity: 1; /* 鼠标悬停时显示文字 */
+    opacity: 1;
+    /* 鼠标悬停时显示文字 */
 }
 
 .username {
@@ -240,7 +246,7 @@ body {
     font-weight: bold;
     color: white;
 
-    background-image: linear-gradient(45deg,  #ffb3ba, #c49c6e, #bfbf76, #77b084, #ff7e74, #3b82f6, #c084fc, #db2777);
+    background-image: linear-gradient(45deg, #ffb3ba, #c49c6e, #bfbf76, #77b084, #ff7e74, #3b82f6, #c084fc, #db2777);
     color: transparent;
     -webkit-background-clip: text;
     background-clip: text;
@@ -251,10 +257,11 @@ body {
 
 @keyframes gradientAnimation {
     0% {
-      background-position: 0;
+        background-position: 0;
     }
+
     to {
-      background-position: 100%;
+        background-position: 100%;
     }
 }
 
@@ -328,6 +335,7 @@ body {
 
 .list-group-item {
     transition: background-color 1s ease-in-out;
+    padding-top: 20px !important;
 }
 
 .blue-fade {
@@ -520,4 +528,3 @@ body {
         height: 0%;
     }
 }
-

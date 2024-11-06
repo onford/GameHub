@@ -36,12 +36,12 @@ function comment_item(id, user, comment, timestamp, likes, liked, unliked) {
     var new_item = document.createElement("div");
     new_item.className = "list-group-item";
     new_item.id = id;
-    new_item.style = "border-left:0;border-right:0;border-radius:0;"
-    new_item.innerHTML = "<div><strong style=\"color:#FB7299\">" + user + "</strong><br><p style=\"margin-top:10px;\">" + comment + "</p></div>";
+    new_item.style = "border-left:0;border-right:0;border-radius:0;display:inline-block;float:right;";
+    new_item.innerHTML = "<div style=\"display:inline-block;\"><img src=\"./../../backend/user_icon/default/default.jpg\" width=\"50px\" style=\"border-radius: 50%;margin-top: -60px;\" class=\"comment-avatar\"></img></div><div style=\"display:inline-block;margin-left:15px;    \"><strong style=\"color:#FB7299\">" + user + "</strong><br><p style=\"margin-top:10px;margin-bottom:5px;\">" + comment + "</p></div>";
     // 评论的详细信息，包括时间戳、点赞数、点踩数、回复按钮和删除按钮
     var detailed = document.createElement("div");
     // 放置时间戳
-    detailed.innerHTML = "<div style=\"color:gray;font-size=16px;margin-top:-2px;display: inline-block; \">" + timestamp + "</div>";
+    detailed.innerHTML = "<div style=\"color:gray;font-size=16px;margin-top:-20px;display: inline-block;margin-left:65px; \">" + timestamp + "</div>";
     // 生成点赞数
     var likes_div = document.createElement("div");
     likes_div.className = "comment_component";
@@ -247,7 +247,7 @@ function handle_reply0() {
             } else {
                 alert("回复发表成功");
                 const reply_comment = reply_item(data.data.comment_id[0], form_data.get("username"), form_data.get("reply_text"), data.data.timestamp[0], 0, 0, 0, null);
-                insertAfterSecondChild(this.parentElement, reply_comment);
+                insertAfterThirdChild(this.parentElement, reply_comment);
                 removeReplyBox();
             }
         }).catch(error => {
@@ -275,7 +275,7 @@ function handle_reply1(reply_div, form) {
             } else {
                 alert("回复发表成功");
                 const reply_comment = reply_item(data.data.comment_id[0], form_data.get("username"), form_data.get("reply_text"), data.data.timestamp[0], 0, 0, 0, reply_div.parentElement.parentElement.id);
-                insertAfterSecondChild(form.parentElement, reply_comment);
+                insertAfterThirdChild(form.parentElement, reply_comment);
                 removeReplyBox();
             }
         }).catch(error => {
@@ -308,9 +308,11 @@ function reply_item(id, user, comment, timestamp, likes, liked, unliked, reply_t
     var text_style = document.createElement("p");
     text_style.style = "display: inline-block;margin-top:10px;margin-left:20px;";
     text_style.innerHTML = comment;
-
-    new_item.appendChild(document.createElement("div"));
-    new_item.firstChild.appendChild(user_style);
+    new_item.innerHTML = "<div style=\"display:inline-block;\"><img src=\"./../../backend/user_icon/default/default.jpg\" width=\"50px\" style=\"border-radius: 50%;margin-top: 0px;\" class=\"comment-avatar\"></img></div>";
+    const user_text = document.createElement("div");
+    user_text.style = "display:inline-block;margin-left:15px;";
+    new_item.appendChild(user_text);
+    user_text.appendChild(user_style);
     if (reply_to) {
         var reply_style = document.createElement("a");
         reply_style.onclick = () => {
@@ -320,12 +322,13 @@ function reply_item(id, user, comment, timestamp, likes, liked, unliked, reply_t
         reply_style.style = "display: inline-block;margin-top:10px;margin-left:20px;color:lightblue;text-decoration:none;";
         reply_style.href = "#" + reply_to;
         reply_style.innerHTML = " 回复 @" + document.getElementById(reply_to).querySelector("strong").innerHTML + " ：";
-        new_item.firstChild.appendChild(reply_style);
+        user_text.appendChild(reply_style);
     }
-    new_item.firstChild.appendChild(text_style);
+    user_text.appendChild(text_style);
 
     // 评论的详细信息，包括时间戳、点赞数、点踩数、回复按钮和删除按钮
     var detailed = document.createElement("div");
+    detailed.style = "margin-left:65px;";
     // 放置时间戳
     detailed.innerHTML = "<div style=\"color:gray;font-size=16px;margin-top:-2px;display: inline-block; \">" + timestamp + "</div>";
     // 生成点赞数
@@ -375,10 +378,42 @@ function reply_item(id, user, comment, timestamp, likes, liked, unliked, reply_t
     return new_item;
 }
 
-function insertAfterSecondChild(parent, new_child) {
+function insertAfterThirdChild(parent, new_child) {
     // 保证至少存在两个儿子
-    if (parent.firstChild.nextSibling.nextSibling)
-        parent.insertBefore(new_child, parent.firstChild.nextSibling.nextSibling);
+    if (parent.firstChild.nextSibling.nextSibling.nextSibling)
+        parent.insertBefore(new_child, parent.firstChild.nextSibling.nextSibling.nextSibling);
     else
         parent.appendChild(new_child);
+}
+
+function renewCommentIcon() {
+    document.querySelectorAll(".comment-avatar").forEach((e) => {
+        const formData = new FormData();
+        formData.append("username", e.parentElement.parentElement.querySelector("strong").innerHTML);
+        fetch("./../../backend/api/get_account_number.php", {
+            method: "POST",
+            body: formData
+        }).then(response => response.json())
+            .then(data => {
+                if (data.code == 1) {
+                    alert(data.msg);
+                } else {
+                    const url = "./../../backend/user_icon/" + data.data.accountnumber + ".jpg";
+                    fetch(url, { method: 'HEAD' })
+                        .then(response => {
+                            var icon_path = "./../../backend/user_icon/default/default.jpg";
+                            if (response.ok) {
+                                icon_path = url;
+                            }
+                            e.src = icon_path;
+                        })
+                        .catch(() => {
+                            alert('获取头像发生错误');
+                            return false;
+                        });
+                }
+            }).catch(error => {
+                console.error(error);
+            });
+    });
 }

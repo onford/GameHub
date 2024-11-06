@@ -19,6 +19,7 @@ function submitForm(event) {
 
                 // 保存在localStorage用于后续界面用户名显示
                 localStorage.setItem("username", data.username);
+                localStorage.setItem("cur_accountnumber", data.data[0]);
                 console.log(localStorage.getItem("username"));
                 localStorage.setItem("cur_game", "2048");
                 window.location.href = "./gamepage.html";

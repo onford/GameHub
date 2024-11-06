@@ -98,7 +98,7 @@ function init_comment_list(option) {
                 for (var i = 0; i < len; i++) {
                     layer0_item = comment_item(data.data[i].id, data.data[i].username, data.data[i].comment, data.data[i].timestamps, data.data[i].likes, data.data[i].liked, data.data[i].unliked);
                     comment_list.appendChild(layer0_item);
-                    init_reply_list(layer0_item);
+                    init_reply_list(layer0_item, i == len - 1);
                 }
             }
         })
@@ -126,7 +126,7 @@ function requestComment(code) {
     }
 }
 
-function init_reply_list(layer0_item) {
+function init_reply_list(layer0_item, final_item) {
     var temp_form_data = new FormData();
     temp_form_data.append("id", layer0_item.id);
     temp_form_data.append("username", localStorage.getItem("username"));
@@ -145,6 +145,7 @@ function init_reply_list(layer0_item) {
                     layer1_item = reply_item(data.data[i].id, data.data[i].username, data.data[i].comment, data.data[i].timestamps, data.data[i].likes, data.data[i].liked, data.data[i].unliked, data.data[i].root_id == data.data[i].reference_id ? null : data.data[i].reference_id);
                     layer0_item.appendChild(layer1_item);
                 }
+                if (final_item) renewCommentIcon();
             }
         })
         .catch(error => {

@@ -6,7 +6,7 @@ fetch(url, { method: 'HEAD' })
             icon_path = url;
         }
         console.log("path", icon_path);
-        document.querySelectorAll(".iconImg").forEach((e) => { e.src = icon_path; })
+        document.querySelectorAll(".iconImg").forEach((e) => { e.src = icon_path; });
     })
     .catch(() => {
         alert('发生错误');
