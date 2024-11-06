@@ -34,6 +34,13 @@ if ($content == "") {
 }
 
 $status = intval($_POST["status"]);
+
+//判断是否没有选择审核状态
+if ($status == 0) {
+    $conn->close();
+    error_and_die("请选择审核结果");
+}
+
 $tablename1 = "message_list";
 $tablename2 = "content_list";
 $sql1 = "
@@ -79,6 +86,51 @@ $sql3 = "
 $res = $conn->query($sql3);
 if ($res) {
 } else {
+    $conn->close();
+    error_and_die($conn->error);
+}
+
+//在newgamelist里面找到用户名
+$sql = "
+    select username
+    from newgame_list
+    where newgame_id=$recognize_id;
+";
+
+$res = $conn->query($sql);
+$username = "";
+if ($res) {
+    $username = $res->fetch_assoc()['username'];
+} else {
+    $conn->close();
+    error_and_die($conn->error);
+}
+
+//用用户名在userlist找到accountnumber
+$sql = "
+    select accountnumber
+    from userlist
+    where username='$username';
+";
+
+$res = $conn->query($sql);
+$accountnumber = "";
+
+if ($res) {
+    $accountnumber = $res->fetch_assoc()["accountnumber"];
+} else {
+    $conn->close();
+    error_and_die($conn->error);
+}
+
+//在消息中心插入一条转发给对应用户的消息
+$sql = "
+    insert into message_list (message_type,message_title,timestamps,recognize_id,status,receive_accountnumber)
+    values (1,'游戏审核通知',NOW(),$recognize_id,0,'$accountnumber');
+";
+
+$res = $conn->query($sql);
+if ($res) {} else {
     $conn->close();
     error_and_die($conn->error);
 }

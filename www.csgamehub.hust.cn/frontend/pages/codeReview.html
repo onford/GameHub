@@ -261,6 +261,7 @@
         cur_select.value = Number(cur_tr_status); //要是整型才是正确的
         cur_select.disabled = false;
         var my_textarea = document.getElementById("opinion-input-box");
+        my_textarea.value = "";
         my_textarea.disabled = false;
         if (cur_tr_status != '0') { //被审核过,那么应该是要有评语的
             cur_select.disabled = true;
