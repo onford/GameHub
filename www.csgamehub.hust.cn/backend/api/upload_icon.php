@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $uploadOk = 0;
         }
 
-        $targetFilePath = $targetDirectory . $_POST["account"] . "." . $fileType;
+        $targetFilePath = $targetDirectory . $_POST["account"] . ".jpg";
 
         // 检查上传状态
         if ($uploadOk == 1) {
