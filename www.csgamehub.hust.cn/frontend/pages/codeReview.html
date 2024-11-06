@@ -9,115 +9,28 @@
     <link rel="stylesheet" href="./../../src/vendor/bootstrap/css/bootstrap.min.css">
 </head>
 
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-    }
-
-    .my-flex-container {
-        display: flex;
-    }
-
-    .my-main {
-        padding: 20px;
-        width: 85%;
-    }
-
-    .my-lefter {
-        height: 100vh;
-        width: 15%;
-        background-color: rgb(58, 58, 58);
-    }
-
-    .my-option-table {
-        width: 100%;
-    }
-
-    .my-option-table:hover {
-        background-color: #000000;
-        cursor: pointer;
-    }
-
-    /* .my-option-table:active {
-        background-color: #bbb;
-    } */
-
-    .my-option {
-        text-align: center;
-        font-size: 20px;
-        padding: 15px;
-        color: white;
-        margin: 0;
-    }
-
-    .my-main-header-title {
-        font-size: 30px;
-    }
-
-    .my-view-option-table {
-        margin-right: 40px;
-    }
-
-    .my-view-option-table:hover {
-        cursor: pointer;
-        border-bottom: 2px solid rgb(0, 153, 255);
-    }
-
-    .my-view-option {
-        margin: 0;
-    }
-
-    table {
-        margin-top: 10px;
-        width: 100%;
-    }
-
-    td {
-        border: 1px solid #ccc;
-        text-align: center;
-        padding: 10px;
-    }
-
-    a {
-        text-decoration: none;
-    }
-
-    .my-reject {
-        color: rgb(255, 75, 0);
-    }
-
-    .my-accpet {
-        color: rgb(0, 150, 150);
-    }
-
-    .my-not-read {
-        color: #00A1D6;
-    }
-
-    .my-main-bottom {
-        width: 100%;
-    }
-
-    .my-page-btn {
-        border: 1px solid #d7dde4;
-        border-radius: 5%;
-        padding: 0 10px;
-        color: #657180;
-        background-color: white;
-    }
-
-    .my-page-btn:hover {
-        border-color: #00A1D6;
-        color: #00A1D6;
-    }
-
-    .my-page-navigation-table {
-        margin: 20px auto;
-    }
-</style>
-
 <body>
+    <div class="my-gray-layer my-not-show">
+        <form class="judge_form">
+            <div class="my-select-box my-flex-item">
+                <span>状态:</span>
+                <select name="judge_select" id="my-judge-select">
+                    <option value="0"></option>
+                    <option value="1">已通过</option>
+                    <option value="2">已驳回</option>
+                </select>
+            </div>
+            <div class="my-input-box my-flex-item">
+                <span>评语:</span>
+                <textarea name="" id="opinion-input-box"></textarea>
+                <!-- <input type="text" class="opinion-input-box"> -->
+            </div>
+            <div class="my-btn-group my-flex-item">
+                <button type="submit" class="my-submit-btn">确认</button>
+                <button class="my-cancel-btn" onclick="cancelHandle(event)">取消</button>
+            </div>
+        </form>
+    </div>
     <div class="my-flex-container">
         <div class="my-lefter">
             <div class="my-option-table" style="background-color: #000000;">
@@ -173,6 +86,13 @@
 </body>
 
 <script>
+    function cancelHandle(event) {
+        event.preventDefault();
+        var overlay = document.getElementsByClassName("my-gray-layer")[0];
+        console.log(overlay);
+        overlay.classList.add("my-not-show");
+    }
+
     function viewOptionHandle(event) {
         event.preventDefault();
         var view_option = event.target.id;
@@ -289,6 +209,12 @@
         my_table.appendChild(my_thead);
     }
 
+    function judgeHandle(event) {
+        event.preventDefault();
+        var overlay = document.getElementsByClassName("my-gray-layer")[0];
+        overlay.classList.remove("my-not-show");
+    }
+
     function generateMessageTable(message_ids, timestampss, statuss, usernames, newgame_names, versions) {
         clearTable();
         var message_table = document.getElementsByClassName("message_table")[0];
@@ -366,7 +292,8 @@
             new_delete_a.onclick = deleteHandle;
             var new_accept_a = document.createElement("a");
             new_accept_a.href = "#";
-            new_accept_a.innerHTML = "通过 ";
+            new_accept_a.innerHTML = "审核 ";
+            new_accept_a.onclick = judgeHandle;
             var new_download_a = document.createElement("a");
             new_download_a.href = "#";
             new_download_a.innerHTML = "下载压缩包 ";
