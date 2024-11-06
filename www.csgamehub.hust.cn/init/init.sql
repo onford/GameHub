@@ -78,7 +78,7 @@ CREATE TABLE `message_list` (
 
 
 -- 下面代码用于加载 game_list，这是一个相对固定的表
-insert into game_list values ('2048'),('senpai'),('redenveloperain');
+insert into game_list values ('2048'),('senpai'),('redenveloperain'),("clearall");
 
 
 
