@@ -183,7 +183,8 @@
     loadScript("./../game/" + queryValue + "/js/game.js", function () {
         console.log(queryValue + " is loaded.");
         localStorage.setItem("cur_game", queryValue);
-    })
+    });
+
     function recordScore(score) {
         const update_score_api = "./../../backend/api/update_score_api.php";
         var gameData = new FormData();

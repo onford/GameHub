@@ -336,8 +336,11 @@ function reply_item(id, user, comment, timestamp, likes, liked, unliked, reply_t
     if (reply_to) {
         var reply_style = document.createElement("a");
         reply_style.onclick = () => {
-            document.getElementById(reply_to).classList.add("blue-fade");
-            setTimeout(() => { document.getElementById(reply_to).classList.remove("blue-fade"); }, 1000);
+            document.getElementById(reply_to).scrollIntoView({ behavior: 'smooth', block: 'start' });
+            setTimeout(() => {
+                document.getElementById(reply_to).classList.add("blue-fade");
+                setTimeout(() => { document.getElementById(reply_to).classList.remove("blue-fade"); }, 1000);
+            }, 300);
         };
         reply_style.style = "display: inline-block;margin-top:10px;margin-left:20px;color:lightblue;text-decoration:none;";
         reply_style.href = "#" + reply_to;

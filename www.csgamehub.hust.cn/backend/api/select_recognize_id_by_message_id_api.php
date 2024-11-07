@@ -3,6 +3,7 @@ $rest = [
     "code" => 0,
     "msg" => "",
     "data" => "",
+    "gamename" => "",
 ];
 
 function error_and_die($msg)
@@ -33,6 +34,20 @@ $sql = "
 $res = $conn->query($sql);
 if ($res) {
     $rest["data"] = $res->fetch_assoc()["recognize_id"];
+} else {
+    $conn->close();
+    error_and_die($conn->error);
+}
+
+$id = $rest["data"];
+$sql = "
+    select gamename
+    from comment_list
+    where id = $id;
+";
+$res = $conn->query($sql);
+if ($res) {
+    $rest["gamename"] = $res->fetch_assoc()["gamename"];
 } else {
     $conn->close();
     error_and_die($conn->error);

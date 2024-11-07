@@ -70,6 +70,21 @@ function init() {
         if (game_icon_ready && score_ready) {
             $(".loader-wrapper").fadeOut("slow");
             clearInterval(score_timer);
+            setTimeout(() => {
+                // 从消息中心跳转过来
+                const check_id = new URLSearchParams(window.location.search).get('check_id');
+                var targetAtComment = setInterval(() => { // 为什么要这样呢，以防评论还没加载出来就锚过去导致没锚到
+                    if (document.getElementById(check_id)) {
+                        console.log("Come from messageCenter.");
+                        document.getElementById(check_id).scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        clearInterval(targetAtComment);
+                        setTimeout(() => {
+                            document.getElementById(check_id).classList.add("blue-fade");
+                            setTimeout(() => { document.getElementById(check_id).classList.remove("blue-fade"); }, 1000);
+                        }, 300);
+                    }
+                }, 10);
+            }, 1000);
         }
     }, 10);
 }

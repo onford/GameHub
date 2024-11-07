@@ -125,6 +125,7 @@
             return;
         }
         event.preventDefault();
+        this.querySelector("h5").style.color = "rgb(204, 204, 204)";
         // var this_item = event.target;
         var this_item = this;
         console.log("this_item: " + this_item);
@@ -182,8 +183,7 @@
         var pop_temp_content = document.getElementsByClassName("pop-content")[0];
         pop_temp_content.style.color = "#555";
         if (message_type == '1') {
-            pop_temp_content.innerHTML = "查看详情";
-            pop_temp_content.style.color = "blue";
+            pop_temp_content.innerHTML = "";
             const api3 = "./../../backend/api/select_recognize_id_by_message_id_api.php";
             var form_data3 = new FormData();
             form_data3.append("message_id", message_id);
@@ -198,6 +198,14 @@
                     } else {
                         console.log("查询recognize_id成功");
                         localStorage.setItem("cur_recognize_id", data.data);
+                        if (!data.gamename) {
+                            pop_temp_content.style.color = "red";
+                            pop_temp_content.innerHTML = "该回复已被删除，不可查看";
+                        }
+                        else {
+                            const url = "./gamepage.html?gamename=" + data.gamename + "&check_id=" + data.data;
+                            pop_temp_content.innerHTML = "<a href='" + url + "' style='color:blue;'>查看详情</a>";
+                        }
                     }
                 })
             return;
@@ -254,7 +262,7 @@
         event.preventDefault();
         var overlay = document.getElementsByClassName("my-gray-layer")[0];
         overlay.classList.add("my-not-show");
-        location.reload();
+        // location.reload();
     }
 
     function jumpHandle1(event) {
