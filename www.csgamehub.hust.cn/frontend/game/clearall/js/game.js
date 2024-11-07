@@ -51,7 +51,7 @@ function endGame() {
     ctx.textBaseline = "middle";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "white";
-    ctx.fillText("END", canvas.width / 2, canvas.height / 2);
+    ctx.fillText("游戏结束！得分："+score, canvas.width / 2, canvas.height / 2);
 }
 
 
@@ -84,7 +84,7 @@ function startGame() {
         for(var i=begin;i<begin+10;i++){
             if(path[i]==path[dic]){ //对比图片路径进行消除
                 if(path[i]!=-1){
-                    //score+=1;
+                    score+=1;
                     ctx.beginPath();
                     ctx.clearRect(40*(i%10),40*x,40,40); //清除图片元素
                     ctx.stroke();
@@ -98,7 +98,7 @@ function startGame() {
         for(var i=y;i<100;i=i+10){
             if(path[i]==path[dic]){ //对比图片路径进行消除
                 if(path[i]!=-1){
-                    //score+=1;
+                    score+=1;
                     ctx.beginPath();
                     ctx.clearRect(40*y,40*parseInt(i/10),40,40);
                     ctx.stroke();
@@ -106,7 +106,7 @@ function startGame() {
                 }
             }
         }
-        //score-=1; //消除横、竖排重复部分
+        score-=1; //消除横、竖排重复部分
         if(isGameOver()){
             endGame();
             recordScore(score);
