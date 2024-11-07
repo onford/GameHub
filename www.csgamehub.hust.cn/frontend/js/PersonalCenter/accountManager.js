@@ -2,21 +2,41 @@
 function submitForm(event) {
     event.preventDefault();
     console.log("表单已被提交");
+
+    const update_form = document.getElementById("update_password_form");
+    const oldPassword = document.getElementById("old_password").value;
+    const newPassword = document.getElementById("new_password").value;
+    const reNewPassword = document.getElementById("re_new_password").value;
+
+    // 验证输入
+    if (oldPassword === '' || newPassword === '' || reNewPassword === '') {
+        alert("请确保所有字段都已填写");
+        return;
+    }
+    if (newPassword !== reNewPassword) {
+        alert("新密码和确认新密码不一致!");
+        return;
+    }
+
     const url = "./../../backend/api/change_password_api.php";
     var formData = new FormData(update_form);
+    
+    // 这里可以添加旧密码和新密码
+    formData.append("old_password", oldPassword);
+    formData.append("new_password", newPassword);
     formData.append("username", localStorage.getItem("username"));
+
     fetch(url, {
         method: "POST",
         body: formData
     }).then(response => response.json())
         .then(data => {
-            if (data.code != 0) {
+            if (data.code !== 0) {
                 alert(data.msg);
-            }
-            else {
+            } else {
                 alert("修改成功");
-                // 清空输入框内容
-                update_form.reset();
+                update_form.reset(); // 清空输入框内容
+                confirm_button.disabled = false; // 启用按钮
             }
         })
         .catch(error => {
@@ -94,12 +114,6 @@ function init_info() {
 
 
 document.getElementById("username").addEventListener('input', () => {
-    if (document.getElementById("username").value == "") {
-        hint.style.color = "red";
-        hint.innerHTML = "用户名不能为空";
-        username_btn.disabled = true;
-        return;
-    }
     var form_data = new FormData();
     form_data.append("username", document.getElementById("username").value);
     form_data.append("account", account.value);
