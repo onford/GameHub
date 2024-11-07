@@ -20,7 +20,7 @@ function submitForm(event) {
 
     const url = "./../../backend/api/change_password_api.php";
     var formData = new FormData(update_form);
-    
+
     // 这里可以添加旧密码和新密码
     formData.append("old_password", oldPassword);
     formData.append("new_password", newPassword);
@@ -239,4 +239,34 @@ function handleFiles(files) {
             icon_input.value = "";
         }
     }
+}
+
+getSpeakingState();
+function getSpeakingState() {
+    const formData = new FormData();
+    const spState = document.getElementById("spState");
+    formData.append("account", localStorage.getItem("cur_accountnumber"));
+    fetch("./../../backend/api/speakable.php", {
+        method: "POST",
+        body: formData
+    }).then(response => response.json())
+        .then(data => {
+            if (data.code != 0) {
+                alert(data.msg);
+            } else {
+                if (data.data == 0) {
+                    spState.style.color = "red";
+                    spState.innerHTML = "禁言中";
+                    spState.hidden = false;
+                }
+                else {
+                    spState.style.color = "green";
+                    spState.innerHTML = "正常";
+                    spState.hidden = false;
+                }
+            }
+        })
+        .catch(error => {
+            console.error(error);
+        })
 }

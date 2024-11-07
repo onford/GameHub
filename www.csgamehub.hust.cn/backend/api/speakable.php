@@ -3,7 +3,8 @@ $message = "";
 $rest = [
     "code" => 0,
     "msg" => $message,
-    "data" => 0,
+    "data" => 1,
+    "available" => "",
 ];
 
 function assign(&$var, $value)
@@ -47,14 +48,17 @@ $account = $_POST["account"];
 
 $now_timestamps = date('Y-m-d H:i:s');
 $sql = "
-    select * from $table_name where accountnumber = '$account' and available_time <= '$now_timestamps';
+    select available_time from $table_name where accountnumber = '$account' and available_time > '$now_timestamps';
 ";
 
 $res = $conn->query($sql);
 
 if ($res) {
-    if($res->fetch_assoc())
-        $rest["data"] = 1;
+    $dt = $res->fetch_assoc();
+    if($dt){
+        $rest["data"] = 0;
+        $rest["available"] = $dt["available_time"];
+    }
 } else {
     assign($message, $conn->error);
 }
