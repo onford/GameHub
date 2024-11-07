@@ -186,7 +186,29 @@
                 })
             return;
         } else if (message_type == '2') {
-            pop_temp_content.innerHTML = "用户名涉嫌违禁";
+            if (message_title == "禁言通知") {
+                const api4 = "./../../backend/api/select_available_time_api.php";
+                var form_data4 = new FormData();
+                form_data4.append("message_id", message_id);
+                fetch(api4, {
+                    method: "POST",
+                    body: form_data4
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.code != 0) {
+                            alert(data.msg);
+                        } else {
+                            console.log("封禁时间查询成功");
+                            console.log("message_id: " + message_id);
+                            console.log(data.data);
+                            pop_temp_content.innerHTML = data.data + "解除封禁";
+                        }
+                    })
+                    .catch(error => console.error(error));
+            } else {
+                pop_temp_content.innerHTML = "用户名涉嫌违禁";
+            }
             return;
         }
         const api = "./../../backend/api/select_content_by_message_id_api.php";

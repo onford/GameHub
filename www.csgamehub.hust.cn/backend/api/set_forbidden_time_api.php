@@ -77,5 +77,15 @@ if ($res) {
 array_push($rest["data"], $new_timestamps);
 array_push($rest["data"], $username);
 
+$sql = "
+    insert into message_list (message_type,message_title,timestamps,recognize_id,status,receive_accountnumber)
+    values (2,'禁言通知',NOW(),null,0,'$accountnumber');
+";
+$res = $conn->query($sql);
+if ($res) {} else {
+    $conn->close();
+    error_and_die($conn->error);
+}
+
 $conn->close();
 echo json_encode($rest);
