@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         "code" => 0,
         "msg" => "",
     ];
-    
+
     function error_and_die($msg)
     {
         global $rest; // 函数作用域内无法访问外部变量, 需要加上global来访问
@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo json_encode($rest);
         die();
     }
-    
+
     $db_setting = require __DIR__ . "./../database/config.php";
     $serverName = $db_setting["serverName"];
     $username = $db_setting["username"];
@@ -32,11 +32,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $cur_time = date('Y-m-d H:i:s');
 
     $sql = "select * from $tablename where newgame_name = '$newgame_name';";
-    if($conn->query($sql)->fetch_assoc()){
+
+    $last_id = "";
+    if ($conn->query($sql)->fetch_assoc()) {
         $sql = "select * from $tablename where newgame_name = '$newgame_name' and `status` = 0;";
         $res = $conn->query($sql)->fetch_assoc();
-        if($res){
+        if ($res) {
             $zip_name = $res["newgame_id"];
+            $last_id = $zip_name;
             $sql = "update $tablename set uploadtime = '$cur_time' where newgame_id = $zip_name;";
             $conn->query($sql);
         } else {
@@ -45,16 +48,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $sql = "insert into $tablename (username,newgame_name,status,version,uploadtime) values ('$username','$newgame_name',0,$next_version,'$cur_time');";
             $conn->query($sql);
             $zip_name = $conn->query("select last_insert_id() as id")->fetch_assoc()["id"];
+            $last_id = $zip_name;
         }
     } else {
         $next_version = 0;
         $sql = "insert into $tablename (username,newgame_name,status,version,uploadtime) values ('$username','$newgame_name',0,0,'$cur_time');";
         $conn->query($sql);
         $zip_name = $conn->query("select last_insert_id() as id")->fetch_assoc()["id"];
+        $last_id = $zip_name;
+    }
+
+    $last_id = intval($last_id);
+    $sql = "
+        insert into message_list (message_type,message_title,timestamps,recognize_id,status)
+        values (0,'1',NOW(),$last_id,0);
+    ";
+
+    $res = $conn->query($sql);
+    if ($res) {} else {
+        $conn->close();
+        error_and_die($conn->error);
     }
 
     // -----------------------上传文件-----------------------
-
 
     // 设置上传目录
     $targetDirectory = "../uploads/";
