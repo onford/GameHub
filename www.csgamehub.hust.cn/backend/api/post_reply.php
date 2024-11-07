@@ -109,9 +109,23 @@ if ($res) {
     error_and_die($conn->error);
 }
 
+
+$sql = "
+    select accountnumber from userlist,comment_list where userlist.username = comment_list.username and comment_list.id = '$reference_id';
+";
+$res = $conn->query($sql);
+if ($res) {
+    $re_account = $res->fetch_assoc()["accountnumber"];
+} else {
+    $conn->close();
+    error_and_die($conn->error);
+}
+
+
+
 $sql = "
     insert into message_list (message_type, message_title, timestamps, recognize_id, status, receive_accountnumber)
-    values (1, '你的评论收到了回复', '$now_timestamps', $last_id, 0, '$accountnumber');
+    values (1, '你的评论收到了回复', '$now_timestamps', $last_id, 0, '$re_account');
 ";
 
 $res = $conn->query($sql);
