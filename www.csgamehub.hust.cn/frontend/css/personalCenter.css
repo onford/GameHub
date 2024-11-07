@@ -67,15 +67,9 @@
 }
 
 .iconImg.profile_pic {
-    width: 80%;
-    /* 指定宽度 */
-    /* 指定高度 */
     border-radius: 50%;
     /* 完全圆形 */
-    object-fit: cover;
-    /* 保持比例裁剪 */
-    overflow: hidden;
-    /* 使用溢出隐藏来确保内容不超出圆形边框 */
+    aspect-ratio: 1;
 }
 
 .option {
