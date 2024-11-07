@@ -3,6 +3,7 @@ $rest = [
     "code" => 0,
     "msg" => "",
     "data" => [
+        "message_types" => [],
         "message_ids" => [],
         "message_titles" => [],
         "timestampss" => [],
@@ -44,6 +45,7 @@ $sql = "
 $res = $conn->query($sql);
 if ($res) {
     while ($row = $res->fetch_assoc()) {
+        array_push($rest["data"]["message_types"], intval($row["message_type"]));
         array_push($rest["data"]["message_ids"], intval($row["message_id"]));
         array_push($rest["data"]["message_titles"], $row["message_title"]);
         array_push($rest["data"]["timestampss"], $row["timestamps"]);
@@ -58,30 +60,35 @@ if ($res) {
             where newgame_id=$recognize_id;
         ";
 
-        $res2 = $conn->query($sql2);
-        if ($res2) {
-            $status = intval($res2->fetch_assoc()["status"]);
-            array_push($rest["data"]["judge_statuss"], $status);
-            if ($status != 0) {
-                $sql3 = "
-                    select message_content
-                    from content_list
-                    where recognize_id=$recognize_id;
-                ";
-                $res3 = $conn->query($sql3);
-                if ($res3) {
-                    $content = $res3->fetch_assoc()["message_content"];
-                    array_push($rest["data"]["contents"], $content);
+        if ($row["message_type"] == '0') { // 0代表游戏审核通知
+            $res2 = $conn->query($sql2);
+            if ($res2) {
+                $status = intval($res2->fetch_assoc()["status"]);
+                array_push($rest["data"]["judge_statuss"], $status);
+                if ($status != 0) {
+                    $sql3 = "
+                        select message_content
+                        from content_list
+                        where recognize_id=$recognize_id;
+                    ";
+                    $res3 = $conn->query($sql3);
+                    if ($res3) {
+                        $content = $res3->fetch_assoc()["message_content"];
+                        array_push($rest["data"]["contents"], $content);
+                    } else {
+                        $conn->close();
+                        error_and_die($conn->error);
+                    }
                 } else {
-                    $conn->close();
-                    error_and_die($conn->error);
+                    array_push($rest["data"]["contents"], null);
                 }
             } else {
-                array_push($rest["data"]["contents"], null);
+                $conn->close();
+                error_and_die($conn->error);
             }
         } else {
-            $conn->close();
-            error_and_die($conn->error);
+            array_push($rest["data"]["judge_statuss"], null); // 除了游戏审核, 其他是不会有审核状态的
+            array_push($rest["data"]["contents"], null); // 只有游戏审核才有评语
         }
     }
 } else {

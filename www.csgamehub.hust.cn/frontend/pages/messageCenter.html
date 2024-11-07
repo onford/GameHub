@@ -130,6 +130,7 @@
         console.log("this_item: " + this_item);
         var message_id = "";
         var message_title = "";
+        var message_type = "";
         for (var child of this_item.childNodes) {
             if (child.classList.contains("form-check")) {
                 for (var child_child of child.childNodes) {
@@ -139,7 +140,19 @@
                 for (var child_child of child.childNodes) {
                     if (child_child.classList.contains("message-title")) {
                         message_title = child_child.innerHTML;
-                        break;
+                    }
+                    if (child_child.classList.contains("message-meta")) {
+                        for (var child_child_child of child_child.childNodes) {
+                            if (child_child_child.classList.contains("badge")) {
+                                if (child_child_child.innerHTML == "Info") {
+                                    message_type = '0';
+                                } else if (child_child_child.innerHTML == "Reply") {
+                                    message_type = '1';
+                                } else {
+                                    message_type = '2';
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -150,6 +163,32 @@
         var pop_title = document.getElementsByClassName("pop-title")[0];
         console.log("pop-title: " + pop_title);
         pop_title.innerHTML = message_title;
+        var pop_temp_content = document.getElementsByClassName("pop-content")[0];
+        pop_temp_content.style.color = "#555";
+        if (message_type == '1') {
+            pop_temp_content.innerHTML = "查看详情";
+            pop_temp_content.style.color = "blue";
+            const api3 = "./../../backend/api/select_recognize_id_by_message_id_api.php";
+            var form_data3 = new FormData();
+            form_data3.append("message_id", message_id);
+            fetch(api3, {
+                method: "POST",
+                body: form_data3
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code != 0) {
+                        alert(data.msg);
+                    } else {
+                        console.log("查询recognize_id成功");
+                        localStorage.setItem("cur_recognize_id", data.data);
+                    }
+                })
+            return;
+        } else if (message_type == '2') {
+            pop_temp_content.innerHTML = "用户名涉嫌违禁";
+            return;
+        }
         const api = "./../../backend/api/select_content_by_message_id_api.php";
         console.log("message_id: " + message_id);
         var form_data = new FormData();
@@ -302,7 +341,7 @@
             .catch(error => console.error(error));
     }
 
-    function generateMessageItem(message_id, message_title, status, id, timestamps, content) {
+    function generateMessageItem(message_type, message_id, message_title, status, judge_status, id, timestamps, content) {
         var message_item = document.createElement("div");
         message_item.classList.add("list-group-item");
         message_item.classList.add("message-item");
@@ -327,9 +366,20 @@
         new_message_meta.classList.add("message-meta");
         var new_span1 = document.createElement("span");
         new_span1.classList.add("badge");
-        new_span1.classList.add("bg-info");
-        new_span1.classList.add("text-white");
-        new_span1.innerHTML = "Info";
+        console.log("message_type: " + message_type);
+        if (message_type == '0') {
+            new_span1.innerHTML = "Info";
+            new_span1.classList.add("bg-info");
+            new_span1.classList.add("text-white");
+        } else if (message_type == '1') {
+            new_span1.innerHTML = "Reply";
+            new_span1.classList.add("bg-success");
+            new_span1.classList.add("text-white");
+        } else {
+            new_span1.innerHTML = "Warning";
+            new_span1.classList.add("bg-warning");
+            new_span1.classList.add("text-dark");
+        }
         var new_span2 = document.createElement("span");
         new_span2.classList.add("message-time");
         new_span2.classList.add("ms-2");
@@ -357,11 +407,11 @@
         return message_item;
     }
 
-    function generateMessageTable(message_ids, message_titles, statuss, judge_statuss, timestampss, contents) {
+    function generateMessageTable(message_types, message_ids, message_titles, statuss, judge_statuss, timestampss, contents) {
         var len = message_ids.length;
         var message_list = document.getElementById("messageList");
         for (var i = 0; i < len; i++) {
-            var new_message_item = generateMessageItem(message_ids[i], message_titles[i], statuss[i], i, timestampss[i], contents[i]);
+            var new_message_item = generateMessageItem(message_types[i], message_ids[i], message_titles[i], statuss[i], judge_statuss[i], i, timestampss[i], contents[i]);
             message_list.appendChild(new_message_item);
         }
     }
@@ -382,13 +432,14 @@
                 } else {
                     console.log("消息列表查询成功");
                     console.log(data.data);
+                    var message_types = data.data.message_types;
                     var message_titles = data.data.message_titles;
                     var timestampss = data.data.timestampss;
                     var contents = data.data.contents;
                     var statuss = data.data.statuss;
                     var judge_statuss = data.data.judge_statuss;
                     var message_ids = data.data.message_ids;
-                    generateMessageTable(message_ids, message_titles, statuss, judge_statuss, timestampss, contents);
+                    generateMessageTable(message_types, message_ids, message_titles, statuss, judge_statuss, timestampss, contents);
                 }
             })
             .catch(error => console.error(error));

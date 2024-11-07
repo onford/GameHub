@@ -3,7 +3,7 @@ $message = "";
 $rest = [
     "code" => 0,
     "msg" => $message,
-    "data" => ["timestamp" => [], "comment_id" => [],],
+    "data" => ["timestamp" => [], "comment_id" => []],
 ];
 
 function assign(&$var, $value)
@@ -69,7 +69,7 @@ $sql = "
 $res = $conn->query($sql);
 
 if ($res) {
-    array_push($rest["data"]["timestamp"],$now_timestamps);
+    array_push($rest["data"]["timestamp"], $now_timestamps);
 } else {
     assign($message, $conn->error);
 }
@@ -77,12 +77,13 @@ if ($res) {
 $sql = "select last_insert_id() as last_id;"; // 获取新插入的评论的id
 $res = $conn->query($sql);
 
-if($res){
-    array_push($rest["data"]["comment_id"],$res->fetch_assoc()["last_id"]);
+$last_id = "";
+if ($res) {
+    $last_id = $res->fetch_assoc()["last_id"];
+    array_push($rest["data"]["comment_id"], $last_id);
 } else {
     assign($message, $conn->error);
 }
-
 
 if ($message != "") {
     $rest["code"] = 1;
@@ -90,6 +91,34 @@ if ($message != "") {
     $conn->close();
     echo json_encode($rest);
     die();
+}
+
+//用用户名找到accountnumber
+
+$sql = "
+    select accountnumber
+    from userlist
+    where username = '$user_name';
+";
+$accountnumber = "";
+$res = $conn->query($sql);
+if ($res) {
+    $accountnumber = $res->fetch_assoc()["accountnumber"];
+} else {
+    $conn->close();
+    error_and_die($conn->error);
+}
+
+$sql = "
+    insert into message_list (message_type, message_title, timestamps, recognize_id, status, receive_accountnumber)
+    values (1, '你的评论收到了回复', '$now_timestamps', $last_id, 0, '$accountnumber');
+";
+
+$res = $conn->query($sql);
+if ($res) {
+} else {
+    $conn->close();
+    error_and_die($conn->error);
 }
 
 $conn->close();
