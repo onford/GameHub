@@ -49,7 +49,7 @@
                 </div>
                 <div class="list-group" id="messageList">
                     <!-- Message 1 -->
-                    <div class="list-group-item message-item">
+                    <!-- <div class="list-group-item message-item">
                         <div class="form-check checkbox-custom">
                             <input class="form-check-input" type="checkbox" value="" id="messageCheckbox1">
                         </div>
@@ -62,10 +62,10 @@
                                     AM</span>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-- Message 2 -->
-                    <div class="list-group-item message-item">
+                    <!-- <div class="list-group-item message-item">
                         <div class="form-check checkbox-custom">
                             <input class="form-check-input" type="checkbox" value="" id="messageCheckbox2">
                         </div>
@@ -78,7 +78,7 @@
                                     AM</span>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-- Add more messages as needed -->
 
@@ -106,6 +106,7 @@
     </div>
 </body>
 <script>
+
     function jumpHandle1(event) {
         event.preventDefault();
         console.log("跳转页面事件触发");
@@ -127,6 +128,90 @@
     $(window).on("load", function () {
         $(".loader-wrapper").fadeOut("slow");
     });
+
+    function generateMessageItem(message_id, message_title, status, id, timestamps, content) {
+        var message_item = document.createElement("div");
+        message_item.classList.add("list-group-item");
+        message_item.classList.add("message-item");
+        var checkbox = document.createElement("div");
+        checkbox.classList.add("form-check");
+        checkbox.classList.add("checkbox-custom");
+        var checkbox_inputer = document.createElement("input");
+        checkbox_inputer.type = "checkbox";
+        checkbox_inputer.classList.add("form-check-input");
+        checkbox_inputer.id = "messageCheckbox" + (id + 1);
+        checkbox.appendChild(checkbox_inputer);
+        message_item.appendChild(checkbox);
+        var new_div = document.createElement("div");
+        var new_h5 = document.createElement("h5");
+        new_h5.innerHTML = message_title;
+        new_h5.classList.add("message-title");
+        var new_message_content = document.createElement("div");
+        new_message_content.innerHTML = content;
+        console.log("content: " + content);
+        var new_message_meta = document.createElement("div");
+        new_message_meta.classList.add("message-meta");
+        var new_span1 = document.createElement("span");
+        new_span1.classList.add("badge");
+        new_span1.classList.add("bg-info");
+        new_span1.classList.add("text-white");
+        new_span1.innerHTML = "Info";
+        var new_span2 = document.createElement("span");
+        new_span2.classList.add("message-time");
+        new_span2.classList.add("ms-2");
+        new_span2.innerHTML = timestamps;
+        var new_i = document.createElement("i");
+        new_i.classList.add("bi");
+        new_i.classList.add("bi-clock");
+        new_i.style.fontSize = "1rem";
+        new_span2.appendChild(new_i);
+        new_message_meta.appendChild(new_span1);
+        new_message_meta.appendChild(new_span2);
+        new_div.appendChild(new_h5);
+        new_div.appendChild(new_message_content);
+        new_div.appendChild(new_message_meta);
+        message_item.appendChild(new_div);
+        return message_item;
+    }
+
+    function generateMessageTable(message_ids, message_titles, statuss, judge_statuss, timestampss, contents) {
+        var len = message_ids.length;
+        var message_list = document.getElementById("messageList");
+        for (var i = 0; i < len; i++) {
+            var new_message_item = generateMessageItem(message_ids[i], message_titles[i], statuss[i], i, timestampss[i], contents[i]);
+            message_list.appendChild(new_message_item);
+        }
+    }
+
+    function init() {
+        var cur_accountnumber = localStorage.getItem("cur_accountnumber");
+        var form_data = new FormData();
+        form_data.append("accountnumber", localStorage.getItem("cur_accountnumber"));
+        const get_message_for_cur_accountnumber_api = "./../../backend/api/get_message_for_cur_accountnumber_api.php";
+        fetch(get_message_for_cur_accountnumber_api, {
+            method: "POST",
+            body: form_data
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code != 0) {
+                    alert(data.msg);
+                } else {
+                    console.log("消息列表查询成功");
+                    console.log(data.data);
+                    var message_titles = data.data.message_titles;
+                    var timestampss = data.data.timestampss;
+                    var contents = data.data.contents;
+                    var statuss = data.data.statuss;
+                    var judge_statuss = data.data.judge_statuss;
+                    var message_ids = data.data.message_ids;
+                    generateMessageTable(message_ids, message_titles, statuss, judge_statuss, timestampss, contents);
+                }
+            })
+            .catch(error => console.error(error));
+    }
+
+    window.onload = init();
 </script>
 
 </html>
