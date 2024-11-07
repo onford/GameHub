@@ -65,6 +65,14 @@
     padding: 20px;
 }
 
+.iconImg.profile_pic {
+    width: 75px; /* 指定宽度 */
+    height: 75px; /* 指定高度 */
+    border-radius: 50%; /* 完全圆形 */
+    object-fit: cover; /* 保持比例裁剪 */
+    overflow: hidden; /* 使用溢出隐藏来确保内容不超出圆形边框 */
+}
+
 .option {
     text-align: center;
     padding: 20px 0;
