@@ -114,4 +114,9 @@ function startGame() {
     });
 }
 
+// 绑定“New Game”按钮的点击事件
+document.getElementById("btn").onclick = function () {
+    alert("你干嘛~~哼哼~哎呦~");
+};
+
 startGame();
