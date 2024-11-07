@@ -45,7 +45,8 @@
                 <!-- <h2 class="mb-4">Message Center</h2> -->
                 <div class="d-flex justify-content-between mb-3 message-buttons">
                     <button class="btn btn-danger" id="deleteAllBtn">全部删除</button>
-                    <button class="btn btn-warning" id="deleteSelectedBtn">删除已选</button>
+                    <button class="btn btn-warning" id="deleteSelectedBtn"
+                        onclick="deleteSelectedHandle(event)">删除已选</button>
                 </div>
                 <div class="list-group" id="messageList">
                     <!-- Message 1 -->
@@ -129,6 +130,50 @@
         $(".loader-wrapper").fadeOut("slow");
     });
 
+    function deleteAllHandle(event) {
+        event.preventDefault();
+        var yes = confirm("确认删除所有已读的信息吗");
+    }
+
+    function deleteSelectedHandle(event) {
+        event.preventDefault();
+        var yes = confirm("确认删除已选择的信息吗");
+        if (!yes) {
+            return;
+        }
+        message_ids = [];
+        var checkboxes = document.getElementsByClassName("form-check-input");
+        for (var checkbox of checkboxes) {
+            if (checkbox.checked) {
+                message_ids.push(checkbox.id);
+            }
+        }
+        var message_list = document.getElementById("messageList");
+        var form_data = new FormData();
+        console.log("message_ids: ", JSON.stringify(message_ids));
+        form_data.append("message_ids", JSON.stringify(message_ids)); //以json格式化字符串传给接口,然后接口再调用decode函数来讲JSON对象解析为数组
+        const delete_selected_messages_api = "./../../backend/api/delete_selected_messages_api.php";
+        fetch(delete_selected_messages_api, {
+            method: "POST",
+            body: form_data
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code != 0) {
+                    alert(data.msg);
+                    console.log(data.data);
+                } else {
+                    console.log("所选消息全部删除成功");
+                    for (var i = 0; i < message_ids.length; i++) {
+                        var checkbox_inputer = document.getElementById(message_ids[i]);
+                        var message_item = checkbox_inputer.parentNode.parentNode;
+                        message_list.removeChild(message_item);
+                    }
+                }
+            })
+            .catch(error => console.error(error));
+    }
+
     function generateMessageItem(message_id, message_title, status, id, timestamps, content) {
         var message_item = document.createElement("div");
         message_item.classList.add("list-group-item");
@@ -139,16 +184,13 @@
         var checkbox_inputer = document.createElement("input");
         checkbox_inputer.type = "checkbox";
         checkbox_inputer.classList.add("form-check-input");
-        checkbox_inputer.id = "messageCheckbox" + (id + 1);
+        checkbox_inputer.id = message_id;//checkbox的id是这条通知对应的message_id,方便后面定位要删除的信息
         checkbox.appendChild(checkbox_inputer);
         message_item.appendChild(checkbox);
         var new_div = document.createElement("div");
         var new_h5 = document.createElement("h5");
         new_h5.innerHTML = message_title;
         new_h5.classList.add("message-title");
-        var new_message_content = document.createElement("div");
-        new_message_content.innerHTML = content;
-        console.log("content: " + content);
         var new_message_meta = document.createElement("div");
         new_message_meta.classList.add("message-meta");
         var new_span1 = document.createElement("span");
@@ -168,7 +210,6 @@
         new_message_meta.appendChild(new_span1);
         new_message_meta.appendChild(new_span2);
         new_div.appendChild(new_h5);
-        new_div.appendChild(new_message_content);
         new_div.appendChild(new_message_meta);
         message_item.appendChild(new_div);
         return message_item;
