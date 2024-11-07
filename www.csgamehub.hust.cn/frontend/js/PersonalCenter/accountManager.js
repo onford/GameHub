@@ -256,7 +256,9 @@ function getSpeakingState() {
             } else {
                 if (data.data == 0) {
                     spState.style.color = "red";
-                    spState.innerHTML = "禁言中";
+                    const newDt = new Date(data.available).getTime();
+                    interval = setInterval(() => { countDown(newDt); }, 1000);
+                    countDown(newDt);
                     spState.hidden = false;
                 }
                 else {
@@ -269,4 +271,26 @@ function getSpeakingState() {
         .catch(error => {
             console.error(error);
         })
+}
+
+var interval;
+function countDown(targetTime) {
+    // 禁言剩余时间倒计时
+    const spState = document.getElementById("spState");
+    const distance = targetTime - new Date().getTime();
+    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    spState.innerHTML = "禁言中&emsp;禁言剩余时间: ";
+    if (days) spState.innerHTML += days + " 天 ";
+    if (hours) spState.innerHTML += hours + " 小时 ";
+    if (minutes) spState.innerHTML += minutes + " 分 ";
+    spState.innerHTML += seconds + " 秒";
+    if (distance < 0) {
+        clearInterval(interval);
+        spState.style.color = "green";
+        spState.innerHTML = "正常";
+        spState.hidden = false;
+    }
 }

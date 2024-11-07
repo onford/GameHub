@@ -258,6 +258,7 @@ function uploadGame(file) {
                 fileInput.value = "";
                 gamenameText.value = "";
                 uploadedFilesDiv.innerHTML = '';
+                document.getElementById("nogame").hidden = true;
                 getAllGamesByName(null);
                 restoreUpload();
             }
@@ -294,6 +295,11 @@ function getAllGamesByName(gamename) {
                     tablebody.appendChild(newgameRecord(data.data[i].newgame_id, data.data[i].gamename, data.data[i].version, data.data[i].uploadtime, data.data[i].status));
                 }
                 tablebody.querySelectorAll(".btn-primary").forEach((element) => { element.onclick = getGameZip; });
+                console.log("记录条数", data.data.length);
+                if (data.data.length)
+                    tablebody.parentElement.hidden = false;
+                else
+                    document.getElementById("nogame").hidden = false;
             }
         }).catch(error => {
             console.error(error);
