@@ -157,6 +157,22 @@
                 }
             }
         }
+        const api2 = "./../../backend/api/set_message_status_api.php";
+        var form_data2 = new FormData();
+        form_data2.append("message_id", message_id);
+        fetch(api2, {
+            method: "POST",
+            body: form_data2
+        })
+            .then(response2 => response2.json())
+            .then(data2 => {
+                if (data2.code != 0) {
+                    alert(data2.msg);
+                } else {
+                    console.log("已读状态设置成功");
+                }
+            })
+            .catch(error => console.error(error));
         var overlay = document.getElementsByClassName('my-gray-layer')[0];
         overlay.classList.remove('my-not-show');
         console.log(message_title);
@@ -228,22 +244,7 @@
                     pop_content.innerHTML = data.data;
                     this_item.classList.remove('not-read');
                     this_item.classList.add('read');
-                    const api2 = "./../../backend/api/set_message_status_api.php";
-                    var form_data2 = new FormData();
-                    form_data2.append("message_id", message_id);
-                    fetch(api2, {
-                        method: "POST",
-                        body: form_data2
-                    })
-                        .then(response2 => response2.json())
-                        .then(data2 => {
-                            if (data2.code != 0) {
-                                alert(data2.msg);
-                            } else {
-                                console.log("已读状态设置成功");
-                            }
-                        })
-                        .catch(error => console.error(error));
+
                 }
             })
             .catch(error => console.error(error));
@@ -253,6 +254,7 @@
         event.preventDefault();
         var overlay = document.getElementsByClassName("my-gray-layer")[0];
         overlay.classList.add("my-not-show");
+        location.reload();
     }
 
     function jumpHandle1(event) {
@@ -423,6 +425,7 @@
         if (status == '0') {
             message_item.id = "not-read";
         } else {
+            new_h5.style.color = ("#ccc");
             message_item.id = "read";
         }
         message_item.onclick = messageItemClickHandle; // 先不要这个
