@@ -4,31 +4,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Focus Style Example</title>
+    <title>消息框示例</title>
     <style>
-        /* 为所有input元素设置基础样式 */
-        input[type="text"] {
-            padding: 5px;
-            font-size: 16px;
+        /* 简单的CSS样式来美化消息框 */
+        .message-box {
             border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 16px;
+            width: 300px;
+            margin: 20px auto;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            /* 添加定位以允许子元素绝对定位 */
         }
 
-        /* 为聚焦状态的input元素设置样式 */
-        input[type="text"]:focus {
-            border-color: #007bff;
-            /* 更改边框颜色 */
-            outline: none;
-            /* 移除默认的聚焦轮廓 */
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-            /* 添加阴影效果 */
+        .message-box .title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .message-box .content {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .message-box .close-btn {
+            position: absolute;
+            /* 绝对定位 */
+            top: 8px;
+            /* 距离顶部8px */
+            right: 8px;
+            /* 距离右侧8px */
+            cursor: pointer;
+            /* 鼠标悬停时显示为可点击 */
+            font-size: 16px;
+            /* 字体大小 */
+            font-weight: bold;
+            /* 字体加粗 */
+            color: #aaa;
+            /* 字体颜色 */
+        }
+
+        .message-box .close-btn:hover {
+            color: #000;
+            /* 鼠标悬停时改变颜色 */
         }
     </style>
 </head>
 
 <body>
 
-    <input type="text" placeholder="点击我，看看会发生什么！">
+    <div class="message-box" id="messageBox">
+        <div class="title">消息标题</div>
+        <div class="content">
+            这是消息的内容部分。你可以在这里放置任何你想要的文本或HTML内容。
+        </div>
+        <div class="close-btn" onclick="closeMessageBox()">&times;</div>
+    </div>
+
+    <script>
+        function closeMessageBox() {
+            document.getElementById('messageBox').style.display = 'none'; // 隐藏消息框
+        }
+    </script>
 
 </body>
 

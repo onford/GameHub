@@ -18,6 +18,17 @@
 </head>
 
 <body>
+    <div class="my-gray-layer my-not-show">
+        <div class="pop-message-box">
+            <div class="pop-titile">
+                消息标题
+            </div>
+            <div class="pop-content">
+                这是消息的内容部分。你可以在这里放置任何你想要的文本或HTML内容。
+            </div>
+            <div class="close-btn" onclick="closeHandle(event)">&times;</div>
+        </div>
+    </div>
     <div class="loader-wrapper">
         <span class="loader"><span class="loader-inner"></span></span>
     </div>
@@ -44,7 +55,7 @@
             <div class="container mt-4">
                 <!-- <h2 class="mb-4">Message Center</h2> -->
                 <div class="d-flex justify-content-between mb-3 message-buttons">
-                    <button class="btn btn-danger" id="deleteAllBtn" onclick="deleteAllHandle(event)">删除全部已读信息</button>
+                    <button class="btn btn-danger" id="deleteAllBtn" onclick="deleteAllHandle(event)">全部删除</button>
                     <button class="btn btn-warning" id="deleteSelectedBtn"
                         onclick="deleteSelectedHandle(event)">删除已选</button>
                 </div>
@@ -107,6 +118,23 @@
     </div>
 </body>
 <script>
+    // function messageItemClickHandle(event) {
+    //     event.preventDefault();
+    //     var this_item = event.target;
+    //     console.log("this_item: " + this_item);
+    //     var message_id = "";
+    //     var message_title = "";
+    //     var children = this_item.childNodes;
+    //     console.log(children);
+    //     var overlay = document.getElementsByClassName('my-gray-layer')[0];
+    //     overlay.classList.remove('my-not-show');
+    // }
+
+    function closeHandle(event) {
+        event.preventDefault();
+        var overlay = document.getElementsByClassName("my-gray-layer")[0];
+        overlay.classList.add("my-not-show");
+    }
 
     function jumpHandle1(event) {
         event.preventDefault();
@@ -132,11 +160,13 @@
 
     function deleteAllHandle(event) {
         event.preventDefault();
-        var yes = confirm("确认删除所有已读的信息吗");
+        // var yes = confirm("确认删除所有已读的信息吗");
+        var yes = confirm("确认删除所有的消息吗?");
         if (!yes) {
             return;
         }
-        const api = "./../../backend/api/delete_all_read_message_api.php";
+        // const api = "./../../backend/api/delete_all_read_message_api.php";
+        const api = "./../../backend/api/delete_all_message_for_one_user_api.php";
         var form_data = new FormData();
         form_data.append("accountnumber", localStorage.getItem("cur_accountnumber"));
         fetch(api, {
@@ -173,16 +203,20 @@
                 }
             }
         }
-        if (have_not_read) {
-            var yes = confirm("你要删除的消息当中包含未读消息，确定删除吗?");
-            if (!yes) {
-                return;
-            }
-        } else {
-            var yes = confirm("确认删除所选消息吗?");
-            if (!yes) {
-                return;
-            }
+        // if (have_not_read) {
+        //     var yes = confirm("你要删除的消息当中包含未读消息，确定删除吗?");
+        //     if (!yes) {
+        //         return;
+        //     }
+        // } else {
+        //     var yes = confirm("确认删除所选消息吗?");
+        //     if (!yes) {
+        //         return;
+        //     }
+        // }
+        var yes = confirm("确认删除所选消息吗");
+        if (!yes) {
+            return;
         }
         var message_list = document.getElementById("messageList");
         var form_data = new FormData();
@@ -227,6 +261,9 @@
         var new_h5 = document.createElement("h5");
         new_h5.innerHTML = message_title;
         new_h5.classList.add("message-title");
+        var new_content = document.createElement("div");
+        new_content.classList.add("content_div");
+        new_content.innerHTML = content;
         var new_message_meta = document.createElement("div");
         new_message_meta.classList.add("message-meta");
         var new_span1 = document.createElement("span");
@@ -246,6 +283,7 @@
         new_message_meta.appendChild(new_span1);
         new_message_meta.appendChild(new_span2);
         new_div.appendChild(new_h5);
+        new_div.appendChild(new_content);
         new_div.appendChild(new_message_meta);
         message_item.appendChild(new_div);
         if (status == '0') {
@@ -253,6 +291,7 @@
         } else {
             message_item.id = "read";
         }
+        // message_item.onclick = messageItemClickHandle; // 先不要这个
         return message_item;
     }
 

@@ -8,6 +8,7 @@
     padding: 1.25rem;
     border-left: 4px solid #e3e6f0 !important;
     transition: border-left-color 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .message-item:hover {
@@ -15,7 +16,7 @@
 }
 
 .message-item.checked {
-    border-left-color: #198754;
+    border-left-color: #198754 !important;
 }
 
 .message-title {
@@ -66,11 +67,16 @@
 }
 
 .iconImg.profile_pic {
-    width: 75px; /* 指定宽度 */
-    height: 75px; /* 指定高度 */
-    border-radius: 50%; /* 完全圆形 */
-    object-fit: cover; /* 保持比例裁剪 */
-    overflow: hidden; /* 使用溢出隐藏来确保内容不超出圆形边框 */
+    width: 75px;
+    /* 指定宽度 */
+    height: 75px;
+    /* 指定高度 */
+    border-radius: 50%;
+    /* 完全圆形 */
+    object-fit: cover;
+    /* 保持比例裁剪 */
+    overflow: hidden;
+    /* 使用溢出隐藏来确保内容不超出圆形边框 */
 }
 
 .option {
@@ -93,6 +99,7 @@
     padding: 0;
     margin: 0;
     /* 图片将缩放以完全覆盖body元素 */
+    overflow-y: auto;
     padding: 20px;
 }
 
@@ -220,8 +227,13 @@ input.fill_in:focus {
 }
 
 .main {
-    background-image: url("./../img/login_background.jpg");
+    /* background-image: url("./../img/login_background.jpg"); */
+    background-color: white;
     background-size: cover;
+}
+
+.content_div {
+    color: #4f4f4f;
 }
 
 .heading {
@@ -232,4 +244,65 @@ input.fill_in:focus {
     text-align: center;
     font-size: 30px;
     color: #4f4f4f;
+}
+
+/* 简单的CSS样式来美化消息框 */
+.pop-message-box {
+    top: 20%;
+    border: 1px solid #ccc;
+    padding: 16px;
+    width: 400px;
+    margin: 20px auto;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    /* 添加定位以允许子元素绝对定位 */
+}
+
+.pop-message-box .pop-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.pop-message-box .pop-content {
+    font-size: 14px;
+    color: #555;
+}
+
+.pop-message-box .close-btn {
+    position: absolute;
+    /* 绝对定位 */
+    top: 8px;
+    /* 距离顶部8px */
+    right: 8px;
+    /* 距离右侧8px */
+    cursor: pointer;
+    /* 鼠标悬停时显示为可点击 */
+    font-size: 16px;
+    /* 字体大小 */
+    font-weight: bold;
+    /* 字体加粗 */
+    color: #aaa;
+    /* 字体颜色 */
+}
+
+.pop-message-box .close-btn:hover {
+    color: #000;
+    /* 鼠标悬停时改变颜色 */
+}
+
+.my-gray-layer {
+    position: fixed;
+    left: 0%;
+    top: 0%;
+    background-color: rgba(58, 58, 58, 0.5) !important;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+}
+
+.my-not-show {
+    display: none;
 }
