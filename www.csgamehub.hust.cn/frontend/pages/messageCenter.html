@@ -20,7 +20,7 @@
 <body>
     <div class="my-gray-layer my-not-show">
         <div class="pop-message-box">
-            <div class="pop-titile">
+            <div class="pop-title">
                 消息标题
             </div>
             <div class="pop-content">
@@ -55,7 +55,7 @@
             <div class="container mt-4">
                 <!-- <h2 class="mb-4">Message Center</h2> -->
                 <div class="d-flex justify-content-between mb-3 message-buttons">
-                    <button class="btn btn-danger" id="deleteAllBtn" onclick="deleteAllHandle(event)">全部删除</button>
+                    <button class="btn btn-danger" id="deleteAllBtn" onclick="deleteAllHandle(event)">删除全部已读消息</button>
                     <button class="btn btn-warning" id="deleteSelectedBtn"
                         onclick="deleteSelectedHandle(event)">删除已选</button>
                 </div>
@@ -118,17 +118,75 @@
     </div>
 </body>
 <script>
-    // function messageItemClickHandle(event) {
-    //     event.preventDefault();
-    //     var this_item = event.target;
-    //     console.log("this_item: " + this_item);
-    //     var message_id = "";
-    //     var message_title = "";
-    //     var children = this_item.childNodes;
-    //     console.log(children);
-    //     var overlay = document.getElementsByClassName('my-gray-layer')[0];
-    //     overlay.classList.remove('my-not-show');
-    // }
+    function messageItemClickHandle(event) {
+        // event.stopPropagation()
+        console.log("event-target: " + event.target.tagName);
+        if (event.target.tagName == "INPUT") {
+            return;
+        }
+        event.preventDefault();
+        // var this_item = event.target;
+        var this_item = this;
+        console.log("this_item: " + this_item);
+        var message_id = "";
+        var message_title = "";
+        for (var child of this_item.childNodes) {
+            if (child.classList.contains("form-check")) {
+                for (var child_child of child.childNodes) {
+                    message_id = child_child.id;
+                }
+            } else {
+                for (var child_child of child.childNodes) {
+                    if (child_child.classList.contains("message-title")) {
+                        message_title = child_child.innerHTML;
+                        break;
+                    }
+                }
+            }
+        }
+        var overlay = document.getElementsByClassName('my-gray-layer')[0];
+        overlay.classList.remove('my-not-show');
+        console.log(message_title);
+        var pop_title = document.getElementsByClassName("pop-title")[0];
+        console.log("pop-title: " + pop_title);
+        pop_title.innerHTML = message_title;
+        const api = "./../../backend/api/select_content_by_message_id_api.php";
+        console.log("message_id: " + message_id);
+        var form_data = new FormData();
+        form_data.append("message_id", message_id);
+        fetch(api, {
+            method: "POST",
+            body: form_data
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code != 0) {
+                    alert(data.msg);
+                } else {
+                    var pop_content = document.getElementsByClassName("pop-content")[0];
+                    pop_content.innerHTML = data.data;
+                    this_item.classList.remove('not-read');
+                    this_item.classList.add('read');
+                    const api2 = "./../../backend/api/set_message_status_api.php";
+                    var form_data2 = new FormData();
+                    form_data2.append("message_id", message_id);
+                    fetch(api2, {
+                        method: "POST",
+                        body: form_data2
+                    })
+                        .then(response2 => response2.json())
+                        .then(data2 => {
+                            if (data2.code != 0) {
+                                alert(data2.msg);
+                            } else {
+                                console.log("已读状态设置成功");
+                            }
+                        })
+                        .catch(error => console.error(error));
+                }
+            })
+            .catch(error => console.error(error));
+    }
 
     function closeHandle(event) {
         event.preventDefault();
@@ -160,13 +218,13 @@
 
     function deleteAllHandle(event) {
         event.preventDefault();
-        // var yes = confirm("确认删除所有已读的信息吗");
-        var yes = confirm("确认删除所有的消息吗?");
+        var yes = confirm("确认删除所有已读的信息吗");
+        // var yes = confirm("确认删除所有的消息吗?");
         if (!yes) {
             return;
         }
-        // const api = "./../../backend/api/delete_all_read_message_api.php";
-        const api = "./../../backend/api/delete_all_message_for_one_user_api.php";
+        const api = "./../../backend/api/delete_all_read_message_api.php";
+        // const api = "./../../backend/api/delete_all_message_for_one_user_api.php";
         var form_data = new FormData();
         form_data.append("accountnumber", localStorage.getItem("cur_accountnumber"));
         fetch(api, {
@@ -203,21 +261,21 @@
                 }
             }
         }
-        // if (have_not_read) {
-        //     var yes = confirm("你要删除的消息当中包含未读消息，确定删除吗?");
-        //     if (!yes) {
-        //         return;
-        //     }
-        // } else {
-        //     var yes = confirm("确认删除所选消息吗?");
-        //     if (!yes) {
-        //         return;
-        //     }
-        // }
-        var yes = confirm("确认删除所选消息吗");
-        if (!yes) {
-            return;
+        if (have_not_read) {
+            var yes = confirm("你要删除的消息当中包含未读消息，确定删除吗?");
+            if (!yes) {
+                return;
+            }
+        } else {
+            var yes = confirm("确认删除所选消息吗?");
+            if (!yes) {
+                return;
+            }
         }
+        // var yes = confirm("确认删除所选消息吗");
+        // if (!yes) {
+        //     return;
+        // }
         var message_list = document.getElementById("messageList");
         var form_data = new FormData();
         console.log("message_ids: ", JSON.stringify(message_ids));
@@ -261,9 +319,10 @@
         var new_h5 = document.createElement("h5");
         new_h5.innerHTML = message_title;
         new_h5.classList.add("message-title");
-        var new_content = document.createElement("div");
-        new_content.classList.add("content_div");
-        new_content.innerHTML = content;
+        // new_h5.onclick = messageItemClickHandle;
+        // var new_content = document.createElement("div");
+        // new_content.classList.add("content_div");
+        // new_content.innerHTML = content;
         var new_message_meta = document.createElement("div");
         new_message_meta.classList.add("message-meta");
         var new_span1 = document.createElement("span");
@@ -282,8 +341,11 @@
         new_span2.appendChild(new_i);
         new_message_meta.appendChild(new_span1);
         new_message_meta.appendChild(new_span2);
+        // new_message_meta.onclick = messageItemClickHandle;
         new_div.appendChild(new_h5);
-        new_div.appendChild(new_content);
+        // new_div.onclick = messageItemClickHandle;
+        new_div.classList.add('z-div');
+        // new_div.appendChild(new_content);
         new_div.appendChild(new_message_meta);
         message_item.appendChild(new_div);
         if (status == '0') {
@@ -291,7 +353,7 @@
         } else {
             message_item.id = "read";
         }
-        // message_item.onclick = messageItemClickHandle; // 先不要这个
+        message_item.onclick = messageItemClickHandle; // 先不要这个
         return message_item;
     }
 

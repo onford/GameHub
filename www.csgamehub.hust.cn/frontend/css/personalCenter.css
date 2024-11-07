@@ -66,6 +66,14 @@
     padding: 20px;
 }
 
+/* .z-div {
+    z-index: 1000;
+} */
+
+.form-check-input {
+    z-index: 1000;
+}
+
 .iconImg.profile_pic {
     width: 80%;
     /* 指定宽度 */
