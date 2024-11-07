@@ -245,7 +245,8 @@ body {
     text-align: left;
     font-weight: bold;
     color: white;
-    border-bottom: 1px solid wheat; /* 在游戏得分元素下方添加一条实线边框 */
+    border-bottom: 1px solid wheat;
+    /* 在游戏得分元素下方添加一条实线边框 */
 
     background-image: linear-gradient(45deg, #ffb3ba, #c49c6e, #bfbf76, #77b084, #ff7e74, #3b82f6, #c084fc, #db2777);
     color: transparent;
@@ -270,7 +271,8 @@ body {
     margin-top: 60px;
     font-size: 13px;
     margin-left: 3%;
-    margin-right: 3%; /*右侧边界限制*/
+    margin-right: 3%;
+    /*右侧边界限制*/
     text-align: left;
     font-weight: bold;
     color: white;
@@ -354,6 +356,11 @@ body {
 .list-group-item {
     transition: background-color 1s ease-in-out;
     padding-top: 20px !important;
+}
+
+.iconImg,
+.comment-avatar {
+    aspect-ratio: 1;
 }
 
 .blue-fade {
