@@ -44,7 +44,7 @@
             <div class="container mt-4">
                 <!-- <h2 class="mb-4">Message Center</h2> -->
                 <div class="d-flex justify-content-between mb-3 message-buttons">
-                    <button class="btn btn-danger" id="deleteAllBtn">全部删除</button>
+                    <button class="btn btn-danger" id="deleteAllBtn" onclick="deleteAllHandle(event)">删除全部已读信息</button>
                     <button class="btn btn-warning" id="deleteSelectedBtn"
                         onclick="deleteSelectedHandle(event)">删除已选</button>
                 </div>
@@ -133,19 +133,55 @@
     function deleteAllHandle(event) {
         event.preventDefault();
         var yes = confirm("确认删除所有已读的信息吗");
+        if (!yes) {
+            return;
+        }
+        const api = "./../../backend/api/delete_all_read_message_api.php";
+        var form_data = new FormData();
+        form_data.append("accountnumber", localStorage.getItem("cur_accountnumber"));
+        fetch(api, {
+            method: "POST",
+            body: form_data
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code != 0) {
+                    alert(data.msg);
+                } else {
+                    console.log("所有已读信息删除成功");
+                    console.log("message_ids: " + data.data);
+                    for (var i = 0; i < data.data.length; i++) {
+                        var checkbox_inputer = document.getElementById(data.data[i]);
+                        var message_item = checkbox_inputer.parentNode.parentNode;
+                        message_item.parentElement.removeChild(message_item);
+                    }
+                }
+            })
+            .catch(error => console.error(error));
     }
 
     function deleteSelectedHandle(event) {
         event.preventDefault();
-        var yes = confirm("确认删除已选择的信息吗");
-        if (!yes) {
-            return;
-        }
         message_ids = [];
+        var have_not_read = false;
         var checkboxes = document.getElementsByClassName("form-check-input");
         for (var checkbox of checkboxes) {
             if (checkbox.checked) {
                 message_ids.push(checkbox.id);
+                if (checkbox.parentNode.parentNode.id == "not-read") {
+                    have_not_read = true;
+                }
+            }
+        }
+        if (have_not_read) {
+            var yes = confirm("你要删除的消息当中包含未读消息，确定删除吗?");
+            if (!yes) {
+                return;
+            }
+        } else {
+            var yes = confirm("确认删除所选消息吗?");
+            if (!yes) {
+                return;
             }
         }
         var message_list = document.getElementById("messageList");
@@ -212,6 +248,11 @@
         new_div.appendChild(new_h5);
         new_div.appendChild(new_message_meta);
         message_item.appendChild(new_div);
+        if (status == '0') {
+            message_item.id = "not-read";
+        } else {
+            message_item.id = "read";
+        }
         return message_item;
     }
 
