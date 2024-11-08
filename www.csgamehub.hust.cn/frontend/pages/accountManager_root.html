@@ -87,7 +87,7 @@
         event.preventDefault();
         var change_form = document.getElementsByClassName("change_form")[0];
         var form_data = new FormData(change_form);
-        form_data.append("username", localStorage.getItem("cur_username"));
+        form_data.append("username", localStorage.getItem("username"));
         form_data.append("accountnumber", localStorage.getItem("cur_accountnumber"));
         const update_username_api = "./../../backend/api/update_username_api.php";
         fetch(update_username_api, {
@@ -101,6 +101,7 @@
                 }
                 else {
                     alert("用户名更新成功");
+                    localStorage.setItem("username", change_form.getItem("new_username"));
                     var overlay = document.getElementsByClassName("my-gray-layer2")[0];
                     overlay.classList.add("my-not-show");
                     location.reload();
