@@ -29,7 +29,7 @@ $gamename = $_POST['gamename'];
 $username = $_POST['username'];
 $tablename = "newgame_list";
 if($gamename)
-    $sql = "select * from $tablename where newgame_name = '$gamename' and username = '$username';"; // 选取特定游戏
+    $sql = "select * from $tablename where newgame_name like '%$gamename%' and username = '$username';"; // 选取特定游戏
 else $sql = "select * from $tablename where username = '$username'"; // 选取所有游戏
 
 $res = $conn->query($sql);

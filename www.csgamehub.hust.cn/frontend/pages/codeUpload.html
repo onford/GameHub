@@ -66,7 +66,11 @@
                     <p style="color:gray;margin-bottom: 40px;display: inline-block;margin-left: 40px;">
                         为你记录已上传游戏的历史记录，及其当前的审核状态。</p>
                 </div>
-                <div style="width: 100%;text-align: center;border: 1.5px solid gray;margin-top: -15px;padding:15px;color: gray;"
+                <div class="my-main-header">
+                    <input type="text" class="my-search-box" placeholder="搜索游戏名">
+                    <button class="my-search-btn" onclick="searchHandle()">搜索</button>
+                </div>
+                <div style="width: 100%;text-align: center;border: 1.5px solid gray;margin-top: 0px;padding:15px;color: gray;"
                     id="nogame" hidden>
                     还没有上传游戏，快试试上传新游戏吧~
                 </div>

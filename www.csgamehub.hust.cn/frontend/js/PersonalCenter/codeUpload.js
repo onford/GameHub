@@ -296,10 +296,20 @@ function getAllGamesByName(gamename) {
                 }
                 tablebody.querySelectorAll(".btn-primary").forEach((element) => { element.onclick = getGameZip; });
                 console.log("记录条数", data.data.length);
-                if (data.data.length)
+                if (data.data.length) {
                     tablebody.parentElement.hidden = false;
-                else
+                    document.getElementById("nogame").hidden = true;
+                }
+                else {
+                    if (gamename) {
+                        document.getElementById("nogame").innerHTML = "没有查询到游戏\"" + gamename + "\"的相关信息。";
+                    }
+                    else {
+                        document.getElementById("nogame").innerHTML = "还没有上传游戏，快试试上传新游戏吧~";
+                    }
                     document.getElementById("nogame").hidden = false;
+                    tablebody.parentElement.hidden = true;
+                }
             }
         }).catch(error => {
             console.error(error);
@@ -348,4 +358,9 @@ function getGameZip() {
             alert('发生错误');
             return false;
         });
+}
+
+function searchHandle() {
+    const search_name = document.querySelector(".my-search-box");
+    getAllGamesByName(search_name.value);
 }
