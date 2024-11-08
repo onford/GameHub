@@ -79,9 +79,9 @@ if ($res) {
 }
 
 if ($status == 1) {
-    $content_header = $content_header . " 评语: ";
+    $content_header = $content_header . "<br>评语: ";
 } else {
-    $content_header = $content_header . " 原因: ";
+    $content_header = $content_header . "<br>原因: ";
 }
 $content = $content_header . $content;
 
