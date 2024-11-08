@@ -13,6 +13,7 @@
 
 .message-item:hover {
     border-left-color: #0d6efd !important;
+    cursor: pointer;
 }
 
 .message-item.checked {
@@ -31,6 +32,12 @@
 
 .message-time {
     margin-left: auto;
+}
+
+#only-p {
+    color: #555;
+    text-align: center;
+    font-size: 25px;
 }
 
 .checkbox-custom {

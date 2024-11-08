@@ -449,6 +449,14 @@
         }
     }
 
+    function generateEmptyTable(msg) {
+        var temp_p = document.createElement("p");
+        temp_p.id = "only-p";
+        temp_p.innerHTML = msg;
+        var message_list = document.getElementById("messageList");
+        message_list.append(temp_p);
+    }
+
     function init() {
         var cur_accountnumber = localStorage.getItem("cur_accountnumber");
         var form_data = new FormData();
@@ -465,14 +473,18 @@
                 } else {
                     console.log("消息列表查询成功");
                     console.log(data.data);
-                    var message_types = data.data.message_types;
-                    var message_titles = data.data.message_titles;
-                    var timestampss = data.data.timestampss;
-                    var contents = data.data.contents;
-                    var statuss = data.data.statuss;
-                    var judge_statuss = data.data.judge_statuss;
-                    var message_ids = data.data.message_ids;
-                    generateMessageTable(message_types, message_ids, message_titles, statuss, judge_statuss, timestampss, contents);
+                    if (data.data.message_types.length != 0) {
+                        var message_types = data.data.message_types;
+                        var message_titles = data.data.message_titles;
+                        var timestampss = data.data.timestampss;
+                        var contents = data.data.contents;
+                        var statuss = data.data.statuss;
+                        var judge_statuss = data.data.judge_statuss;
+                        var message_ids = data.data.message_ids;
+                        generateMessageTable(message_types, message_ids, message_titles, statuss, judge_statuss, timestampss, contents);
+                    } else {
+                        generateEmptyTable("暂时没有消息");
+                    }
                 }
             })
             .catch(error => console.error(error));
