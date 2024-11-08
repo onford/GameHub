@@ -285,7 +285,26 @@
         }
     }
 
-    function generateMessageTable(message_ids, timestampss, statuss, usernames, newgame_names, versions) {
+    function downloadHandle(event) {
+        event.preventDefault();
+        var url = "./../../backend/uploads/" + this.id;
+        fetch(url + ".rar", { method: 'HEAD' })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = url + ".rar";
+                    return true;
+                } else {
+                    window.location.href = url + ".zip";
+                    return false;
+                }
+            })
+            .catch(() => {
+                alert('发生错误');
+                return false;
+            });
+    }
+
+    function generateMessageTable(message_ids, timestampss, statuss, usernames, newgame_names, versions, newgame_ids) {
         clearTable();
         var message_table = document.getElementsByClassName("message_table")[0];
         var len = timestampss.length;
@@ -370,6 +389,8 @@
             var new_download_a = document.createElement("a");
             new_download_a.href = "#";
             new_download_a.innerHTML = "下载压缩包 ";
+            new_download_a.id = newgame_ids[i];
+            new_download_a.onclick = downloadHandle;
 
             //把子组件都放在操作组件里面
             new_operation_td.appendChild(new_delete_a);
@@ -415,7 +436,8 @@
                         var usernames = data.data.usernames;
                         var newgame_names = data.data.newgame_names;
                         var versions = data.data.versions;
-                        generateMessageTable(message_ids, timestampss, statuss, usernames, newgame_names, versions);
+                        var newgame_ids = data.data.newgame_ids;
+                        generateMessageTable(message_ids, timestampss, statuss, usernames, newgame_names, versions, newgame_ids);
                     }
                 }
             })
