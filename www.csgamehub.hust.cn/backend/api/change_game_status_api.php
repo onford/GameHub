@@ -126,7 +126,7 @@ if ($res) {
 //在消息中心插入一条转发给对应用户的消息
 $sql = "
     insert into message_list (message_type,message_title,timestamps,recognize_id,status,receive_accountnumber)
-    values (1,'游戏审核通知',NOW(),$recognize_id,0,'$accountnumber');
+    values (0,'游戏审核通知',NOW(),$recognize_id,0,'$accountnumber');
 ";
 
 $res = $conn->query($sql);

@@ -38,7 +38,7 @@ $mode = intval($_POST["mode"]);
 $sql1 = "
     select *
     from $tablename1
-    where message_type = 0;
+    where message_type = 0 and receive_accountnumber is null;
 ";
 
 $res1 = $conn->query($sql1);
