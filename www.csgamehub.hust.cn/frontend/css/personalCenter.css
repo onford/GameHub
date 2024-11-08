@@ -97,6 +97,19 @@
     transition: background-color 0.3s;
 }
 
+.text-overlay {
+    position: fixed;
+    top: 0;
+    left: 70%;
+    width: 20%;
+    height: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease;
+    font-size: 20px;
+}
+
 .option:hover {
     cursor: pointer;
 }
