@@ -55,11 +55,35 @@ $recognize_id = 0;
 
 //找出newgame_id
 if ($res) {
-    $recognize_id = $res->fetch_assoc()["recognize_id"];
+    $recognize_id = intval($res->fetch_assoc()["recognize_id"]);
 } else {
     $conn->close();
     error_and_die($conn->error);
 }
+
+$content_header = "";
+$sql4 = "
+    select newgame_name,version
+    from newgame_list
+    where newgame_id=$recognize_id;
+";
+
+$res = $conn->query($sql4);
+if ($res) {
+    $row = $res->fetch_assoc();
+    $content_header = "游戏名: " . $row['newgame_name'];
+    $content_header = $content_header . " 版本号: " . (intval($row["version"]) + 1) . ".0\n";
+} else {
+    $conn->close();
+    error_and_die($conn->error);
+}
+
+if ($status == 1) {
+    $content_header = $content_header . " 评语: ";
+} else {
+    $content_header = $content_header . " 原因: ";
+}
+$content = $content_header . $content;
 
 //在content表里面插入评语
 $sql2 = "
@@ -124,9 +148,15 @@ if ($res) {
 }
 
 //在消息中心插入一条转发给对应用户的消息
+$message_title = "";
+if ($status == 1) {
+    $message_title = "你的游戏审核已通过";
+} else {
+    $message_title = "你的游戏审核已驳回";
+}
 $sql = "
     insert into message_list (message_type,message_title,timestamps,recognize_id,status,receive_accountnumber)
-    values (0,'游戏审核通知',NOW(),$recognize_id,0,'$accountnumber');
+    values (0,'$message_title',NOW(),$recognize_id,0,'$accountnumber');
 ";
 
 $res = $conn->query($sql);

@@ -366,6 +366,7 @@ a {
 .my-main {
     padding: 20px;
     width: 85%;
+    overflow-y: auto !important;
 }
 
 .my-lefter {
